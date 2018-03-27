@@ -1,0 +1,127 @@
+body {
+  background-color: #962A2A;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 80px;
+  color: #FFF;
+  text-shadow: 5px 5px 1px #000;
+  margin: -10px;
+  padding: 0px;
+}
+
+h2 {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 24px;
+  font-style: italic;
+  font-weight: lighter;
+  color: #FFF;
+  text-shadow: 2px 2px 0px #000;
+  margin: 5px;
+}
+
+h3 {
+  display: inline;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-Size: 30px;
+  color: #FFF;
+  text-shadow: 3px 3px 0px #000;
+  padding: 0px;
+  margin: 0px;
+}
+
+button {
+  background-color: #D13A3A;
+  color: #FFF;
+  border: 0px;
+  border-radius: 5px;
+  outline: none;
+  padding: 10px 25px 10px 25px;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 25px;
+  text-shadow: 2px 2px 0px #000;
+  box-shadow: 5px 5px 0px #000;
+  margin-bottom: 10px;
+}
+
+button:active {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0px #000;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #D16E6E;
+  cursor: wait;
+  box-shadow: 5px 5px 0px #000;
+  color: #FFF;
+}
+
+img {
+  display: block;
+  width: 40px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 0px;
+}
+
+a {
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.player-info {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.inactive {
+  cursor: not-allowed;
+  margin-right: 10px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  width: 120px;
+  background-color: #000;
+  color: #FFF;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+}
+
+#main-cluster {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#video-embed {
+  margin: 5px 0px 5px 0px;
+}

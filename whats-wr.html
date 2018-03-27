@@ -1,0 +1,544 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta name='author' content='Christopher Fimbel'>
+  <link rel='icon' href='https://www.speedrun.com/themes/Default/1st.png'>
+  <link rel='stylesheet' href='styles.css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet'>
+  <script src='jquery-3.3.1.min.js'></script>
+  <script src='https://unpkg.com/axios/dist/axios.min.js'></script>
+</head>
+
+<body>
+  <h1 id='main-title'>What's WR?</h1>
+  <h2 id='description'>Find a random speedrun world record to watch!</h2>
+  <div class='hidden' id='main-cluster'>
+    <div>
+      <h3 id='game-title'></h3>
+      <h3 id='category-name'></h3>
+      <h3 id='run-time'></h3>
+      <h3 id='primary-timing-method'></h3>
+    </div>
+    <div id='video-embed'></div>
+    <div id='player-info-container'>
+    </div>
+  </div>
+  <button type='button' id='getWr' onclick='getRandomWr()' disabled>Get WR!</button>
+  <h2>Designed and coded by</h2>
+  <div class='player-info'>
+    <a href='https://www.twitch.tv/fimbz' target='_blank'><img src='twitch-icon.png'></a>
+    <a href='https://www.youtube.com/channel/UC6WkHltiscPYu0YNyfOJIow' target='_blank'><img src='youtube-icon.png'></a>
+    <a href='https://twitter.com/Fimbz' target='_blank'><img src='twitter-icon.png'></a>
+    <a href='https://www.speedrun.com/user/Fimbz' target='_blank'><h3>Fimbz</h3></a>
+  </div>
+</body>
+</html>
+
+<script>
+  var gamesListOffset = 12000;
+  var totalGames;
+
+  var callsStarted = 0;
+  var callsFinished = 0;
+
+  var youTubeEmbedHTML = '<iframe width="1024" height="576" src="https://www.youtube.com/embed/{videoId}?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+  var twitchEmbedHTML = '<iframe src="https://player.twitch.tv/?autoplay=false&video=v{videoId}" frameborder="0" allowfullscreen="true" scrolling="no" height="576" width="1024"></iframe>';
+
+  var recordInformation;
+  var randomGameTitle;
+
+  function RecordInfo(apiResponse) {
+    this.gameId = null
+    this.gameTitle = null;
+    this.categoryId = null;
+    this.categoryName = null;
+    this.primaryTimingMethod = null;
+    this.runTime = null;
+    this.videoType = null;
+    this.videoUrl = null;
+    this.videoId = null;
+    this.players = [];
+    this.locationHash = null;
+
+    if(apiResponse) {
+      this.gameId = apiResponse.game;
+      this.gameTitle = randomGameTitle;
+      this.categoryId = apiResponse.category;
+
+      this.primaryTimingMethod = setPrimaryTimingMethod(apiResponse.times);
+
+      this.runTime = formatTime(apiResponse.times.primary_t);
+
+      this.videoUrl = apiResponse.videos.links[0].uri;
+      this.videoType = getVideoType(this.videoUrl);
+      this.videoId = getVideoIdFromUri(this.videoType, this.videoUrl);
+
+      for(var i = 0; i < apiResponse.players.length; i++) {
+        this.players.push(new Player(apiResponse.players[i]));
+      }
+    }
+
+    this.locationHash = function locationHash() {
+      return encodeURIComponent(this.gameTitle + '&' + this.categoryName + '&' + this.categoryId);
+    }
+  }
+
+  function Player(playerObj) {
+    this.id = null;
+    this.name = null;
+    this.speedruncom = null;
+    this.twitch = null;
+    this.youtube = null;
+    this.twitter = null;
+
+    if(playerObj) {
+      if(playerObj.rel === 'user') {
+        this.id = playerObj.id;
+      } else {
+        this.id = null;
+        this.name = playerObj.name;
+      }
+    }
+  }
+
+  /*
+  Enables the "Get WR" button after all asynchronous calls have been finished.
+  */
+  function enableGetWr() {
+    document.getElementById('getWr').disabled = false;
+  }
+
+  /*
+  Disables the "Get WR" button before making asynchronous calls. This is to prevent
+  spamming API requests.
+  */
+  function disableGetWr() {
+    document.getElementById('getWr').disabled = true;
+  }
+
+  /*
+  speedrun.com's API doesn't have anything to simply get the total number of games,
+  so instead I make an API call with a large offset to find the end of results.
+  I then add the number of results made with a large offset to the offset to find the total number of games.
+  */
+  function getTotalNumberOfGames() {
+    callsStarted++;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://www.speedrun.com/api/v1/games?_bulk=yes&max=1000&offset=' + gamesListOffset, true);
+
+    xhr.onload = function() {
+      callsFinished++;
+
+      var response = JSON.parse(this.responseText);
+
+      totalGames = gamesListOffset + response.pagination.size;
+      enableGetWr();
+      if(location.hash) {
+        getInfoFromHash(location.hash);
+      } else {
+        getRandomWr();
+      }
+    };
+
+    xhr.send(null);
+  }
+
+  /*
+  This function stores a random offset from getRandomOffset and then uses that offset
+  to start a series of API calls to retrieve a random WR.
+  */
+  function getRandomWr() {
+    disableGetWr();
+    getGameFromOffset(Math.floor(Math.random() * totalGames));
+  }
+
+  /*
+  The speedrun.com API also doesn't allow us to grab a random game from their list, so in order
+  to find a random game I'm going to get a random number between 0 and the total number of games less 1.
+  Then I will make an API call to get the game using the random offset generated here.
+  Now we can grab the game's data and retrieve its ID and title. The ID will be
+  used to retrieve further information about the game and the title will be stored
+  since subsequent API calls will not have this information available to them.
+  */
+  function getGameFromOffset(offset) {
+    callsStarted++;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://www.speedrun.com/api/v1/games?offset=' + offset, true);
+    // xhr.open('GET', 'https://www.speedrun.com/api/v1/games/dqmj', true);
+
+    xhr.onload = function() {
+      callsFinished++;
+
+      var response = JSON.parse(this.responseText).data[0];
+
+      /*
+      The game title will be stored outside of any recordInformation object
+      since we can't be sure this game will be used yet, however storing the
+      title now saves us an API call later.
+      */
+      if(response.names.international) {
+        randomGameTitle = response.names.international;
+      } else {
+        randomGameTitle = response.names.japanese;
+      }
+
+      getRecordsFromId(response.id);
+    }
+
+    xhr.send(null);
+  }
+
+  /*
+  Now that we have the game's unique ID we can query the API to get the game's records
+  (which are non-misc categories only). From this point we will need to pick a random category
+  and then grab the video from that category. If the category is either empty or has no video link
+  a different category will be chosen. If there is a video link but it does not link to Twitch or Youtube
+  then it will also be rejected and a new category will be selected. If none of the game's categories
+  fulfill these criteria then a different game will be picked.
+
+  Valid video URLs are:
+  https://www.twitch.tv/videos/{videoID}
+  https://www.twitch.tv/{user}/v/{videoID}
+  https://www.youtube.com/watch?v={videoID}
+  https://youtu.be/{videoID}
+
+  After a record is chosen, the categories name will need to be queried using the category ID.
+  */
+  function getRecordsFromId(gameId) {
+    callsStarted++;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://www.speedrun.com/api/v1/games/' + gameId + '/records?top=1', true);
+
+    xhr.onload = function() {
+      callsFinished++;
+
+      var recordNotFound = true;
+      var response = JSON.parse(this.responseText).data;
+
+      do {
+        var randomIndex = Math.floor(Math.random() * response.length);
+        var randomCategory = response[randomIndex].runs;
+
+        if(randomCategory.length > 0 && randomCategory[0].run.videos !== null && videoUrlIsValid(randomCategory[0].run.videos.links[0].uri)) {
+          // At this point, a record has been found to be viable and its info
+          // can be stored.
+          recordNotFound = false;
+          recordInformation = new RecordInfo(randomCategory[0].run);
+        } else {
+          response.splice(randomIndex, 1);
+
+          if(response.length < 1) {
+            getRandomWr();
+            break;
+          }
+        }
+      } while(recordNotFound);
+
+      getCategoryName(recordInformation.categoryId);
+
+      for(var i = 0; i < recordInformation.players.length; i++) {
+        if(recordInformation.players[i].id) {
+          getPlayerInfo(i);
+        } else {
+          if(callsStarted === callsFinished) {
+            enableGetWr();
+            updateHtmlElements();
+          }
+        }
+      }
+    }
+
+    xhr.send(null);
+  }
+
+  /*
+  Since previous queries only give us the category ID and not the name of the category
+  itself we need to make a separate query here.
+
+  We will need to make one last API after this one to query to runner's name.
+  */
+  function getCategoryName(id) {
+    callsStarted++;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://www.speedrun.com/api/v1/categories/' + id, true);
+
+    xhr.onload = function() {
+      callsFinished++;
+      var response = JSON.parse(this.responseText).data;
+
+      recordInformation.categoryName = response.name;
+    };
+
+    xhr.send(null);
+  }
+
+  /*
+  This API call retrieves the players' names via the players' IDs.
+
+  This is the last API call that needs to be made to get all relevant data about
+  any given record run. Any code needed to update the page will be called at the
+  end of xhr.onload to ensure that update code is being ran only after all relevant
+  information has been retrieved.
+  */
+  function getPlayerInfo(index) {
+    callsStarted++;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://www.speedrun.com/api/v1/users/' + recordInformation.players[index].id, true);
+
+    xhr.onload = function() {
+      callsFinished++;
+
+      var response = JSON.parse(this.responseText).data;
+      var currentPlayer = recordInformation.players[index];
+
+      if(response.names.international) {
+        currentPlayer.name = response.names.international;
+      } else {
+        currentPlayer.name = response.names.japanese;
+      }
+
+      currentPlayer.speedruncom = response.weblink;
+      if(response.twitch) {currentPlayer.twitch = response.twitch.uri;}
+      if(response.youtube) {currentPlayer.youtube = response.youtube.uri;}
+      if(response.twitter) {currentPlayer.twitter = response.twitter.uri;}
+
+      updateHtmlElements();
+    };
+
+    xhr.send(null);
+  }
+
+  /*
+  Takes a player object as an argument and creates a string to use as a block of
+  HTML to be added to player-info-container
+  */
+  function generatePlayerInfoHtml(playerObj) {
+    var newHtml = '<div class="player-info">';
+
+    if(playerObj.twitch) {
+      newHtml += '<a href="' + playerObj.twitch + '" target="_blank"><img src="twitch-icon.png"></a>';
+    } else {
+      newHtml += '<img class="inactive" src="twitch-icon-inactive.png">';
+    }
+
+    if(playerObj.youtube) {
+      newHtml += '<a href="' + playerObj.youtube + '" target="_blank"><img src="youtube-icon.png"></a>';
+    } else {
+      newHtml += '<img class="inactive" src="youtube-icon-inactive.png">';
+    }
+
+    if(playerObj.twitter) {
+      newHtml += '<a href="' + playerObj.twitter + '" target="_blank"><img src="twitter-icon.png"></a>';
+    } else {
+      newHtml += '<img class="inactive" src="twitter-icon-inactive.png">';
+    }
+
+    if(playerObj.speedruncom) {
+      newHtml += '<a href="' + playerObj.speedruncom + '" target="_blank"><h3>' + playerObj.name + '</h3></a>'
+    } else {
+      newHtml += '<h3 class="inactive">' + playerObj.name + '</h3>';
+    }
+
+    return newHtml;
+  }
+
+  /*
+  If the page is loaded with a specific hash value, get the recordInformation from that.
+  Hashes will be structured as the game's title, followed by the category name, followed
+  by the category ID.
+  */
+  function getInfoFromHash(hash) {
+    recordInformation = new RecordInfo();
+
+    var hashFragments = decodeURIComponent(hash).split('&');
+
+    recordInformation.gameTitle = hashFragments[0].substr(1);
+    recordInformation.categoryName = hashFragments[1];
+    recordInformation.categoryId = hashFragments[2];
+
+    getCategoryRecordsFromId(recordInformation.categoryId);
+  }
+
+  /*
+  Uses a category ID from a URL hash to query SRcom to get general information about
+  the run to store in recordInformation.
+  */
+  function getCategoryRecordsFromId(categoryId) {
+    callsStarted++;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://www.speedrun.com/api/v1/categories/' + categoryId + '/records?top=1', true);
+
+    xhr.onload = function() {
+      callsFinished++;
+
+      var response = JSON.parse(this.responseText).data[0].runs[0].run;
+
+      for(var i = 0; i < response.players.length; i++) {
+        recordInformation.players.push(new Player(response.players[i]));
+      }
+
+      recordInformation.primaryTimingMethod = setPrimaryTimingMethod(response.times);
+      recordInformation.runTime = formatTime(response.times.primary_t);
+      recordInformation.videoUrl = response.videos.links[0].uri;
+      recordInformation.videoType = getVideoType(recordInformation.videoUrl);
+      recordInformation.videoId = getVideoIdFromUri(recordInformation.videoType, recordInformation.videoUrl);
+
+      for(var i = 0; i < recordInformation.players.length; i++) {
+        if(recordInformation.players[i].id) {
+          getPlayerInfo(i);
+        }
+      }
+    };
+
+    xhr.send(null);
+  }
+
+  /*
+  This function will update the page's HTML with all of the run's information after
+  all API calls have been completed.
+  */
+  function updateHtmlElements() {
+    if(callsStarted === callsFinished) {
+
+      // Remove any existing player information
+      $('#player-info-container').empty();
+
+      // Update the embedded video
+      var embeddedPlayer = $('#video-embed');
+
+      if(recordInformation.videoType === 'twitch') {
+        embeddedPlayer.html(twitchEmbedHTML.replace('{videoId}', recordInformation.videoId));
+      } else {
+        embeddedPlayer.html(youTubeEmbedHTML.replace('{videoId}', recordInformation.videoId));
+      }
+
+      // Update the game's title
+      var title = $('#game-title');
+
+      title.html(recordInformation.gameTitle + ' - ');
+
+      // Update the category name
+      var category = $('#category-name');
+
+      category.html(recordInformation.categoryName);
+
+      // Update the run time
+      var time = $('#run-time');
+
+      time.html(' in ' + recordInformation.runTime);
+
+      // Update the primary timing method
+      var timingMethod = $('#primary-timing-method');
+
+      timingMethod.html(' ' + recordInformation.primaryTimingMethod);
+
+      // Update the player information
+      var info = $('#player-info');
+
+      // Show all elements within 'main-cluster'
+      showElement($('#main-cluster'));
+
+      for(var i = 0; i < recordInformation.players.length; i++) {
+        $('#player-info-container').append(generatePlayerInfoHtml(recordInformation.players[i]));
+      }
+    }
+
+    location.hash = recordInformation.locationHash();
+    enableGetWr();
+  }
+
+  /*
+  Uses jQuery to remove the 'hidden' class if an element has it
+  */
+  function showElement(jquerySelector) {
+    var element = $(jquerySelector);
+    if(element.hasClass('hidden')) {
+      element.removeClass('hidden');
+    }
+  }
+
+  /*
+  Checks video URL to ensure that it is from either Twitch or YouTube and then stores
+  the video ID for embedding.
+  */
+  function videoUrlIsValid(url) {
+    if(url.includes('youtube') || url.includes('youtu.be') || /twitch\.tv\/(?:\w{3,25}\/v|videos)\//.test(url)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /*
+  Takes SRcom's time in seconds and formats it to HH:MM:SS -OR- HH:MM:SS.sss
+  */
+  function formatTime(runTime) {
+    var date = new Date(null);
+    date.setSeconds(runTime);
+
+    if(runTime % 1) {
+      return date.toISOString().substr(11, 8) + (runTime % 1).toString().substr(1, 4);
+    } else {
+      return date.toISOString().substr(11, 8);
+    }
+  }
+
+  /*
+  Determines the primary timing Method of a run based on the times obect returned
+  from either a /games/{gameID}/records or a /category/{categoryID}/records API call.
+  */
+  function setPrimaryTimingMethod(timesObj) {
+    if(timesObj.ingame === timesObj.primary) {
+      return '(IGT)';
+    } else if(timesObj.realtime === timesObj.primary) {
+      return '(RTA)';
+    } else {
+      return '(RTA (No Loads))';
+    }
+  };
+
+  /*
+  Determines the video hosting type of the run's URI.
+  */
+  function getVideoType(videoUri) {
+    if(videoUri.includes('twitch.tv')) {
+      return 'twitch';
+    } else if(videoUri.includes('youtube.com') || videoUri.includes('youtu.be')) {
+      return 'youtube';
+    }
+  }
+
+  /*
+  Takes a video URI and determines the video type as well as extracts the video's ID
+  to later be used for embedding.
+
+  Valid video URLs are:
+  https://www.twitch.tv/videos/{videoID}
+  https://www.twitch.tv/{user}/v/{videoID}
+  https://www.youtube.com/watch?v={videoID}
+  https://youtu.be/{videoID}
+  */
+  function getVideoIdFromUri(videoType, uri) {
+    if(videoType === 'twitch') {
+      console.log(uri);
+      return /\/v(?:ideos)?\/(\d{8,9})/.exec(uri)[1];
+    } else {
+      console.log(uri);
+      return /(?:v=|\.be\/)([^&\/]+)/.exec(uri)[1];
+    }
+  }
+
+  getTotalNumberOfGames();
+
+  $(window).on('popstate', function(event) {
+    // location.reload(true);
+  });
+
+</script>
