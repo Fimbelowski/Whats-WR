@@ -3,11 +3,11 @@
 <head>
   <meta charset='utf-8'>
   <meta name='author' content='Christopher Fimbel'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   <link rel='icon' href='https://www.speedrun.com/themes/Default/1st.png'>
   <link rel='stylesheet' href='styles.css'>
   <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet'>
   <script src='jquery-3.3.1.min.js'></script>
-  <script src='https://unpkg.com/axios/dist/axios.min.js'></script>
 </head>
 
 <body>
@@ -536,9 +536,5 @@
   }
 
   getTotalNumberOfGames();
-
-  $(window).on('popstate', function(event) {
-    // location.reload(true);
-  });
 
 </script>
