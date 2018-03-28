@@ -15,8 +15,10 @@
   <h2 id='description'>Find a random speedrun world record to watch!</h2>
   <div class='hidden' id='main-cluster'>
     <div>
-      <h3 id='game-title'></h3>
-      <h3 id='category-name'></h3>
+      <a href='#' target='_blank' id='weblink'>
+        <h3 id='game-title'></h3>
+        <h3 id='category-name'></h3>
+      </a>
       <h3 id='run-time'></h3>
       <h3 id='primary-timing-method'></h3>
     </div>
@@ -60,6 +62,7 @@
     this.videoId = null;
     this.players = [];
     this.locationHash = null;
+    this.weblink = null;
 
     if(apiResponse) {
       this.gameId = apiResponse.game;
@@ -73,6 +76,7 @@
       this.videoUrl = apiResponse.videos.links[0].uri;
       this.videoType = getVideoType(this.videoUrl);
       this.videoId = getVideoIdFromUri(this.videoType, this.videoUrl);
+      this.weblink = apiResponse.weblink.slice(0, -13);
 
       for(var i = 0; i < apiResponse.players.length; i++) {
         this.players.push(new Player(apiResponse.players[i]));
@@ -389,6 +393,7 @@
       recordInformation.videoUrl = response.videos.links[0].uri;
       recordInformation.videoType = getVideoType(recordInformation.videoUrl);
       recordInformation.videoId = getVideoIdFromUri(recordInformation.videoType, recordInformation.videoUrl);
+      recordInformation.weblink = response.weblink.slice(0, -13);
 
       for(var i = 0; i < recordInformation.players.length; i++) {
         if(recordInformation.players[i].id) {
@@ -428,6 +433,11 @@
       var category = $('#category-name');
 
       category.html(recordInformation.categoryName);
+
+      // Update the weblink
+      var weblink = $('#weblink');
+
+      weblink.attr('href', recordInformation.weblink);
 
       // Update the run time
       var time = $('#run-time');
@@ -527,10 +537,10 @@
   */
   function getVideoIdFromUri(videoType, uri) {
     if(videoType === 'twitch') {
-      console.log(uri);
+      // console.log(uri);
       return /\/v(?:ideos)?\/(\d{8,9})/.exec(uri)[1];
     } else {
-      console.log(uri);
+      // console.log(uri);
       return /(?:v=|\.be\/)([^&\/]+)/.exec(uri)[1];
     }
   }
