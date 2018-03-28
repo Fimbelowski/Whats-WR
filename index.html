@@ -250,7 +250,7 @@
         var randomIndex = Math.floor(Math.random() * response.length);
         var randomCategory = response[randomIndex].runs;
 
-        if(randomCategory.length > 0 && randomCategory[0].run.videos !== null && videoUrlIsValid(randomCategory[0].run.videos.links[0].uri) && (randomCategory[0].run.videos.times.primary_t <= document.getElementById("runLength").value || document.getElementById("runLength").value == 0)) {
+        if(randomCategory.length > 0 && randomCategory[0].run.videos !== null && videoUrlIsValid(randomCategory[0].run.videos.links[0].uri) && (randomCategory[0].run.times.primary_t <= document.getElementById("runLength").value || document.getElementById("runLength").value == 0)) {
           // At this point, a record has been found to be viable and its info
           // can be stored.
           recordNotFound = false;
