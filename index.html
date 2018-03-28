@@ -537,11 +537,9 @@
   */
   function getVideoIdFromUri(videoType, uri) {
     if(videoType === 'twitch') {
-      // console.log(uri);
-      return /\/v(?:ideos)?\/(\d{8,9})/.exec(uri)[1];
+      return /\/v(?:ideos)?\/([^&]+)/.exec(uri)[1];
     } else {
-      // console.log(uri);
-      return /(?:v=|\.be\/)([^&\/]+)/.exec(uri)[1];
+      return /(?:v=|\.be\/)([^&]+)/.exec(uri)[1];
     }
   }
 
