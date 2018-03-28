@@ -78,6 +78,11 @@ a {
   margin-right: 10px;
 }
 
+iframe {
+  max-width: 100%;
+  max-height: auto;
+}
+
 .hidden {
   display: none;
 }
@@ -117,6 +122,7 @@ a {
 }
 
 #main-cluster {
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
