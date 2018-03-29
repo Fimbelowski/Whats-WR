@@ -38,6 +38,18 @@
     </div>
   </div>
   <button type='button' id='getWr' onclick='getRandomWr()' disabled>Get WR!</button>
+  <form>
+  <label>Max. length:
+    <select name="length" size="1" id="runLength">
+      <option value="0">No Restriction</option>
+      <option value="600">10 Minutes</option>
+      <option value="1200">20 Minutes</option>
+      <option value="1800">30 Minutes</option>
+      <option value="2400">40 Minutes</option>
+      <option value="3000">50 Minutes</option>
+    </select>
+  </label>
+</form>
   <h2>Designed and coded by</h2>
   <div class='player-info'>
     <a href='https://www.twitch.tv/fimbz' target='_blank'><img src='twitch-icon.png'></a>
@@ -238,7 +250,7 @@
         var randomIndex = Math.floor(Math.random() * response.length);
         var randomCategory = response[randomIndex].runs;
 
-        if(randomCategory.length > 0 && randomCategory[0].run.videos !== null && videoUrlIsValid(randomCategory[0].run.videos.links[0].uri)) {
+        if(randomCategory.length > 0 && randomCategory[0].run.videos !== null && videoUrlIsValid(randomCategory[0].run.videos.links[0].uri) && (randomCategory[0].run.times.primary_t <= document.getElementById("runLength").value || document.getElementById("runLength").value == 0)) {
           // At this point, a record has been found to be viable and its info
           // can be stored.
           recordNotFound = false;
