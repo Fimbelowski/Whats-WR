@@ -14,7 +14,7 @@ h1 {
   padding: 0px;
 }
 
-h2 {
+h2, label {
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 24px;
   font-style: italic;
@@ -83,6 +83,14 @@ iframe {
   max-height: 100%;
 }
 
+form {
+  margin-right: 10px;
+}
+
+select {
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
 .hidden {
   display: none;
 }
@@ -119,6 +127,12 @@ iframe {
 
 .tooltip:hover .tooltip-text {
   visibility: visible;
+}
+
+.inline-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 #main-cluster {
