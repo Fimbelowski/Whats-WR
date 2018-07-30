@@ -5,7 +5,7 @@
   <meta charset='utf-8'>
   <meta name='author' content='Christopher Fimbel'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <link rel='icon' href='https://www.speedrun.com/themes/Default/1st.png'>
+  <link rel='icon' href='favicon.png'>
   <link rel='stylesheet' href='styles.css'>
   <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet'>
   <script src='vue.js'></script>
@@ -28,20 +28,20 @@
   <div id='v-app'>
     <div id='main-cluster'>
       <!-- Record Information -->
-      <h3><a :href='weblink' target='_blank'>{{ gameTitle }}{{ categoryName }}</a>  {{ runTime }} {{ primaryTimingMethod }}</h3>
+      <h3><a :href='displayObj.weblink' target='_blank'>{{ displayObj.gameTitle }}{{ displayObj.categoryName }}</a>  {{ displayObj.runTime }} {{ displayObj.primaryTimingMethod }}</h3>
       <!-- VoD Embed -->
-      <template v-if='videoType === "youtube"'>
+      <template v-if='displayObj.videoType === "youtube"'>
         <iframe
         id="ytplayer"
         type="text/html"
         width="1024"
         height="576"
-        :src="embedSRC"
+        :src="displayObj.embedSource"
         frameborder="0"></iframe>
       </template>
       <template v-else>
         <iframe
-        :src="embedSRC"
+        :src="displayObj.embedSource"
         height="576"
         width="1024"
         frameborder="0"
@@ -52,7 +52,7 @@
       <!-- Player Information -->
       <div id='lower-cluster'>
         <div id='player-cluster'>
-          <div class='player-info' v-for="player in players">
+          <div class='player-info' v-for="player in displayObj.players">
             <template v-if="player.twitch !== null">
               <a :href="player.twitch" target='_blank'><img src='twitch-icon.png'></a>
             </template>
@@ -83,7 +83,7 @@
           </div>
         </div>
         <div id='control-cluster'>
-          <button type='button' :disabled='buttonDisabled' @click='fetchNewRecord'>Get WR!</button>
+          <button type='button' :disabled='isButtonDisabled' @click='fetchNewRecord'>Get WR!</button>
         </div>
       </div>
     </div>
