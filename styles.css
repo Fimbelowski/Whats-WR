@@ -43,7 +43,8 @@ h3 {
 img {
   width: 50px;
   height: 50px;
-  margin-right: 5px;
+  margin: 0;
+  display: block;
 }
 
 button {
@@ -70,21 +71,35 @@ button:hover {
 }
 
 button:disabled {
-  background-color: #D16E6E;
+  filter: grayscale(50%);
   cursor: wait;
   box-shadow: 5px 5px 0px #000;
-  color: #FFF;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  display: inline;
 }
 
 .player-info {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-top: 5px;
+}
+
+.greyscale {
+  filter: grayscale(80%);
+  margin-right: 5px;
+}
+
+.image-anchor {
+  margin-right: 5px;
+}
+
+.github-icon {
+  margin-left: 5px;
 }
 
 #main-cluster {
@@ -96,9 +111,17 @@ a {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  overflow: visible;
 }
 
 #player-cluster {
   display: flex;
   flex-direction: column;
+}
+
+#creator-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: auto;
 }

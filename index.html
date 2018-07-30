@@ -54,24 +54,24 @@
         <div id='player-cluster'>
           <div class='player-info' v-for="player in displayObj.players">
             <template v-if="player.twitch !== null">
-              <a :href="player.twitch" target='_blank'><img src='twitch-icon.png'></a>
+              <a :href="player.twitch" target='_blank' class='image-anchor'><img src='twitch-icon.png'></a>
             </template>
             <template v-else>
-              <img src='twitch-icon-inactive.png'>
+              <img src='twitch-icon.png' class='greyscale'>
             </template>
             <!-- -->
             <template v-if="player.youtube !== null">
-              <a :href='player.youtube' target='_blank'><img src='youtube-icon.png'></a>
+              <a :href='player.youtube' target='_blank' class='image-anchor'><img src='youtube-icon.png'></a>
             </template>
             <template v-else>
-              <img src='youtube-icon-inactive.png'>
+              <img src='youtube-icon.png' class='greyscale'>
             </template>
             <!-- -->
             <template v-if='player.twitter !== null'>
-              <a :href='player.twitter' target='_blank'><img src='twitter-icon.png'></a>
+              <a :href='player.twitter' target='_blank' class='image-anchor'><img src='twitter-icon.png'></a>
             </template>
             <template v-else>
-              <img src='twitter-icon-inactive.png'>
+              <img src='twitter-icon.png' class='greyscale'>
             </template>
             <!-- -->
             <template v-if='player.weblink !== null'>
@@ -87,6 +87,10 @@
         </div>
       </div>
     </div>
+  </div>
+  <div id='creator-info'>
+    <h3>Programmed and Designed by Christopher Fimbel</h3>
+    <a href='https://github.com/Fimbelowski' target='_blank' class='github-icon'><img src='github-icon.png'></a>
   </div>
 </body>
 </html>
