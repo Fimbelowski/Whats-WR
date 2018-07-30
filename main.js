@@ -412,7 +412,7 @@ window.onload = function() {
         if(videoType === 'youtube') {
           return 'https://www.youtube.com/embed/' + videoID;
         } else {
-          return 'http://player.twitch.tv/?video=' + videoID;
+          return 'https://player.twitch.tv/?video=' + videoID;
         }
       },
       enableButton: function() {
