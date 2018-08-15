@@ -55,6 +55,10 @@ $screen-xl-min: 1800px;
 html {
   height: 100%;
 
+  @include sm-landscape {
+    font-size: 16px;
+  }
+
   @include md {
     font-size: 16px;
   }
@@ -80,6 +84,10 @@ h1 {
   margin: -10px;
   padding: 0px;
 
+  @include sm-landscape {
+    font-size: 2.3rem;
+  }
+
   @include md {
     font-size: 2.8rem;
   }
@@ -98,6 +106,10 @@ h2 {
   font-weight: lighter;
   text-shadow: 2px 2px 0px #000;
   margin: 5px;
+
+  @include sm-landscape {
+    font-size: 1.1rem;
+  }
 
   @include md {
     font-size: 1.45rem;
@@ -118,6 +130,10 @@ h3 {
   padding: 0px;
   margin: 0px;
 
+  @include sm-landscape {
+    font-size: 1.3rem;
+  }
+
   @include md {
     font-size: 1.35rem;
   }
@@ -132,6 +148,11 @@ h3 {
 }
 
 iframe {
+  @include sm-landscape {
+    width: 50vh * 1.78;
+    height: 50vh;
+  }
+
   @include md {
     width: 55vh * 1.78;
     height: 55vh;
@@ -151,6 +172,11 @@ iframe {
 img {
   margin: 0;
   display: block;
+
+  @include sm-landscape {
+    width: 28px;
+    height: 28px;
+  }
 
   @include md {
     width: 30px;
@@ -177,8 +203,12 @@ button {
   text-shadow: 2px 2px 0px #000;
   box-shadow: 5px 5px 0px #000;
 
-  @include md {
+  @include sm-landscape {
     padding: 10px 26px;
+  }
+
+  @include md {
+    padding: 8px 22px;
   }
 
   @include lg {
