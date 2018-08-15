@@ -55,6 +55,10 @@ $screen-xl-min: 1800px;
 html {
   height: 100%;
 
+  @include md {
+    font-size: 16px;
+  }
+
   @include lg {
     font-size: 18px;
   }
@@ -76,6 +80,10 @@ h1 {
   margin: -10px;
   padding: 0px;
 
+  @include md {
+    font-size: 2.8rem;
+  }
+
   @include lg {
     font-size: 2.6rem;
   }
@@ -90,6 +98,10 @@ h2 {
   font-weight: lighter;
   text-shadow: 2px 2px 0px #000;
   margin: 5px;
+
+  @include md {
+    font-size: 1.45rem;
+  }
 
   @include lg {
     font-size: 1.2rem;
@@ -106,6 +118,10 @@ h3 {
   padding: 0px;
   margin: 0px;
 
+  @include md {
+    font-size: 1.35rem;
+  }
+
   @include lg {
     font-size: 1.5rem;
   }
@@ -116,6 +132,11 @@ h3 {
 }
 
 iframe {
+  @include md {
+    width: 55vh * 1.78;
+    height: 55vh;
+  }
+
   @include lg {
     width: 60vh * 1.78;
     height: 60vh;
@@ -130,6 +151,11 @@ iframe {
 img {
   margin: 0;
   display: block;
+
+  @include md {
+    width: 30px;
+    height: 30px;
+  }
 
   @include lg {
     width: 35px;
@@ -150,6 +176,10 @@ button {
   font-size: 25px;
   text-shadow: 2px 2px 0px #000;
   box-shadow: 5px 5px 0px #000;
+
+  @include md {
+    padding: 10px 26px;
+  }
 
   @include lg {
     padding: 12px 26px;
