@@ -53,8 +53,13 @@ $screen-xl-min: 1800px;
 }
 
 html {
+  height: 100%;
+
+  @include lg {
+    font-size: 18px;
+  }
+
   @include xl {
-    height: 100%;
     font-size: 20px;
   }
 }
@@ -71,8 +76,12 @@ h1 {
   margin: -10px;
   padding: 0px;
 
+  @include lg {
+    font-size: 2.6rem;
+  }
+
   @include xl {
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
 }
 
@@ -81,6 +90,10 @@ h2 {
   font-weight: lighter;
   text-shadow: 2px 2px 0px #000;
   margin: 5px;
+
+  @include lg {
+    font-size: 1.2rem;
+  }
 
   @include xl {
     font-size: 1.2rem;
@@ -93,12 +106,21 @@ h3 {
   padding: 0px;
   margin: 0px;
 
+  @include lg {
+    font-size: 1.5rem;
+  }
+
   @include xl {
     font-size: 1.4rem;
   }
 }
 
 iframe {
+  @include lg {
+    width: 60vh * 1.78;
+    height: 60vh;
+  }
+
   @include xl {
     width: 60vh * 1.78;
     height: 60vh;
@@ -108,8 +130,16 @@ iframe {
 img {
   margin: 0;
   display: block;
-  width: 45px;
-  height: 45px;
+
+  @include lg {
+    width: 35px;
+    height: 35px;
+  }
+
+  @include xl {
+    width: 45px;
+    height: 45px;
+  }
 }
 
 button {
@@ -120,6 +150,10 @@ button {
   font-size: 25px;
   text-shadow: 2px 2px 0px #000;
   box-shadow: 5px 5px 0px #000;
+
+  @include lg {
+    padding: 12px 26px;
+  }
 
   @include xl {
     padding: 15px 30px;
