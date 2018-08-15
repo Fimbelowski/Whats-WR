@@ -1,5 +1,7 @@
-html {
-  height: 100%; }
+@media (min-width: 1800px) {
+  html {
+    height: 100%;
+    font-size: 20px; } }
 
 body {
   background-color: #962A2A;
@@ -10,27 +12,33 @@ body {
 h1 {
   text-shadow: 5px 5px 1px #000;
   margin: -10px;
-  padding: 0px;
-  font-size: 65px; }
+  padding: 0px; }
+  @media (min-width: 1800px) {
+    h1 {
+      font-size: 3rem; } }
 
 h2 {
-  font-size: 24px;
   font-style: italic;
   font-weight: lighter;
   text-shadow: 2px 2px 0px #000;
   margin: 5px; }
+  @media (min-width: 1800px) {
+    h2 {
+      font-size: 1.2rem; } }
 
 h3 {
   display: inline;
-  font-Size: 30px;
   text-shadow: 3px 3px 0px #000;
   padding: 0px;
-  margin: 0px;
-  font-size: 32px; }
+  margin: 0px; }
+  @media (min-width: 1800px) {
+    h3 {
+      font-size: 1.4rem; } }
 
-iframe {
-  width: 106.8vh;
-  height: 60vh; }
+@media (min-width: 1800px) {
+  iframe {
+    width: 106.8vh;
+    height: 60vh; } }
 
 img {
   margin: 0;
@@ -45,8 +53,10 @@ button {
   outline: none;
   font-size: 25px;
   text-shadow: 2px 2px 0px #000;
-  box-shadow: 5px 5px 0px #000;
-  padding: 10px 25px; }
+  box-shadow: 5px 5px 0px #000; }
+  @media (min-width: 1800px) {
+    button {
+      padding: 15px 30px; } }
   button:active {
     transform: translate(3px, 3px);
     box-shadow: 2px 2px 0px #000; }
