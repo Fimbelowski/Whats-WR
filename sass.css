@@ -8,10 +8,10 @@ body {
   align-items: center; }
 
 h1 {
-  font-size: 80px;
   text-shadow: 5px 5px 1px #000;
   margin: -10px;
-  padding: 0px; }
+  padding: 0px;
+  font-size: 65px; }
 
 h2 {
   font-size: 24px;
@@ -25,23 +25,28 @@ h3 {
   font-Size: 30px;
   text-shadow: 3px 3px 0px #000;
   padding: 0px;
-  margin: 0px; }
+  margin: 0px;
+  font-size: 32px; }
+
+iframe {
+  width: 106.8vh;
+  height: 60vh; }
 
 img {
-  width: 50px;
-  height: 50px;
   margin: 0;
-  display: block; }
+  display: block;
+  width: 45px;
+  height: 45px; }
 
 button {
   background-color: #D13A3A;
   border: 0px;
   border-radius: 5px;
   outline: none;
-  padding: 10px 25px 10px 25px;
   font-size: 25px;
   text-shadow: 2px 2px 0px #000;
-  box-shadow: 5px 5px 0px #000; }
+  box-shadow: 5px 5px 0px #000;
+  padding: 10px 25px; }
   button:active {
     transform: translate(3px, 3px);
     box-shadow: 2px 2px 0px #000; }

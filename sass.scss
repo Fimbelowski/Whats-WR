@@ -1,6 +1,56 @@
 $primary-font: 'Roboto Condensed', sans-serif;
 $primary-font-color: #FFF;
-$image-size: 50px;
+
+// Small devices (portrait)
+$screen-sm-portrait-min: 600px;
+
+// Small devices (landscape)
+$screen-sm-landscape-min: 900px;
+
+// Medium devices
+$screen-md-min: 1200px;
+
+// Large devices
+$screen-lg-min: 1500px;
+
+// Extra-large devices
+$screen-xl-min: 1800px;
+
+// Mixin declarations
+// Small devices (portrait)
+@mixin sm-portrait {
+  @media (min-width: #{$screen-sm-portrait-min}) {
+    @content;
+  }
+}
+
+// Small devices (landscape)
+@mixin sm-landscape {
+  @media (min-width: #{$screen-sm-landscape-min}) {
+    @content;
+  }
+}
+
+// Medium devices
+@mixin md {
+  @media (min-width: #{$screen-md-min}) {
+    @content;
+  }
+}
+
+// Large devices
+@mixin lg {
+  @media (min-width: #{$screen-lg-min}) {
+    @content;
+  }
+}
+
+// Extra-large devices
+@mixin xl {
+  @media (min-width: #{$screen-xl-min}) {
+    @content;
+  }
+}
 
 html {
   height: 100%;
@@ -14,10 +64,10 @@ body {
 }
 
 h1 {
-  font-size: 80px;
   text-shadow: 5px 5px 1px #000;
   margin: -10px;
   padding: 0px;
+  font-size: 65px;
 }
 
 h2 {
@@ -34,13 +84,19 @@ h3 {
   text-shadow: 3px 3px 0px #000;
   padding: 0px;
   margin: 0px;
+  font-size: 32px;
+}
+
+iframe {
+  width: 60vh * 1.78;
+  height: 60vh;
 }
 
 img {
-  width: $image-size;
-  height: $image-size;
   margin: 0;
   display: block;
+  width: 45px;
+  height: 45px;
 }
 
 button {
@@ -48,10 +104,10 @@ button {
   border: 0px;
   border-radius: 5px;
   outline: none;
-  padding: 10px 25px 10px 25px;
   font-size: 25px;
   text-shadow: 2px 2px 0px #000;
   box-shadow: 5px 5px 0px #000;
+  padding: 10px 25px;
 
   &:active {
     transform: translate(3px, 3px);
