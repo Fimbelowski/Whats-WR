@@ -57,7 +57,7 @@ h3 {
   margin: 0px; }
   @media (min-width: 300px) and (orientation: portrait) {
     h3 {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       text-shadow: 2px 2px 0px #000; } }
   @media (min-width: 560px) {
     h3 {
@@ -86,16 +86,16 @@ img {
   display: block; }
   @media (min-width: 300px) and (orientation: portrait) {
     img {
-      width: 35px;
-      height: 35px; } }
+      width: 30px;
+      height: 30px; } }
   @media (min-width: 560px) {
     img {
       width: 20px;
       height: 20px; } }
   @media (min-width: 768px) and (orientation: portrait) {
     img {
-      width: 45px;
-      height: 45px; } }
+      width: 50px;
+      height: 50px; } }
 
 button {
   background-color: #D13A3A;
@@ -149,34 +149,49 @@ a {
   color: #FFF; }
 
 .player-info {
-  align-items: center;
-  margin-top: 5px; }
+  align-items: center; }
   @media (min-width: 560px) {
     .player-info {
       margin-top: 2px; } }
+  @media (min-width: 300px) and (orientation: portrait) {
+    .player-info {
+      margin-top: 5px; } }
+  @media (min-width: 768px) and (orientation: portrait) {
+    .player-info {
+      margin-top: 5px; } }
 
 .greyscale {
   filter: grayscale(100%); }
-  @media (min-width: 300px) and (orientation: portrait) {
-    .greyscale {
-      margin-right: 5px; } }
-  @media (min-width: 560px) {
-    .greyscale {
-      margin-right: 2px; } }
 
 @media (min-width: 300px) and (orientation: portrait) {
-  .image-anchor {
+  .image-margin {
     margin-right: 5px; } }
 @media (min-width: 560px) {
-  .image-anchor {
+  .image-margin {
     margin-right: 2px; } }
+@media (min-width: 768px) and (orientation: portrait) {
+  .image-margin {
+    margin-right: 5px; } }
 
-.github-icon {
-  margin-left: 5px; }
+@media (min-width: 300px) and (orientation: portrait) {
+  .github-icon {
+    margin: 0; } }
+@media (min-width: 560px) {
+  .github-icon {
+    margin-left: 5px; } }
+@media (min-width: 768px) and (orientation: portrait) {
+  .github-icon {
+    margin: 0; } }
 
+@media (min-width: 300px) and (orientation: portrait) {
+  .multiplayer {
+    overflow: visible; } }
 @media (min-width: 560px) {
   .multiplayer {
     overflow: auto; } }
+@media (min-width: 768px) and (orientation: portrait) {
+  .multiplayer {
+    overflow: visible; } }
 
 #header-text-container {
   align-items: center; }

@@ -52,24 +52,24 @@
         <div id='player-cluster' class='flex-col-container' :class='{ multiplayer: displayObj.players.length > 1 }'>
           <div class='player-info flex-row-container' v-for="player in displayObj.players">
             <template v-if="player.twitch !== null">
-              <a :href="player.twitch" target='_blank' class='image-anchor'><img src='twitch-icon.png'></a>
+              <a :href="player.twitch" target='_blank' class='image-margin'><img src='twitch-icon.png'></a>
             </template>
             <template v-else>
-              <img src='twitch-icon.png' class='greyscale'>
+              <img src='twitch-icon.png' class='greyscale image-margin'>
             </template>
             <!-- -->
             <template v-if="player.youtube !== null">
-              <a :href='player.youtube' target='_blank' class='image-anchor'><img src='youtube-icon.png'></a>
+              <a :href='player.youtube' target='_blank' class='image-margin'><img src='youtube-icon.png'></a>
             </template>
             <template v-else>
-              <img src='youtube-icon.png' class='greyscale'>
+              <img src='youtube-icon.png' class='greyscale image-margin'>
             </template>
             <!-- -->
             <template v-if='player.twitter !== null'>
-              <a :href='player.twitter' target='_blank' class='image-anchor'><img src='twitter-icon.png'></a>
+              <a :href='player.twitter' target='_blank' class='image-margin'><img src='twitter-icon.png'></a>
             </template>
             <template v-else>
-              <img src='twitter-icon.png' class='greyscale'>
+              <img src='twitter-icon.png' class='greyscale image-margin'>
             </template>
             <!-- -->
             <template v-if='player.weblink !== null'>

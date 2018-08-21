@@ -113,7 +113,7 @@ h3 {
   margin: 0px;
 
   @include phone-portrait {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     text-shadow: 2px 2px 0px #000;
   }
 
@@ -150,7 +150,7 @@ img {
   display: block;
 
   @include phone-portrait {
-    $square-dimension: 35px;
+    $square-dimension: 30px;
     width: $square-dimension;
     height: $square-dimension;
   }
@@ -162,7 +162,7 @@ img {
   }
 
   @include tablet-portrait {
-    $square-dimension: 45px;
+    $square-dimension: 50px;
     width: $square-dimension;
     height: $square-dimension;
   }
@@ -234,42 +234,64 @@ a {
 }
 
 .player-info {
+  align-items: center;
+
   @include phone-landscape {
     margin-top: 2px;
   }
-  align-items: center;
-  margin-top: 5px;
+
+  @include phone-portrait {
+    margin-top: 5px;
+  }
+
+  @include tablet-portrait {
+    margin-top: 5px;
+  }
 }
 
 .greyscale {
   filter: grayscale(100%);
-
-  @include phone-portrait {
-    margin-right: 5px;
-  }
-
-  @include phone-landscape {
-    margin-right: 2px;
-  }
 }
 
-.image-anchor {
+.image-margin {
   @include phone-portrait {
     margin-right: 5px;
   }
 
   @include phone-landscape {
     margin-right: 2px;
+  }
+
+  @include tablet-portrait {
+    margin-right: 5px;
   }
 }
 
 .github-icon {
-  margin-left: 5px;
+  @include phone-portrait {
+    margin: 0;
+  }
+
+  @include phone-landscape {
+    margin-left: 5px;
+  }
+
+  @include tablet-portrait {
+    margin: 0;
+  }
 }
 
 .multiplayer {
+  @include phone-portrait {
+    overflow: visible;
+  }
+
   @include phone-landscape {
     overflow: auto;
+  }
+
+  @include tablet-portrait {
+    overflow: visible;
   }
 }
 
