@@ -80,6 +80,11 @@ h1 {
     font-size: 1.9rem;
     text-shadow: 2px 2px 1px #000;
   }
+
+  @include tablet-portrait {
+    font-size: 3rem;
+    text-shadow: 3px 3px 1px #000;
+  }
 }
 
 h2 {
@@ -94,6 +99,10 @@ h2 {
 
   @include phone-landscape {
     font-size: 1rem;
+  }
+
+  @include tablet-portrait {
+    font-size: 1.5rem;
   }
 }
 
@@ -112,6 +121,11 @@ h3 {
     font-size: 1rem;
     text-shadow: 2px 2px 0px #000;
   }
+
+  @include tablet-portrait {
+    font-size: 1.5rem;
+    text-shadow: 3px 3px 0px #000;
+  }
 }
 
 iframe {
@@ -123,6 +137,11 @@ iframe {
   @include phone-landscape {
     height: 62vh;
     width: 62vh * 1.78;
+  }
+
+  @include tablet-portrait {
+    width: 98vw;
+    height: 98vw * 0.5625;
   }
 }
 
@@ -138,6 +157,12 @@ img {
 
   @include phone-landscape {
     $square-dimension: 20px;
+    width: $square-dimension;
+    height: $square-dimension;
+  }
+
+  @include tablet-portrait {
+    $square-dimension: 45px;
     width: $square-dimension;
     height: $square-dimension;
   }
@@ -163,6 +188,13 @@ button {
     font-size: 1rem;
     text-shadow: 2px 2px 0px #000;
     box-shadow: 2px 2px 0px #000;
+  }
+
+  @include tablet-portrait {
+    padding: 10px 26px;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 0px #000;
+    box-shadow: 3px 3px 0px #000;
   }
 
   &:active {

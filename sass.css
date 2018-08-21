@@ -30,6 +30,10 @@ h1 {
     h1 {
       font-size: 1.9rem;
       text-shadow: 2px 2px 1px #000; } }
+  @media (min-width: 768px) and (orientation: portrait) {
+    h1 {
+      font-size: 3rem;
+      text-shadow: 3px 3px 1px #000; } }
 
 h2 {
   font-style: italic;
@@ -42,6 +46,9 @@ h2 {
   @media (min-width: 560px) {
     h2 {
       font-size: 1rem; } }
+  @media (min-width: 768px) and (orientation: portrait) {
+    h2 {
+      font-size: 1.5rem; } }
 
 h3 {
   display: inline;
@@ -56,6 +63,10 @@ h3 {
     h3 {
       font-size: 1rem;
       text-shadow: 2px 2px 0px #000; } }
+  @media (min-width: 768px) and (orientation: portrait) {
+    h3 {
+      font-size: 1.5rem;
+      text-shadow: 3px 3px 0px #000; } }
 
 @media (min-width: 300px) and (orientation: portrait) {
   iframe {
@@ -65,6 +76,10 @@ h3 {
   iframe {
     height: 62vh;
     width: 110.36vh; } }
+@media (min-width: 768px) and (orientation: portrait) {
+  iframe {
+    width: 98vw;
+    height: 55.125vw; } }
 
 img {
   margin: 0;
@@ -77,6 +92,10 @@ img {
     img {
       width: 20px;
       height: 20px; } }
+  @media (min-width: 768px) and (orientation: portrait) {
+    img {
+      width: 45px;
+      height: 45px; } }
 
 button {
   background-color: #D13A3A;
@@ -97,6 +116,12 @@ button {
       font-size: 1rem;
       text-shadow: 2px 2px 0px #000;
       box-shadow: 2px 2px 0px #000; } }
+  @media (min-width: 768px) and (orientation: portrait) {
+    button {
+      padding: 10px 26px;
+      font-size: 1.5rem;
+      text-shadow: 2px 2px 0px #000;
+      box-shadow: 3px 3px 0px #000; } }
   button:active {
     transform: translate(3px, 3px);
     box-shadow: 2px 2px 0px #000; }
