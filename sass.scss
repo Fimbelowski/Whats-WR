@@ -1,53 +1,35 @@
 $primary-font: 'Roboto Condensed', sans-serif;
 $primary-font-color: #FFF;
 
-// Small devices (portrait)
-$screen-sm-portrait-min: 600px;
+// Smartphones (portrait)
+$screen-phone-portrait-min: 300px;
 
-// Small devices (landscape)
-$screen-sm-landscape-min: 900px;
+// Smartphones (landscape)
+$screen-phone-landscape-min: 560px;
 
-// Medium devices
-$screen-md-min: 1200px;
+// Tablets (portrait)
+$screen-tablet-portrait-min: 768px;
 
-// Large devices
-$screen-lg-min: 1500px;
+// Tablets (landscape) / Desktops (small)
+$screen-tablet-landscape-min: 1024px;
 
-// Extra-large devices
-$screen-xl-min: 1800px;
+// Desktops (medium)
+$screen-desk-md-min: 1500px;
+
+// Desktops (lg)
+$screen-desk-lg-min: 1800px;
 
 // Mixin declarations
 // Small devices (portrait)
-@mixin sm-portrait {
-  @media (min-width: #{$screen-sm-portrait-min}) {
+@mixin phone-portrait {
+  @media (min-width: #{$screen-phone-portrait-min}) and (orientation: portrait) {
     @content;
   }
 }
 
 // Small devices (landscape)
-@mixin sm-landscape {
-  @media (min-width: #{$screen-sm-landscape-min}) {
-    @content;
-  }
-}
-
-// Medium devices
-@mixin md {
-  @media (min-width: #{$screen-md-min}) {
-    @content;
-  }
-}
-
-// Large devices
-@mixin lg {
-  @media (min-width: #{$screen-lg-min}) {
-    @content;
-  }
-}
-
-// Extra-large devices
-@mixin xl {
-  @media (min-width: #{$screen-xl-min}) {
+@mixin phone-landscape {
+  @media (min-width: #{$screen-phone-landscape-min}) {
     @content;
   }
 }
@@ -55,24 +37,18 @@ $screen-xl-min: 1800px;
 html {
   height: 100%;
 
-  @include sm-landscape {
-    font-size: 16px;
+  @include phone-portrait {
+    font-size: 14px;
   }
 
-  @include md {
-    font-size: 16px;
-  }
-
-  @include lg {
-    font-size: 18px;
-  }
-
-  @include xl {
-    font-size: 20px;
+  @include phone-landscape {
+    font-size: 14px;
   }
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   background-color: #962A2A;
   height: 98%;
   margin: 0.5%;
@@ -81,23 +57,17 @@ body {
 
 h1 {
   text-shadow: 5px 5px 1px #000;
-  margin: -10px;
+  margin: 0;
   padding: 0px;
 
-  @include sm-landscape {
-    font-size: 2.3rem;
+  @include phone-portrait {
+    font-size: 3.7rem;
+    text-shadow: 3px 3px 1px #000;
   }
 
-  @include md {
-    font-size: 2.8rem;
-  }
-
-  @include lg {
-    font-size: 2.6rem;
-  }
-
-  @include xl {
-    font-size: 2.5rem;
+  @include phone-landscape {
+    font-size: 1.9rem;
+    text-shadow: 2px 2px 1px #000;
   }
 }
 
@@ -105,22 +75,14 @@ h2 {
   font-style: italic;
   font-weight: lighter;
   text-shadow: 2px 2px 0px #000;
-  margin: 5px;
+  margin: 0;
 
-  @include sm-landscape {
-    font-size: 1.1rem;
+  @include phone-portrait {
+    font-size: 1.3rem;
   }
 
-  @include md {
-    font-size: 1.45rem;
-  }
-
-  @include lg {
-    font-size: 1.2rem;
-  }
-
-  @include xl {
-    font-size: 1.2rem;
+  @include phone-landscape {
+    font-size: 1rem;
   }
 }
 
@@ -130,42 +92,24 @@ h3 {
   padding: 0px;
   margin: 0px;
 
-  @include sm-landscape {
-    font-size: 1.3rem;
+  @include phone-portrait {
+    font-size: 1.25rem;
+    text-shadow: 2px 2px 0px #000;
   }
 
-  @include md {
-    font-size: 1.35rem;
-  }
-
-  @include lg {
-    font-size: 1.5rem;
-  }
-
-  @include xl {
-    font-size: 1.4rem;
+  @include phone-landscape {
+    font-size: 1rem;
+    text-shadow: 2px 2px 0px #000;
   }
 }
 
 iframe {
-  @include sm-landscape {
-    width: 50vh * 1.78;
-    height: 50vh;
-  }
+  width: auto;
+  height: 100% * 1.78;
 
-  @include md {
-    width: 55vh * 1.78;
-    height: 55vh;
-  }
-
-  @include lg {
-    width: 60vh * 1.78;
-    height: 60vh;
-  }
-
-  @include xl {
-    width: 60vh * 1.78;
-    height: 60vh;
+  @include phone-landscape {
+    height: 62vh;
+    width: 62vh * 1.78;
   }
 }
 
@@ -173,24 +117,16 @@ img {
   margin: 0;
   display: block;
 
-  @include sm-landscape {
-    width: 28px;
-    height: 28px;
+  @include phone-portrait {
+    $square-dimension: 35px;
+    width: $square-dimension;
+    height: $square-dimension;
   }
 
-  @include md {
-    width: 30px;
-    height: 30px;
-  }
-
-  @include lg {
-    width: 35px;
-    height: 35px;
-  }
-
-  @include xl {
-    width: 45px;
-    height: 45px;
+  @include phone-landscape {
+    $square-dimension: 20px;
+    width: $square-dimension;
+    height: $square-dimension;
   }
 }
 
@@ -199,24 +135,21 @@ button {
   border: 0px;
   border-radius: 5px;
   outline: none;
-  font-size: 25px;
   text-shadow: 2px 2px 0px #000;
   box-shadow: 5px 5px 0px #000;
 
-  @include sm-landscape {
+  @include phone-portrait {
     padding: 10px 26px;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 0px #000;
+    box-shadow: 3px 3px 0px #000;
   }
 
-  @include md {
-    padding: 8px 22px;
-  }
-
-  @include lg {
-    padding: 12px 26px;
-  }
-
-  @include xl {
-    padding: 15px 30px;
+  @include phone-landscape {
+    padding: 5px 17px;
+    font-size: 1rem;
+    text-shadow: 2px 2px 0px #000;
+    box-shadow: 2px 2px 0px #000;
   }
 
   &:active {
@@ -229,9 +162,8 @@ button {
   }
 
   &:disabled {
-    filter: grayscale(50%);
+    filter: grayscale(100%);
     cursor: wait;
-    box-shadow: 5px 5px 0px #000;
   }
 }
 
@@ -257,26 +189,70 @@ a {
 }
 
 .player-info {
+  @include phone-landscape {
+    margin-top: 2px;
+  }
   align-items: center;
   margin-top: 5px;
 }
 
 .greyscale {
-  filter: grayscale(80%);
-  margin-right: 5px;
+  filter: grayscale(100%);
+
+  @include phone-portrait {
+    margin-right: 5px;
+  }
+
+  @include phone-landscape {
+    margin-right: 2px;
+  }
 }
 
 .image-anchor {
-  margin-right: 5px;
+  @include phone-portrait {
+    margin-right: 5px;
+  }
+
+  @include phone-landscape {
+    margin-right: 2px;
+  }
 }
 
 .github-icon {
   margin-left: 5px;
 }
 
+.multiplayer {
+  @include phone-landscape {
+    overflow: auto;
+  }
+}
+
+#header-text-container {
+  align-items: center;
+}
+
+#main-cluster {
+  @include phone-portrait {
+    width: 98vw;
+  }
+}
+
 #lower-cluster {
   justify-content: space-between;
-  overflow: visible;
+
+  @include phone-portrait {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+}
+
+#player-cluster {
+  @include phone-landscape {
+    display: block;
+    justify-content: space-between;
+    max-height: 36px;
+  }
 }
 
 #control-cluster {
@@ -286,4 +262,14 @@ a {
 #creator-info {
   align-items: center;
   margin-top: auto;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
+}
+
+#credits {
+  @include phone-portrait {
+    text-align: center;
+  }
 }
