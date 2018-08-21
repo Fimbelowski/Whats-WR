@@ -9,6 +9,9 @@ html {
   @media (min-width: 768px) and (orientation: portrait) {
     html {
       font-size: 18px; } }
+  @media (min-width: 1024px) {
+    html {
+      font-size: 18px; } }
 
 body {
   display: flex;
@@ -34,6 +37,10 @@ h1 {
     h1 {
       font-size: 3rem;
       text-shadow: 3px 3px 1px #000; } }
+  @media (min-width: 1024px) {
+    h1 {
+      font-size: 2.5rem;
+      text-shadow: 4px 4px 1px #000; } }
 
 h2 {
   font-style: italic;
@@ -49,6 +56,9 @@ h2 {
   @media (min-width: 768px) and (orientation: portrait) {
     h2 {
       font-size: 1.5rem; } }
+  @media (min-width: 1024px) {
+    h2 {
+      font-size: 1.2rem; } }
 
 h3 {
   display: inline;
@@ -67,6 +77,10 @@ h3 {
     h3 {
       font-size: 1.5rem;
       text-shadow: 3px 3px 0px #000; } }
+  @media (min-width: 1024px) {
+    h3 {
+      font-size: 1.3rem;
+      text-shadow: 3px 3px 0px #000; } }
 
 @media (min-width: 300px) and (orientation: portrait) {
   iframe {
@@ -80,6 +94,10 @@ h3 {
   iframe {
     width: 98vw;
     height: 55.125vw; } }
+@media (min-width: 1024px) {
+  iframe {
+    height: 65vh;
+    width: 115.7vh; } }
 
 img {
   margin: 0;
@@ -96,6 +114,10 @@ img {
     img {
       width: 50px;
       height: 50px; } }
+  @media (min-width: 1024px) {
+    img {
+      width: 40px;
+      height: 40px; } }
 
 button {
   background-color: #D13A3A;
@@ -119,6 +141,12 @@ button {
   @media (min-width: 768px) and (orientation: portrait) {
     button {
       padding: 10px 26px;
+      font-size: 1.5rem;
+      text-shadow: 2px 2px 0px #000;
+      box-shadow: 3px 3px 0px #000; } }
+  @media (min-width: 1024px) {
+    button {
+      padding: 10px 30px;
       font-size: 1.5rem;
       text-shadow: 2px 2px 0px #000;
       box-shadow: 3px 3px 0px #000; } }
@@ -150,15 +178,18 @@ a {
 
 .player-info {
   align-items: center; }
-  @media (min-width: 560px) {
-    .player-info {
-      margin-top: 2px; } }
   @media (min-width: 300px) and (orientation: portrait) {
     .player-info {
       margin-top: 5px; } }
+  @media (min-width: 560px) {
+    .player-info {
+      margin-top: 2px; } }
   @media (min-width: 768px) and (orientation: portrait) {
     .player-info {
       margin-top: 5px; } }
+  @media (min-width: 1024px) {
+    .player-info {
+      margin-top: 3px; } }
 
 .greyscale {
   filter: grayscale(100%); }
@@ -210,8 +241,11 @@ a {
 @media (min-width: 560px) {
   #player-cluster {
     display: block;
-    justify-content: space-between;
     max-height: 36px; } }
+@media (min-width: 1024px) {
+  #player-cluster {
+    display: block;
+    max-height: 70px; } }
 
 #control-cluster {
   margin-top: 5px; }

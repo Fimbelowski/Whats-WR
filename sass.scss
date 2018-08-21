@@ -41,6 +41,13 @@ $screen-desk-lg-min: 1800px;
   }
 }
 
+// Tablets (landscape)
+@mixin tablet-landscape {
+  @media (min-width: #{$screen-tablet-landscape-min}) {
+    @content;
+  }
+}
+
 html {
   height: 100%;
 
@@ -53,6 +60,10 @@ html {
   }
 
   @include tablet-portrait {
+    font-size: 18px;
+  }
+
+  @include tablet-landscape {
     font-size: 18px;
   }
 }
@@ -85,6 +96,11 @@ h1 {
     font-size: 3rem;
     text-shadow: 3px 3px 1px #000;
   }
+
+  @include tablet-landscape {
+    font-size: 2.5rem;
+    text-shadow: 4px 4px 1px #000;
+  }
 }
 
 h2 {
@@ -103,6 +119,10 @@ h2 {
 
   @include tablet-portrait {
     font-size: 1.5rem;
+  }
+
+  @include tablet-landscape {
+    font-size: 1.2rem;
   }
 }
 
@@ -126,6 +146,11 @@ h3 {
     font-size: 1.5rem;
     text-shadow: 3px 3px 0px #000;
   }
+
+  @include tablet-landscape {
+    font-size: 1.3rem;
+    text-shadow: 3px 3px 0px #000;
+  }
 }
 
 iframe {
@@ -142,6 +167,11 @@ iframe {
   @include tablet-portrait {
     width: 98vw;
     height: 98vw * 0.5625;
+  }
+
+  @include tablet-landscape {
+    height: 65vh;
+    width: 65vh * 1.78;
   }
 }
 
@@ -163,6 +193,12 @@ img {
 
   @include tablet-portrait {
     $square-dimension: 50px;
+    width: $square-dimension;
+    height: $square-dimension;
+  }
+
+  @include tablet-landscape {
+    $square-dimension: 40px;
     width: $square-dimension;
     height: $square-dimension;
   }
@@ -192,6 +228,13 @@ button {
 
   @include tablet-portrait {
     padding: 10px 26px;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 0px #000;
+    box-shadow: 3px 3px 0px #000;
+  }
+
+  @include tablet-landscape {
+    padding: 10px 30px;
     font-size: 1.5rem;
     text-shadow: 2px 2px 0px #000;
     box-shadow: 3px 3px 0px #000;
@@ -236,16 +279,20 @@ a {
 .player-info {
   align-items: center;
 
-  @include phone-landscape {
-    margin-top: 2px;
-  }
-
   @include phone-portrait {
     margin-top: 5px;
   }
 
+  @include phone-landscape {
+    margin-top: 2px;
+  }
+
   @include tablet-portrait {
     margin-top: 5px;
+  }
+
+  @include tablet-landscape {
+    margin-top: 3px;
   }
 }
 
@@ -317,8 +364,12 @@ a {
 #player-cluster {
   @include phone-landscape {
     display: block;
-    justify-content: space-between;
     max-height: 36px;
+  }
+
+  @include tablet-landscape {
+    display: block;
+    max-height: 70px;
   }
 }
 
