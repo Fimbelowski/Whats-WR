@@ -6,6 +6,9 @@ html {
   @media (min-width: 560px) {
     html {
       font-size: 14px; } }
+  @media (min-width: 768px) and (orientation: portrait) {
+    html {
+      font-size: 18px; } }
 
 body {
   display: flex;
@@ -54,13 +57,14 @@ h3 {
       font-size: 1rem;
       text-shadow: 2px 2px 0px #000; } }
 
-iframe {
-  width: auto;
-  height: 178%; }
-  @media (min-width: 560px) {
-    iframe {
-      height: 62vh;
-      width: 110.36vh; } }
+@media (min-width: 300px) and (orientation: portrait) {
+  iframe {
+    width: 98vw;
+    height: 55.125vw; } }
+@media (min-width: 560px) {
+  iframe {
+    height: 62vh;
+    width: 110.36vh; } }
 
 img {
   margin: 0;

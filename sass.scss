@@ -20,16 +20,23 @@ $screen-desk-md-min: 1500px;
 $screen-desk-lg-min: 1800px;
 
 // Mixin declarations
-// Small devices (portrait)
+// Smartphones (portrait)
 @mixin phone-portrait {
   @media (min-width: #{$screen-phone-portrait-min}) and (orientation: portrait) {
     @content;
   }
 }
 
-// Small devices (landscape)
+// Smartphones (landscape)
 @mixin phone-landscape {
   @media (min-width: #{$screen-phone-landscape-min}) {
+    @content;
+  }
+}
+
+// Tablets (portrait)
+@mixin tablet-portrait {
+  @media (min-width: #{$screen-tablet-portrait-min}) and (orientation: portrait) {
     @content;
   }
 }
@@ -43,6 +50,10 @@ html {
 
   @include phone-landscape {
     font-size: 14px;
+  }
+
+  @include tablet-portrait {
+    font-size: 18px;
   }
 }
 
@@ -104,8 +115,10 @@ h3 {
 }
 
 iframe {
-  width: auto;
-  height: 100% * 1.78;
+  @include phone-portrait {
+    width: 98vw;
+    height: 98vw * 0.5625;
+  }
 
   @include phone-landscape {
     height: 62vh;
