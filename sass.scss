@@ -48,6 +48,20 @@ $screen-desk-lg-min: 1800px;
   }
 }
 
+// Desktops (medium)
+@mixin desktop-medium {
+  @media (min-width: #{$screen-desk-md-min}) {
+    @content;
+  }
+}
+
+// Desktops (large)
+@mixin desktop-large {
+  @media (min-width: #{$screen-desk-lg-min}) {
+    @content;
+  }
+}
+
 html {
   height: 100%;
 
@@ -65,6 +79,14 @@ html {
 
   @include tablet-landscape {
     font-size: 18px;
+  }
+
+  @include desktop-medium {
+    font-size: 20px;
+  }
+
+  @include desktop-large {
+    font-size: 22px;
   }
 }
 
@@ -101,28 +123,53 @@ h1 {
     font-size: 2.5rem;
     text-shadow: 4px 4px 1px #000;
   }
+
+  @include desktop-medium {
+    font-size: 2.6rem;
+    text-shadow: 4px 4px 1px #000;
+    margin: -10px;
+  }
+
+  @include desktop-large {
+    font-size: 3rem;
+    text-shadow: 4px 4px 1px #000;
+    margin: -10px;
+  }
 }
 
 h2 {
   font-style: italic;
   font-weight: lighter;
-  text-shadow: 2px 2px 0px #000;
   margin: 0;
 
   @include phone-portrait {
     font-size: 1.3rem;
+    text-shadow: 2px 2px 0px #000;
   }
 
   @include phone-landscape {
     font-size: 1rem;
+    text-shadow: 2px 2px 0px #000;
   }
 
   @include tablet-portrait {
     font-size: 1.5rem;
+    text-shadow: 2px 2px 0px #000;
   }
 
   @include tablet-landscape {
     font-size: 1.2rem;
+    text-shadow: 2px 2px 0px #000;
+  }
+
+  @include desktop-medium {
+    font-size: 1.2rem;
+    text-shadow: 3px 3px 0px #000;
+  }
+
+  @include desktop-large {
+    font-size: 1.3rem;
+    text-shadow: 3px 3px 0px #000;
   }
 }
 
@@ -151,6 +198,16 @@ h3 {
     font-size: 1.3rem;
     text-shadow: 3px 3px 0px #000;
   }
+
+  @include desktop-medium {
+    font-size: 1.4rem;
+    text-shadow: 3px 3px 0px #000;
+  }
+
+  @include desktop-large {
+    font-size: 1.4rem;
+    text-shadow: 4px 4px 0px #000;
+  }
 }
 
 iframe {
@@ -172,6 +229,11 @@ iframe {
   @include tablet-landscape {
     height: 65vh;
     width: 65vh * 1.78;
+  }
+
+  @include desktop-medium {
+    height: 60vh;
+    width: 60vh * 1.78;
   }
 }
 
@@ -199,6 +261,18 @@ img {
 
   @include tablet-landscape {
     $square-dimension: 40px;
+    width: $square-dimension;
+    height: $square-dimension;
+  }
+
+  @include desktop-medium {
+    $square-dimension: 40px;
+    width: $square-dimension;
+    height: $square-dimension;
+  }
+
+  @include desktop-large {
+    $square-dimension: 45px;
     width: $square-dimension;
     height: $square-dimension;
   }
@@ -238,6 +312,20 @@ button {
     font-size: 1.5rem;
     text-shadow: 2px 2px 0px #000;
     box-shadow: 3px 3px 0px #000;
+  }
+
+  @include desktop-medium {
+    padding: 10px 30px;
+    font-size: 1.5rem;
+    text-shadow: 3px 3px 0px #000;
+    box-shadow: 4px 4px 0px #000;
+  }
+
+  @include desktop-large {
+    padding: 15px 35px;
+    font-size: 1.8rem;
+    text-shadow: 3px 3px 0px #000;
+    box-shadow: 4px 4px 0px #000;
   }
 
   &:active {
@@ -294,6 +382,14 @@ a {
   @include tablet-landscape {
     margin-top: 3px;
   }
+
+  @include desktop-medium {
+    margin-top: 4px;
+  }
+
+  @include desktop-large {
+    margin-top: 5px;
+  }
 }
 
 .greyscale {
@@ -302,7 +398,7 @@ a {
 
 .image-margin {
   @include phone-portrait {
-    margin-right: 5px;
+    margin-right: 2px;
   }
 
   @include phone-landscape {
@@ -310,6 +406,18 @@ a {
   }
 
   @include tablet-portrait {
+    margin-right: 4px;
+  }
+
+  @include tablet-landscape {
+    margin-right: 3px;
+  }
+
+  @include desktop-medium {
+    margin-right: 4px;
+  }
+
+  @include desktop-large {
     margin-right: 5px;
   }
 }
@@ -326,6 +434,18 @@ a {
   @include tablet-portrait {
     margin: 0;
   }
+
+  @include tablet-landscape {
+    margin-left: 7px;
+  }
+
+  @include desktop-medium {
+    margin-left: 7px;
+  }
+
+  @include desktop-large {
+    margin-left: 8px;
+  }
 }
 
 .multiplayer {
@@ -340,16 +460,18 @@ a {
   @include tablet-portrait {
     overflow: visible;
   }
+
+  @include tablet-landscape {
+    overflow: auto;
+  }
+
+  @include desktop-medium {
+    overflow: visible;
+  }
 }
 
 #header-text-container {
   align-items: center;
-}
-
-#main-cluster {
-  @include phone-portrait {
-    width: 98vw;
-  }
 }
 
 #lower-cluster {
@@ -371,6 +493,11 @@ a {
     display: block;
     max-height: 70px;
   }
+
+  @include desktop-medium {
+    display: flex;
+    max-height: 100%;
+  }
 }
 
 #control-cluster {
@@ -383,11 +510,5 @@ a {
 
   @include phone-portrait {
     flex-direction: column;
-  }
-}
-
-#credits {
-  @include phone-portrait {
-    text-align: center;
   }
 }

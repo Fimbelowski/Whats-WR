@@ -12,6 +12,12 @@ html {
   @media (min-width: 1024px) {
     html {
       font-size: 18px; } }
+  @media (min-width: 1500px) {
+    html {
+      font-size: 20px; } }
+  @media (min-width: 1800px) {
+    html {
+      font-size: 22px; } }
 
 body {
   display: flex;
@@ -41,24 +47,45 @@ h1 {
     h1 {
       font-size: 2.5rem;
       text-shadow: 4px 4px 1px #000; } }
+  @media (min-width: 1500px) {
+    h1 {
+      font-size: 2.6rem;
+      text-shadow: 4px 4px 1px #000;
+      margin: -10px; } }
+  @media (min-width: 1800px) {
+    h1 {
+      font-size: 3rem;
+      text-shadow: 4px 4px 1px #000;
+      margin: -10px; } }
 
 h2 {
   font-style: italic;
   font-weight: lighter;
-  text-shadow: 2px 2px 0px #000;
   margin: 0; }
   @media (min-width: 300px) and (orientation: portrait) {
     h2 {
-      font-size: 1.3rem; } }
+      font-size: 1.3rem;
+      text-shadow: 2px 2px 0px #000; } }
   @media (min-width: 560px) {
     h2 {
-      font-size: 1rem; } }
+      font-size: 1rem;
+      text-shadow: 2px 2px 0px #000; } }
   @media (min-width: 768px) and (orientation: portrait) {
     h2 {
-      font-size: 1.5rem; } }
+      font-size: 1.5rem;
+      text-shadow: 2px 2px 0px #000; } }
   @media (min-width: 1024px) {
     h2 {
-      font-size: 1.2rem; } }
+      font-size: 1.2rem;
+      text-shadow: 2px 2px 0px #000; } }
+  @media (min-width: 1500px) {
+    h2 {
+      font-size: 1.2rem;
+      text-shadow: 3px 3px 0px #000; } }
+  @media (min-width: 1800px) {
+    h2 {
+      font-size: 1.3rem;
+      text-shadow: 3px 3px 0px #000; } }
 
 h3 {
   display: inline;
@@ -81,6 +108,14 @@ h3 {
     h3 {
       font-size: 1.3rem;
       text-shadow: 3px 3px 0px #000; } }
+  @media (min-width: 1500px) {
+    h3 {
+      font-size: 1.4rem;
+      text-shadow: 3px 3px 0px #000; } }
+  @media (min-width: 1800px) {
+    h3 {
+      font-size: 1.4rem;
+      text-shadow: 4px 4px 0px #000; } }
 
 @media (min-width: 300px) and (orientation: portrait) {
   iframe {
@@ -98,6 +133,10 @@ h3 {
   iframe {
     height: 65vh;
     width: 115.7vh; } }
+@media (min-width: 1500px) {
+  iframe {
+    height: 60vh;
+    width: 106.8vh; } }
 
 img {
   margin: 0;
@@ -118,6 +157,14 @@ img {
     img {
       width: 40px;
       height: 40px; } }
+  @media (min-width: 1500px) {
+    img {
+      width: 40px;
+      height: 40px; } }
+  @media (min-width: 1800px) {
+    img {
+      width: 45px;
+      height: 45px; } }
 
 button {
   background-color: #D13A3A;
@@ -150,6 +197,18 @@ button {
       font-size: 1.5rem;
       text-shadow: 2px 2px 0px #000;
       box-shadow: 3px 3px 0px #000; } }
+  @media (min-width: 1500px) {
+    button {
+      padding: 10px 30px;
+      font-size: 1.5rem;
+      text-shadow: 3px 3px 0px #000;
+      box-shadow: 4px 4px 0px #000; } }
+  @media (min-width: 1800px) {
+    button {
+      padding: 15px 35px;
+      font-size: 1.8rem;
+      text-shadow: 3px 3px 0px #000;
+      box-shadow: 4px 4px 0px #000; } }
   button:active {
     transform: translate(3px, 3px);
     box-shadow: 2px 2px 0px #000; }
@@ -190,17 +249,32 @@ a {
   @media (min-width: 1024px) {
     .player-info {
       margin-top: 3px; } }
+  @media (min-width: 1500px) {
+    .player-info {
+      margin-top: 4px; } }
+  @media (min-width: 1800px) {
+    .player-info {
+      margin-top: 5px; } }
 
 .greyscale {
   filter: grayscale(100%); }
 
 @media (min-width: 300px) and (orientation: portrait) {
   .image-margin {
-    margin-right: 5px; } }
+    margin-right: 2px; } }
 @media (min-width: 560px) {
   .image-margin {
     margin-right: 2px; } }
 @media (min-width: 768px) and (orientation: portrait) {
+  .image-margin {
+    margin-right: 4px; } }
+@media (min-width: 1024px) {
+  .image-margin {
+    margin-right: 3px; } }
+@media (min-width: 1500px) {
+  .image-margin {
+    margin-right: 4px; } }
+@media (min-width: 1800px) {
   .image-margin {
     margin-right: 5px; } }
 
@@ -213,6 +287,15 @@ a {
 @media (min-width: 768px) and (orientation: portrait) {
   .github-icon {
     margin: 0; } }
+@media (min-width: 1024px) {
+  .github-icon {
+    margin-left: 7px; } }
+@media (min-width: 1500px) {
+  .github-icon {
+    margin-left: 7px; } }
+@media (min-width: 1800px) {
+  .github-icon {
+    margin-left: 8px; } }
 
 @media (min-width: 300px) and (orientation: portrait) {
   .multiplayer {
@@ -223,13 +306,15 @@ a {
 @media (min-width: 768px) and (orientation: portrait) {
   .multiplayer {
     overflow: visible; } }
+@media (min-width: 1024px) {
+  .multiplayer {
+    overflow: auto; } }
+@media (min-width: 1500px) {
+  .multiplayer {
+    overflow: visible; } }
 
 #header-text-container {
   align-items: center; }
-
-@media (min-width: 300px) and (orientation: portrait) {
-  #main-cluster {
-    width: 98vw; } }
 
 #lower-cluster {
   justify-content: space-between; }
@@ -246,6 +331,10 @@ a {
   #player-cluster {
     display: block;
     max-height: 70px; } }
+@media (min-width: 1500px) {
+  #player-cluster {
+    display: flex;
+    max-height: 100%; } }
 
 #control-cluster {
   margin-top: 5px; }
@@ -256,7 +345,3 @@ a {
   @media (min-width: 300px) and (orientation: portrait) {
     #creator-info {
       flex-direction: column; } }
-
-@media (min-width: 300px) and (orientation: portrait) {
-  #credits {
-    text-align: center; } }
