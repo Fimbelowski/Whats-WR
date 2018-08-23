@@ -123,8 +123,8 @@ h3 {
     height: 55.125vw; } }
 @media (min-width: 560px) {
   iframe {
-    height: 60vh;
-    width: 106.8vh; } }
+    height: 58vh;
+    width: 103.24vh; } }
 @media (min-width: 768px) and (orientation: portrait) {
   iframe {
     width: 98vw;
