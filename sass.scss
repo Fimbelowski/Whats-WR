@@ -4,7 +4,6 @@ $primary-font-color: #FFF;
 // Smartphones (portrait)
 $screen-phone-portrait-min: 300px;
 
-
 // Smartphones (landscape)
 $screen-phone-landscape-min: 560px;
 
@@ -218,8 +217,8 @@ iframe {
   }
 
   @include phone-landscape {
-    height: 62vh;
-    width: 62vh * 1.78;
+    height: 60vh;
+    width: 60vh * 1.78;
   }
 
   @include tablet-portrait {
@@ -292,6 +291,7 @@ button {
     font-size: 1.5rem;
     text-shadow: 2px 2px 0px #000;
     box-shadow: 3px 3px 0px #000;
+    margin-top: 2px;
   }
 
   @include phone-landscape {
@@ -299,6 +299,7 @@ button {
     font-size: 1rem;
     text-shadow: 2px 2px 0px #000;
     box-shadow: 2px 2px 0px #000;
+    margin-top: 2px;
   }
 
   @include tablet-portrait {
@@ -306,6 +307,7 @@ button {
     font-size: 1.5rem;
     text-shadow: 2px 2px 0px #000;
     box-shadow: 3px 3px 0px #000;
+    margin-top: 5px;
   }
 
   @include tablet-landscape {
@@ -313,6 +315,7 @@ button {
     font-size: 1.5rem;
     text-shadow: 2px 2px 0px #000;
     box-shadow: 3px 3px 0px #000;
+    margin-top: 3px;
   }
 
   @include desktop-medium {
@@ -320,6 +323,7 @@ button {
     font-size: 1.5rem;
     text-shadow: 3px 3px 0px #000;
     box-shadow: 4px 4px 0px #000;
+    margin-top: 5px;
   }
 
   @include desktop-large {
@@ -473,6 +477,14 @@ a {
 
 #header-text-container {
   align-items: center;
+
+  @include phone-landscape {
+    flex-direction: row;
+  }
+
+  @include tablet-landscape {
+    flex-direction: column;
+  }
 }
 
 #lower-cluster {
@@ -499,10 +511,6 @@ a {
     display: flex;
     max-height: 100%;
   }
-}
-
-#control-cluster {
-  margin-top: 5px;
 }
 
 #creator-info {
