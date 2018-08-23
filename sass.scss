@@ -217,8 +217,8 @@ iframe {
   }
 
   @include phone-landscape {
-    height: 60vh;
-    width: 60vh * 1.78;
+    height: 58vh;
+    width: 58vh * 1.78;
   }
 
   @include tablet-portrait {
