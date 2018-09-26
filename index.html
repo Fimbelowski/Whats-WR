@@ -5,11 +5,11 @@
   <meta charset='utf-8'>
   <meta name='author' content='Christopher Fimbel'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <link rel='icon' href='favicon.png'>
-  <link rel='stylesheet' href='sass.css'>
+  <link rel='icon' href='src/images/favicon.png'>
+  <link rel='stylesheet' href='dist/css/sass.css'>
   <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet'>
-  <script src='vue.js'></script>
-  <script src='main.js'></script>
+  <script src='src/js/vue.js'></script>
+  <script src='src/js/main.js'></script>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116536708-1"></script>
@@ -52,24 +52,24 @@
         <div id='player-cluster' class='flex-col-container' :class='{ multiplayer: displayObj.players.length > 1 }'>
           <div class='player-info flex-row-container' v-for="player in displayObj.players">
             <template v-if="player.twitch !== null">
-              <a :href="player.twitch" target='_blank' class='image-margin'><img src='twitch-icon.png'></a>
+              <a :href="player.twitch" target='_blank' class='image-margin'><img src='src/images/twitch-icon.png'></a>
             </template>
             <template v-else>
-              <img src='twitch-icon.png' class='greyscale image-margin'>
+              <img src='src/images/twitch-icon.png' class='greyscale image-margin'>
             </template>
             <!-- -->
             <template v-if="player.youtube !== null">
-              <a :href='player.youtube' target='_blank' class='image-margin'><img src='youtube-icon.png'></a>
+              <a :href='player.youtube' target='_blank' class='image-margin'><img src='src/images/youtube-icon.png'></a>
             </template>
             <template v-else>
-              <img src='youtube-icon.png' class='greyscale image-margin'>
+              <img src='src/images/youtube-icon.png' class='greyscale image-margin'>
             </template>
             <!-- -->
             <template v-if='player.twitter !== null'>
-              <a :href='player.twitter' target='_blank' class='image-margin'><img src='twitter-icon.png'></a>
+              <a :href='player.twitter' target='_blank' class='image-margin'><img src='src/images/twitter-icon.png'></a>
             </template>
             <template v-else>
-              <img src='twitter-icon.png' class='greyscale image-margin'>
+              <img src='src/images/twitter-icon.png' class='greyscale image-margin'>
             </template>
             <!-- -->
             <template v-if='player.weblink !== null'>
@@ -88,7 +88,7 @@
   </div>
   <div id='creator-info' class='flex-row-container'>
     <h3 class='primary-text' id='credits'>Programmed and Designed by Christopher Fimbel</h3>
-    <a href='https://github.com/Fimbelowski' target='_blank' class='github-icon'><img src='github-icon.png'></a>
+    <a href='https://github.com/Fimbelowski' target='_blank' class='github-icon'><img src='src/images/github-icon.png'></a>
   </div>
 </body>
 </html>
