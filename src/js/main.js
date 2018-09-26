@@ -201,7 +201,7 @@ window.onload = function() {
 
             /*
             At this point additional API calls need to be made in order to gather the few pieces of
-            information that we still need. This includes the category name, the platform name, and the
+            information that we still need. This includes the category name, the player(s) information, and the
             weblink to the category's leaderboards on SRcom.
 
             Since these are the last API calls we need to make to gather all of the information we need
