@@ -1,0 +1,44 @@
+@import 'variables';
+
+// Base CSS Rules
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    height: 100%;
+
+    padding: 10px;
+
+    background-color: $gray-100;
+}
+
+header, footer {
+    width: 100%;
+    height: 75px;
+
+    background-color: $gray-200;
+}
+
+header {
+    margin-bottom: 10px;
+}
+
+footer {
+    margin-top: 10px;
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    flex: 1;
+}

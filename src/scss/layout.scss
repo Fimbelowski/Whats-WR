@@ -1,0 +1,29 @@
+@import 'variables';
+
+// Layout CSS Rules
+.l-main-primary {
+    width: 85%;
+    margin-right: 10px;
+
+    background-color: $gray-200;
+}
+
+.l-main-secondary {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+}
+
+.l-player-data {
+    flex: 1;
+    margin-bottom: 10px;
+
+    background-color: $gray-200;
+}
+
+.l-wr-button {
+    height: 15%;
+
+    background-color: $gray-200;
+}

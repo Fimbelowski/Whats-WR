@@ -22,73 +22,15 @@
     </script>
   </head>
 
-<body>
-  <div class='flex-col-container' id='header-text-container'>
-    <h1 class='primary-text'>What's WR?</h1>
-    <h2 class='primary-text'>Find a speedrun world record to watch!</h2>
-  </div>
-  <div id='v-app'>
-    <div id='main-cluster' class='flex-col-container'>
-      <!-- Record Information -->
-      <h3 class='primary-text'><a :href='displayObj.weblink' target='_blank'>{{ displayObj.gameTitle }}{{ displayObj.categoryName }}</a>  {{ displayObj.runTime }} {{ displayObj.primaryTimingMethod }}</h3>
-      <!-- VoD Embed -->
-      <template v-if='displayObj.videoType === "youtube"'>
-        <iframe
-        id="ytplayer"
-        type="text/html"
-        :src="displayObj.embedSource"
-        frameborder="0"></iframe>
-      </template>
-      <template v-else>
-        <iframe
-        :src="displayObj.embedSource"
-        frameborder="0"
-        scrolling="no"
-        allowfullscreen="true">
-        </iframe>
-      </template>
-      <!-- Player Information -->
-      <div id='lower-cluster' class='flex-row-container'>
-        <div id='player-cluster' class='flex-col-container' :class='{ multiplayer: displayObj.players.length > 1 }'>
-          <div class='player-info flex-row-container' v-for="player in displayObj.players">
-            <template v-if="player.twitch !== null">
-              <a :href="player.twitch" target='_blank' class='image-margin'><img src='dist/images/twitch-icon.png'></a>
-            </template>
-            <template v-else>
-              <img src='dist/images/twitch-icon.png' class='greyscale image-margin'>
-            </template>
-            <!-- -->
-            <template v-if="player.youtube !== null">
-              <a :href='player.youtube' target='_blank' class='image-margin'><img src='dist/images/youtube-icon.png'></a>
-            </template>
-            <template v-else>
-              <img src='dist/images/youtube-icon.png' class='greyscale image-margin'>
-            </template>
-            <!-- -->
-            <template v-if='player.twitter !== null'>
-              <a :href='player.twitter' target='_blank' class='image-margin'><img src='dist/images/twitter-icon.png'></a>
-            </template>
-            <template v-else>
-              <img src='dist/images/twitter-icon.png' class='greyscale image-margin'>
-            </template>
-            <!-- -->
-            <template v-if='player.weblink !== null'>
-              <a :href='player.weblink' target='_blank'><h3 class='primary-text'>{{ player.name }}</h3></a>
-            </template>
-            <template v-else>
-              <h3 class='primary-text'>{{ player.name }}</h3>
-            </template>
-          </div>
-        </div>
-        <div id='control-cluster'>
-          <button type='button' :disabled='isButtonDisabled' @click='fetchNewRecord' class='primary-text'>Get WR!</button>
-        </div>
+  <body>
+    <header></header>
+    <main>
+      <section class='l-main-primary'></section>
+      <div class='l-main-secondary'>
+        <section class='l-player-data'></section>
+        <section class='l-wr-button'></section>
       </div>
-    </div>
-  </div>
-  <div id='creator-info' class='flex-row-container'>
-    <h3 class='primary-text' id='credits'>Programmed and Designed by Christopher Fimbel</h3>
-    <a href='https://github.com/Fimbelowski' target='_blank' class='github-icon'><img src='dist/images/github-icon.png'></a>
-  </div>
-</body>
+    </main>
+    <footer></footer>
+  </body>
 </html>
