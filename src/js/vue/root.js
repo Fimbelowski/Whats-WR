@@ -41,9 +41,12 @@ window.onload = function() {
                 // Fetches a group of 20 games with all their categories embedded at a random offset and stores them in randomGamesCategories
                 var req = new XMLHttpRequest();
 
+                var url = 'https://www.speedrun.com/api/v1/games?offset=' + this.getRandomNumber(this.totalNumOfGames) + '&embed=categories.game';
+                console.log(url);
+
                 req.open(
                     'GET',
-                    'https://www.speedrun.com/api/v1/games?_offset=' + this.getRandomNumber(this.totalNumOfGames) + '&embed=categories.game',
+                    url,
                     true
                 );
 
