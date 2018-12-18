@@ -4,7 +4,8 @@ window.onload = function() {
         data: {
             totalNumOfGamesStartingOffset: 14000,
             totalNumOfGames: 0,
-            randomGamesCategories: []
+            randomCategories: [],
+            viewableCategories: []
         },
         methods: {
             getTotalNumOfGames: function() {
@@ -38,11 +39,13 @@ window.onload = function() {
                req.send();
             },
             getRandomGroupOfGames: function() {
-                // Fetches a group of 20 games with all their categories embedded at a random offset and stores them in randomGamesCategories
+                /*
+                    Fetches a group of 20 games at a random offset with all their categories embedded and stores them
+                    in randomCategories
+                */
                 var req = new XMLHttpRequest();
 
                 var url = 'https://www.speedrun.com/api/v1/games?offset=' + this.getRandomNumber(this.totalNumOfGames) + '&embed=categories.game';
-                console.log(url);
 
                 req.open(
                     'GET',
@@ -56,9 +59,11 @@ window.onload = function() {
                     // For each game, add each category individually to randomGameCategories
                     for(var i = 0; i < randomGamesGroup.length; i++) {
                         for(var j = 0; j < randomGamesGroup[i].categories.data.length; j++) {
-                            vm.randomGamesCategories.push(randomGamesGroup[i].categories.data[j]);
+                            vm.randomCategories.push(randomGamesGroup[i].categories.data[j]);
                         }
                     }
+
+                    vm.checkCategoriesForSuitability(5);
                 }
 
                 req.send();
@@ -66,6 +71,39 @@ window.onload = function() {
             getRandomNumber: function(max) {
                 // Generates a random number between 0 and max, inclusive.
                 return Math.floor(Math.random() * (max + 1));
+            },
+            checkCategoriesForSuitability: function(numOfCategories) {
+                // Checks a number of random categories for whether or not they are suitable to show the user.
+
+                // Start by generating a set of unique, random numbers between 0 and the length of randomCategories
+               var randomIndices = [];
+
+                while(randomIndices.length < numOfCategories) {
+                    var r = this.getRandomNumber(this.randomCategories.length);
+                    
+                    if(randomIndices.indexOf(r) === -1) {
+                        randomIndices.push(r);
+                    }
+                }
+
+                // For each random category, fetch the category's top run and check for viewing criteria
+                for(var i = 0; i < randomIndices.length; i++) {
+                    var req = new XMLHttpRequest();
+
+                    var url = 'https://www.speedrun.com/api/v1/categories/' + this.randomCategories[randomIndices[i]].id + '/records?top=1';
+
+                    req.open(
+                        'GET',
+                        url,
+                        true
+                    );
+
+                    req.onload = function() {
+                        console.log(JSON.parse(this.responseText));
+                    }
+
+                    req.send();
+                }
             }
         },
         created: function() {
