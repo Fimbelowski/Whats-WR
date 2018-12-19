@@ -5,6 +5,7 @@ window.onload = function() {
             totalNumOfGamesStartingOffset: 14000,
             totalNumOfGames: 0,
             randomCategories: [],
+            categoriesToCheck: [],
             viewableCategories: []
         },
         methods: {
@@ -63,7 +64,7 @@ window.onload = function() {
                         }
                     }
 
-                    vm.checkCategoriesForSuitability(5);
+                    vm.getRandomSetOfCategories(5);
                 }
 
                 req.send();
@@ -72,38 +73,45 @@ window.onload = function() {
                 // Generates a random number between 0 and max, inclusive.
                 return Math.floor(Math.random() * (max + 1));
             },
-            checkCategoriesForSuitability: function(numOfCategories) {
-                // Checks a number of random categories for whether or not they are suitable to show the user.
-
-                // Start by generating a set of unique, random numbers between 0 and the length of randomCategories
-               var randomIndices = [];
+            getRandomSetOfCategories: function(numOfCategories) {
+                // Start by generating a set of unique, random numbers between 0 and the length of randomCategories minus 1
+                var randomIndices = [];
 
                 while(randomIndices.length < numOfCategories) {
-                    var r = this.getRandomNumber(this.randomCategories.length);
+                    var r = this.getRandomNumber(this.randomCategories.length - 1);
                     
                     if(randomIndices.indexOf(r) === -1) {
                         randomIndices.push(r);
                     }
                 }
 
-                // For each random category, fetch the category's top run and check for viewing criteria
+                /*
+                    Pushes a category from randomCategories into categoriesToCheck at each index in randomIndices, then grabs the record
+                    run for each category in categoriesToCheck
+                */
                 for(var i = 0; i < randomIndices.length; i++) {
-                    var req = new XMLHttpRequest();
-
-                    var url = 'https://www.speedrun.com/api/v1/categories/' + this.randomCategories[randomIndices[i]].id + '/records?top=1';
-
-                    req.open(
-                        'GET',
-                        url,
-                        true
-                    );
-
-                    req.onload = function() {
-                        console.log(JSON.parse(this.responseText));
-                    }
-
-                    req.send();
+                    this.categoriesToCheck.push(this.randomCategories[randomIndices[i]]);
+                    this.getRecordFromCategoryID(this.categoriesToCheck[i].id, i);
                 }
+            },
+            getRecordFromCategoryID: function(id, index) {
+                // Checks a number of random categories for whether or not they are suitable to show the user.
+                var req = new XMLHttpRequest();
+
+                var url = 'https://www.speedrun.com/api/v1/categories/' + id + '/records?top=1';
+
+                req.open(
+                    'GET',
+                    url,
+                    true
+                );
+
+                req.onload = function() {
+                    // Append the record run(s) to the respective category object
+                    vm.categoriesToCheck[index].records = JSON.parse(this.responseText).data
+                }
+
+                req.send();
             }
         },
         created: function() {
