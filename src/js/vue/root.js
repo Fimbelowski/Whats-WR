@@ -91,14 +91,16 @@ window.onload = function() {
                 */
                 for(var i = 0; i < randomIndices.length; i++) {
                     this.categoriesToCheck.push(this.randomCategories[randomIndices[i]]);
-                    this.getRecordFromCategoryID(this.categoriesToCheck[i].id, i);
+                    this.getRecordFromCategoryID(this.categoriesToCheck[i]);
                 }
             },
-            getRecordFromCategoryID: function(id, index) {
-                // Checks a number of random categories for whether or not they are suitable to show the user.
+            getRecordFromCategoryID: function(categoryObj) {
+                //  Fetches a category's world recorn run given a category object
+                var index = this.categoriesToCheck.indexOf(categoryObj);
+
                 var req = new XMLHttpRequest();
 
-                var url = 'https://www.speedrun.com/api/v1/categories/' + id + '/records?top=1';
+                var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
 
                 req.open(
                     'GET',
@@ -112,6 +114,13 @@ window.onload = function() {
                 }
 
                 req.send();
+            },
+            checkCategoryViewingSuitability: function(categoryObj) {
+                /*
+                    Checks a category to see whether or not it is suitable to show to the user. Categories with no runs, IL categories,
+                    categories with no video proof hosted on either Twitch or YouTube are not suitable. All others that fall within these
+                    parameters are okay to show the user.
+                */
             }
         },
         created: function() {
