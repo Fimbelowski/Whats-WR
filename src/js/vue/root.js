@@ -41,8 +41,7 @@ window.onload = function() {
             },
             getRandomGroupOfGames: function() {
                 /*
-                    Fetches a group of 20 games at a random offset with all their categories embedded and stores them
-                    in randomCategories
+                    Fetches a group of 20 games at a random offset with all their categories embedded
                 */
                 var req = new XMLHttpRequest();
 
@@ -55,16 +54,17 @@ window.onload = function() {
                 );
 
                 req.onload = function() {
-                    var randomGamesGroup = JSON.parse(this.responseText).data;
+                    var parsedResponse = JSON.parse(this.responseText).data;
+                    var fullCategorySet = [];
 
                     // For each game, add each category individually to randomGameCategories
-                    for(var i = 0; i < randomGamesGroup.length; i++) {
-                        for(var j = 0; j < randomGamesGroup[i].categories.data.length; j++) {
-                            vm.randomCategories.push(randomGamesGroup[i].categories.data[j]);
+                    for(var i = 0; i < parsedResponse.length; i++) {
+                        for(var j = 0; j < parsedResponse[i].categories.data.length; j++) {
+                            fullCategorySet.push(parsedResponse[i].categories.data[j]);
                         }
                     }
 
-                    vm.getRandomSetOfCategories(5);
+                    vm.getRandomSetOfCategories(fullCategorySet);
                 }
 
                 req.send();
@@ -73,12 +73,13 @@ window.onload = function() {
                 // Generates a random number between 0 and max, inclusive.
                 return Math.floor(Math.random() * (max + 1));
             },
-            getRandomSetOfCategories: function(numOfCategories) {
+            getRandomSetOfCategories: function(setOfCategories, numOfCategories = 10) {
                 // Start by generating a set of unique, random numbers between 0 and the length of randomCategories minus 1
                 var randomIndices = [];
+                var randomSetOfCategories = [];
 
                 while(randomIndices.length < numOfCategories) {
-                    var r = this.getRandomNumber(this.randomCategories.length - 1);
+                    var r = this.getRandomNumber(setOfCategories.length - 1);
                     
                     if(randomIndices.indexOf(r) === -1) {
                         randomIndices.push(r);
@@ -90,9 +91,11 @@ window.onload = function() {
                     run for each category in categoriesToCheck
                 */
                 for(var i = 0; i < randomIndices.length; i++) {
-                    this.categoriesToCheck.push(this.randomCategories[randomIndices[i]]);
-                    this.getRecordFromCategoryID(this.categoriesToCheck[i]);
+                    randomSetOfCategories.push(setOfCategories[randomIndices[i]]);
+                    // this.getRecordFromCategoryID(this.categoriesToCheck[i]);
                 }
+
+                console.log(randomSetOfCategories);
             },
             getRecordFromCategoryID: function(categoryObj) {
                 //  Fetches a category's world recorn run given a category object
