@@ -41,7 +41,8 @@ window.onload = function() {
             },
             getRandomGroupOfGames: function() {
                 /*
-                    Fetches a group of 20 games at a random offset with all their categories embedded
+                    Fetches a group of 20 games at a random offset with all their categories embedded, then break the set up
+                    into individual categories.
                 */
                 var req = new XMLHttpRequest();
 
@@ -74,7 +75,17 @@ window.onload = function() {
                 return Math.floor(Math.random() * (max + 1));
             },
             getRandomSetOfCategories: function(setOfCategories, numOfCategories = 10) {
-                // Start by generating a set of unique, random numbers between 0 and the length of randomCategories minus 1
+                console.log(setOfCategories);
+                // Start by removing any categories with the type of 'per-level' as these are individual level leaderboards.
+                for(var i = 0; i < setOfCategories.length; i++) {
+                    if(setOfCategories[i].type === 'per-level') {
+                        setOfCategories.splice(i, 1);
+                    }
+                }
+
+                console.log(setOfCategories);
+
+                // Generate a set of unique, random numbers between 0 and the length of randomCategories minus 1
                 var randomIndices = [];
                 var randomSetOfCategories = [];
 
@@ -86,37 +97,43 @@ window.onload = function() {
                     }
                 }
 
-                /*
-                    Pushes a category from randomCategories into categoriesToCheck at each index in randomIndices, then grabs the record
-                    run for each category in categoriesToCheck
-                */
+                // Pushes a category from randomCategories into categoriesToCheck at each index in randomIndices
                 for(var i = 0; i < randomIndices.length; i++) {
                     randomSetOfCategories.push(setOfCategories[randomIndices[i]]);
-                    // this.getRecordFromCategoryID(this.categoriesToCheck[i]);
                 }
-
                 console.log(randomSetOfCategories);
+                this.getRecordFromCategoryID(randomSetOfCategories);
             },
-            getRecordFromCategoryID: function(categoryObj) {
-                //  Fetches a category's world recorn run given a category object
-                var index = this.categoriesToCheck.indexOf(categoryObj);
+            getRecordFromCategoryID: function(categoryArr) {
+                var categories = [];
 
-                var req = new XMLHttpRequest();
-
-                var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
-
-                req.open(
-                    'GET',
-                    url,
-                    true
-                );
-
-                req.onload = function() {
-                    // Append the record run(s) to the respective category object
-                    vm.categoriesToCheck[index].records = JSON.parse(this.responseText).data
+                // If the argument passed into this function is not an array, make it an array with the parameter object as the only element
+                if(!Array.isArray(categoryArr)) {
+                    categories.push(categoryArr);
+                } else {
+                    categories = categoryArr;
                 }
 
-                req.send();
+                //  Fetches a category's world record run given a category object for each element in categories
+                for(var i = 0; i < categories.length; i++) {
+                    var req = new XMLHttpRequest();
+    
+                    var url = 'https://www.speedrun.com/api/v1/categories/' + categories[i].id + '/records?top=1';
+    
+                    req.open(
+                        'GET',
+                        url,
+                        true
+                    );
+    
+                    req.onload = function(i) {
+                        // Append the record run(s) to the respective category object
+                        // console.log(JSON.parse(this.responseText).data);
+                        // console.log(categories[i]);
+                    }
+    
+                    req.send();
+                }
             },
             checkCategoryViewingSuitability: function(categoryObj) {
                 /*
