@@ -29,6 +29,7 @@ window.onload = function() {
                promise.then((response) => {
                     if(response.length < 1000) {
                         vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
+                        vm.getRandomGroupOfGames();
                     } else {
                         vm.totalNumOfGamesStartingOffset += 1000;
                         vm.getTotalNumOfGames();
@@ -40,31 +41,19 @@ window.onload = function() {
                     Fetches a group of 20 games at a random offset with all their categories embedded, then break the set up
                     into individual categories.
                 */
-                var req = new XMLHttpRequest();
+                var promise = new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    var url = 'https://www.speedrun.com/api/v1/games?offset=' + this.getRandomNumber(this.totalNumOfGames) + '&embed=categories.game';
+                    xhr.open('GET', url);
+                    xhr.onload = () => resolve(JSON.parse(xhr.responseText).data);
+                    xhr.onerror = () => reject(xhr.statusText);
+                    xhr.send();
+                });
 
-                var url = 'https://www.speedrun.com/api/v1/games?offset=' + this.getRandomNumber(this.totalNumOfGames) + '&embed=categories.game';
-
-                req.open(
-                    'GET',
-                    url,
-                    true
-                );
-
-                req.onload = function() {
-                    var parsedResponse = JSON.parse(this.responseText).data;
-                    var fullCategorySet = [];
-
-                    // For each game, add each category individually to randomGameCategories
-                    for(var i = 0; i < parsedResponse.length; i++) {
-                        for(var j = 0; j < parsedResponse[i].categories.data.length; j++) {
-                            fullCategorySet.push(parsedResponse[i].categories.data[j]);
-                        }
-                    }
-
-                    vm.getRandomSetOfCategories(fullCategorySet);
-                }
-
-                req.send();
+                promise.then((response) => {
+                    var categorySet = [].concat.apply([], response.map(item => item.categories.data));
+                    console.log(categorySet);
+                });
             },
             getRandomNumber: function(max) {
                 // Generates a random number between 0 and max, inclusive.
