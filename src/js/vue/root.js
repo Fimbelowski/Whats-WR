@@ -56,7 +56,12 @@ window.onload = function() {
             },
             extractCategoriesFromGroupOfGames: function(groupOfGames) {
                 var categorySet = [].concat.apply([], groupOfGames.map(item => item.categories.data));
-                console.log(categorySet);
+                vm.removePerLevelCategories(categorySet);
+            },
+            removePerLevelCategories: function(categorySet) {
+                // Removes any categories from categorySet that are 'per-level' and calls getRandomSetOfCategories with the new array.
+                var prunedCategorySet = categorySet.filter(category => category.type === 'per-game');
+                console.log(prunedCategorySet);
             },
             getRandomNumber: function(max) {
                 // Generates a random number between 0 and max, inclusive.
