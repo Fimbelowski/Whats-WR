@@ -75,15 +75,12 @@ window.onload = function() {
                 return Math.floor(Math.random() * (max + 1));
             },
             getRandomSetOfCategories: function(setOfCategories, numOfCategories = 10) {
-                console.log(setOfCategories);
                 // Start by removing any categories with the type of 'per-level' as these are individual level leaderboards.
                 for(var i = 0; i < setOfCategories.length; i++) {
                     if(setOfCategories[i].type === 'per-level') {
                         setOfCategories.splice(i, 1);
                     }
                 }
-
-                console.log(setOfCategories);
 
                 // Generate a set of unique, random numbers between 0 and the length of randomCategories minus 1
                 var randomIndices = [];
@@ -101,41 +98,41 @@ window.onload = function() {
                 for(var i = 0; i < randomIndices.length; i++) {
                     randomSetOfCategories.push(setOfCategories[randomIndices[i]]);
                 }
-                console.log(randomSetOfCategories);
                 this.getRecordFromCategoryID(randomSetOfCategories);
             },
-            getRecordFromCategoryID: function(categoryArr) {
-                var categories = [];
+            getRecordFromCategoryObj: function(categoryObj) {
+                //  Fetches a category's world record run given a category object for each element in categories
+                var req = new XMLHttpRequest();
 
-                // If the argument passed into this function is not an array, make it an array with the parameter object as the only element
-                if(!Array.isArray(categoryArr)) {
-                    categories.push(categoryArr);
-                } else {
-                    categories = categoryArr;
+                var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
+
+                req.open(
+                    'GET',
+                    url,
+                    true
+                );
+
+                req.onload = function() {
+                    // Test the response to see whether or not it is suitable for viewing
+                    var response = JSON.parse(this.responseText).data;
+
+                    categoryObj.records = vm.isRecordSuitableForViewing(response) ? response : false;
                 }
 
-                //  Fetches a category's world record run given a category object for each element in categories
-                for(var i = 0; i < categories.length; i++) {
-                    var req = new XMLHttpRequest();
-    
-                    var url = 'https://www.speedrun.com/api/v1/categories/' + categories[i].id + '/records?top=1';
-    
-                    req.open(
-                        'GET',
-                        url,
-                        true
-                    );
-    
-                    req.onload = function(i) {
-                        // Append the record run(s) to the respective category object
-                        // console.log(JSON.parse(this.responseText).data);
-                        // console.log(categories[i]);
-                    }
-    
-                    req.send();
+                req.send();
+            },
+            getRecordsFromCategoryArray: function(arr) {
+                // Create an empty array that will store all promises
+                var promises = [];
+
+                // For each element in arr, create a new promise
+                for (var i = 0; i < arr.length; i++) {
+                    promises.push(new Promise(function(resolve, reject) {
+                        
+                    }))
                 }
             },
-            checkCategoryViewingSuitability: function(categoryObj) {
+            isRecordSuitableForViewing: function(recordObj) {
                 /*
                     Checks a category to see whether or not it is suitable to show to the user. Categories with no runs, IL categories,
                     categories with no video proof hosted on either Twitch or YouTube are not suitable. All others that fall within these
