@@ -51,9 +51,12 @@ window.onload = function() {
                 });
 
                 promise.then((response) => {
-                    var categorySet = [].concat.apply([], response.map(item => item.categories.data));
-                    console.log(categorySet);
+                    vm.extractCategoriesFromGroupOfGames(response);
                 });
+            },
+            extractCategoriesFromGroupOfGames: function(groupOfGames) {
+                var categorySet = [].concat.apply([], groupOfGames.map(item => item.categories.data));
+                console.log(categorySet);
             },
             getRandomNumber: function(max) {
                 // Generates a random number between 0 and max, inclusive.
