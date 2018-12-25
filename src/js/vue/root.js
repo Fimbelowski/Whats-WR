@@ -84,7 +84,7 @@ window.onload = function() {
                 for(var i = 0; i < randomIndices.length; i++) {
                     randomSetOfCategories.push(setOfCategories[randomIndices[i]]);
                 }
-                console.log(randomSetOfCategories);
+                vm.getRecordsFromCategoryArray(randomSetOfCategories);
             },
             getRecordFromCategoryObj: function(categoryObj) {
                 return new Promise((resolve, reject) => {
@@ -101,9 +101,11 @@ window.onload = function() {
                 var promises = [];
 
                 // For each element in arr, create a new promise
-                for (var i = 0; i < arr.length; i++) {
-                    
-                }
+                arr.forEach(item => promises.push(vm.getRecordFromCategoryObj(item)));
+
+                Promise.all(promises).then((response) => {
+                    console.log('All promises resolved!');
+                }); 
             },
             isRecordSuitableForViewing: function(recordObj) {
                 /*
