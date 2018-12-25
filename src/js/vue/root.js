@@ -17,27 +17,23 @@ window.onload = function() {
                     If 1,000 games are found, the offset is increased by 1,000 and this function is run again. If less than 1,000 games
                     are found, the number of games found is added to the starting offset and this is the total number of games.
                 */
-               var req = new XMLHttpRequest();
+               var promise = new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    var url = 'https://www.speedrun.com/api/v1/games?_bulk=yes&max=1000&offset=' + this.totalNumOfGamesStartingOffset;
+                    xhr.open('GET', url);
+                    xhr.onload = () => resolve(JSON.parse(xhr.responseText).data);
+                    xhr.onerror = () => reject(xhr.statusText);
+                    xhr.send();
+               });
 
-               req.open(
-               'GET',
-               'https://www.speedrun.com/api/v1/games?_bulk=yes&max=1000&offset=' + this.totalNumOfGamesStartingOffset,
-               true
-               );
-
-               req.onload = function() {
-                   var gamesPastOffset = JSON.parse(this.responseText).data.length;
-
-                   if(gamesPastOffset === 1000) {
-                       vm.totalNumOfGamesStartingOffset += 1000;
-                       vm.getTotalGames();
-                   } else {
-                       vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + gamesPastOffset;
-                       vm.getRandomGroupOfGames();
-                   }
-               }
-
-               req.send();
+               promise.then((response) => {
+                    if(response.length < 1000) {
+                        vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
+                    } else {
+                        vm.totalNumOfGamesStartingOffset += 1000;
+                        vm.getTotalNumOfGames();
+                    }
+               });
             },
             getRandomGroupOfGames: function() {
                 /*
@@ -101,25 +97,14 @@ window.onload = function() {
                 this.getRecordFromCategoryID(randomSetOfCategories);
             },
             getRecordFromCategoryObj: function(categoryObj) {
-                //  Fetches a category's world record run given a category object for each element in categories
-                var req = new XMLHttpRequest();
-
-                var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
-
-                req.open(
-                    'GET',
-                    url,
-                    true
-                );
-
-                req.onload = function() {
-                    // Test the response to see whether or not it is suitable for viewing
-                    var response = JSON.parse(this.responseText).data;
-
-                    categoryObj.records = vm.isRecordSuitableForViewing(response) ? response : false;
-                }
-
-                req.send();
+                return new Promise((resolve, reject) => {
+                    const req = new XMLHttpRequest();
+                    var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
+                    req.open('GET', url);
+                    req.onload = () => resolve(JSON.parse(req.responseText).data);
+                    req.onerror = () => reject(req.statusText);
+                    req.send();
+                });
             },
             getRecordsFromCategoryArray: function(arr) {
                 // Create an empty array that will store all promises
@@ -127,9 +112,7 @@ window.onload = function() {
 
                 // For each element in arr, create a new promise
                 for (var i = 0; i < arr.length; i++) {
-                    promises.push(new Promise(function(resolve, reject) {
-                        
-                    }))
+                    
                 }
             },
             isRecordSuitableForViewing: function(recordObj) {
