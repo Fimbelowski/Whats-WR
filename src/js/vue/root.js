@@ -61,20 +61,13 @@ window.onload = function() {
             removePerLevelCategories: function(categorySet) {
                 // Removes any categories from categorySet that are 'per-level' and calls getRandomSetOfCategories with the new array.
                 var prunedCategorySet = categorySet.filter(category => category.type === 'per-game');
-                console.log(prunedCategorySet);
+                vm.getRandomSetOfCategories(prunedCategorySet);
             },
             getRandomNumber: function(max) {
                 // Generates a random number between 0 and max, inclusive.
                 return Math.floor(Math.random() * (max + 1));
             },
             getRandomSetOfCategories: function(setOfCategories, numOfCategories = 10) {
-                // Start by removing any categories with the type of 'per-level' as these are individual level leaderboards.
-                for(var i = 0; i < setOfCategories.length; i++) {
-                    if(setOfCategories[i].type === 'per-level') {
-                        setOfCategories.splice(i, 1);
-                    }
-                }
-
                 // Generate a set of unique, random numbers between 0 and the length of randomCategories minus 1
                 var randomIndices = [];
                 var randomSetOfCategories = [];
@@ -91,7 +84,7 @@ window.onload = function() {
                 for(var i = 0; i < randomIndices.length; i++) {
                     randomSetOfCategories.push(setOfCategories[randomIndices[i]]);
                 }
-                this.getRecordFromCategoryID(randomSetOfCategories);
+                console.log(randomSetOfCategories);
             },
             getRecordFromCategoryObj: function(categoryObj) {
                 return new Promise((resolve, reject) => {
