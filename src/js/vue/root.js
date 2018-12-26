@@ -87,14 +87,21 @@ window.onload = function() {
                 vm.getRecordsFromCategoryArray(randomSetOfCategories);
             },
             getRecordFromCategoryObj: function(categoryObj) {
-                return new Promise((resolve, reject) => {
+                // Fetches the world record run for a given category and then passes the result to isRecordViewable.
+                var promise = new Promise((resolve, reject) => {
                     const req = new XMLHttpRequest();
                     var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
                     req.open('GET', url);
-                    req.onload = () => resolve(JSON.parse(req.responseText).data);
+                    req.onload = () => resolve(JSON.parse(req.responseText).data[0]);
                     req.onerror = () => reject(req.statusText);
                     req.send();
                 });
+
+                promise.then((response) => {
+                    vm.isRecordViewable(response);
+                });
+
+                return promise;
             },
             getRecordsFromCategoryArray: function(arr) {
                 // Create an empty array that will store all promises
@@ -104,15 +111,58 @@ window.onload = function() {
                 arr.forEach(item => promises.push(vm.getRecordFromCategoryObj(item)));
 
                 Promise.all(promises).then((response) => {
-                    console.log('All promises resolved!');
+                    console.log(response);
                 }); 
             },
-            isRecordSuitableForViewing: function(recordObj) {
+            isRecordViewable: function(recordObj) {
                 /*
-                    Checks a category to see whether or not it is suitable to show to the user. Categories with no runs, IL categories,
-                    categories with no video proof hosted on either Twitch or YouTube are not suitable. All others that fall within these
-                    parameters are okay to show the user.
+                    Checks a category to see whether or not it is suitable to show to the user. Records with no runs, records with no video
+                    links, records with multiple video links, and records with video links not hosted on either Twitch or YouTube are not
+                    viewable. All others that fall within these parameters are okay to show the user.
                 */
+
+               if(recordObj.runs.length === 0 ||
+                recordObj.runs[0].run.videos === 0 ||
+                recordObj.runs[0].run.videos.links.length !== 1 ||
+                !vm.getVideoHost(recordObj.runs[0].run.videos.links[0].uri)) {
+                    // console.log(false);
+               } else {
+                    videoInfo = {
+                        host: vm.getVideoHost(recordObj.runs[0].run.videos.links[0].uri),
+                        id: vm.getVideoID(recordObj.runs[0].run.videos.links[0].uri)
+                    }
+                    console.log(videoInfo);
+               }
+            },
+            getVideoHost: function(videoURL) {
+                // Returns the video host of videoURL (either 'youtube' or 'twitch'). If videoURL is not hosted on either Twitch or Youtube,
+                // null is returned.
+                host = '';
+
+                if(videoURL.includes('youtube') || videoURL.includes('youtu.be')) {
+                    host = 'youtube';
+                } else if(videoURL.includes('twitch')) {
+                    host = 'twitch';
+                } else {
+                    host = null;
+                }
+
+                return host;
+            },
+            getVideoID: function(videoURL, videoHost) {
+                // Returns the video ID of of videoURL based on videoHost
+                const yt = /youtu\.be\/(.{11})|youtube\.com\/watch\?v=(.{11})/;
+                const twitch = /twitch\.tv\/videos\/(\d+)|twitch\.tv\/\w{3,15}\/v\/(\d+)/;
+                var id = '';
+
+                if(videoHost === 'youtube') {
+                    id = yt.exec(videoURL);
+                } else {
+                    console.log('test');
+                    id = twitch.exec(videoURL)[1];
+                }
+
+                return id;
             }
         },
         created: function() {
