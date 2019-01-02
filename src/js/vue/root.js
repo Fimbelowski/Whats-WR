@@ -121,17 +121,18 @@ window.onload = function() {
                     viewable. All others that fall within these parameters are okay to show the user.
                 */
 
-               if(recordObj.runs.length === 0 ||
-                recordObj.runs[0].run.videos === 0 ||
-                recordObj.runs[0].run.videos.links.length !== 1 ||
-                !vm.getVideoHost(recordObj.runs[0].run.videos.links[0].uri)) {
-                    // console.log(false);
+                console.log(recordObj);
+
+               if(recordObj.runs.length > 0 &&
+                recordObj.runs[0].run.videos &&
+                (recordObj.runs[0].run.videos.links[0].uri.includes('youtube') ||
+                recordObj.runs[0].run.videos.links[0].uri.includes('youtu.be') ||
+                recordObj.runs[0].run.videos.links[0].uri.includes('twitch.tv'))) {
+                   console.log('Category Accepted.');
+                   return true;
                } else {
-                    videoInfo = {
-                        host: vm.getVideoHost(recordObj.runs[0].run.videos.links[0].uri),
-                        id: vm.getVideoID(recordObj.runs[0].run.videos.links[0].uri)
-                    }
-                    console.log(videoInfo);
+                   console.log('Category Rejected');
+                   return false;
                }
             },
             getVideoHost: function(videoURL) {
@@ -141,8 +142,10 @@ window.onload = function() {
 
                 if(videoURL.includes('youtube') || videoURL.includes('youtu.be')) {
                     host = 'youtube';
+                    console.log('Video Host: ' + host);
                 } else if(videoURL.includes('twitch')) {
                     host = 'twitch';
+                    console.log('Video Host: ' + host);
                 } else {
                     host = null;
                 }
@@ -158,11 +161,9 @@ window.onload = function() {
                 if(videoHost === 'youtube') {
                     id = yt.exec(videoURL);
                 } else {
-                    console.log('test');
-                    id = twitch.exec(videoURL)[1];
+                    id = twitch.exec(videoURL);
                 }
-
-                return id;
+                console.log('Exec results: ' + id);
             }
         },
         created: function() {
