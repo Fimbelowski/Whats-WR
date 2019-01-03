@@ -4,8 +4,8 @@ window.onload = function() {
         data: {
             totalNumOfGamesStartingOffset: 14000,
             totalNumOfGames: 0,
-            ytRegEx: /youtube\.com\/watch\?v=|youtu\.be\//i,
-            twitchRegEx: /twitch\.tv\/\w{3,15}\/v\/|twitch.tv\/videos\//i
+            ytRegEx: /youtube\.com\/watch\?v=(.+)|youtu\.be\/(.+)/i,
+            twitchRegEx: /twitch\.tv\/\w{3,15}\/v\/(\d+)|twitch.tv\/videos\/(\d+)/i
         },
         methods: {
             getTotalNumOfGames: function() {
@@ -104,12 +104,17 @@ window.onload = function() {
                     // Iterate through each item in arr and check to see that it has video proof and that its video proof is suitable for
                     // viewing.
                     console.log('Array Length: ' + arr.length);
+                    console.log(arr);
                     arr.forEach(function(item) {
                         if(item.wr) {
                             console.log(item);
-                            host = vm.getVideoHost(item.wr.videos.links[0].uri);
+                            var uri = item.wr.videos.links[0].uri;
+                            var host = vm.getVideoHost(uri);
+                            var id = '';
                             if(host) {
+                                console.log('Video URL: ' + uri);
                                 console.log('Video Host: ' + host);
+                                
                             } else {
                                 arr.splice(arr.indexOf(item), 1);
                             }
@@ -118,6 +123,7 @@ window.onload = function() {
                         }
                     });
                     console.log('Array Length: ' + arr.length);
+                    console.log(arr);
                 });
             },
             getRecordFromCategoryObj: function(categoryObj) {
@@ -143,21 +149,11 @@ window.onload = function() {
                 // YouTube or Twitch url then the name of the host is returned. Otherwise, false is returned.
 
                 return (vm.ytRegEx.test(uri)) ? 'youtube'
-                : (vm.twitchRegEx.test(uri)) ? 'twtich'
+                : (vm.twitchRegEx.test(uri)) ? 'twitch'
                 : false;
             },
-            getVideoInfo: function(uri) {
-                var host = (vm.ytRegEx.test(uri)) ? 'youtube' : 'twitch';
-                console.log('Video URI: ' + uri);
-
-                console.log('Video Host: ' + host);
-            },
             getVideoID: function(uri, host) {
-                console.log('This shouldnt run.');
                 // Returns the video ID of of videoURL based on videoHost
-                const yt = /youtu\.be\/(.{11})|youtube\.com\/watch\?v=(.{11})/;
-                const twitch = /twitch\.tv\/videos\/(\d+)|twitch\.tv\/\w{3,15}\/v\/(\d+)/;
-
                 return (host === 'youtube') ? yt.exec(uri) : twitch.exec(uri);
             },
             // Utility Methods
