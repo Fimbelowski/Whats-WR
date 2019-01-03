@@ -99,7 +99,23 @@ window.onload = function() {
                 arr.forEach(item => promises.push(vm.getRecordFromCategoryObj(item)));
 
                 Promise.all(promises).then(() => {
-                    // arr.forEach(item =>(vm.isRecordViewable(item)));
+                    console.log(arr);
+
+                    arr.forEach(function(item) {
+                        console.log(item);
+
+                        if(item.wr) {
+                            if(vm.isRecordViewable(item.wr)) {
+                                // Get video info
+                            } else {
+                                arr.splice(arr.indexOf(item), 1);
+                            }
+                        } else {
+                            arr.splice(arr.indexOf(item), 1);
+                        }
+                    });
+
+                    console.log(arr);
                 }); 
             },
             getRecordFromCategoryObj: function(categoryObj) {
@@ -119,26 +135,23 @@ window.onload = function() {
 
                 return promise;
             },
-            isRecordViewable: function(categoryObj) {
+            isRecordViewable: function(recordObj) {
                 /*
                     Checks a category to see whether or not it is suitable to show to the user. Records with no runs, records with no video
                     links, records with multiple video links, and records with video links not hosted on either Twitch or YouTube are not
                     viewable. All others that fall within these parameters are okay to show the user.
                 */
 
-                console.log(categoryObj);
+                console.log(recordObj);
 
-            //    if(recordObj.runs.length > 0 &&
-            //     recordObj.runs[0].run.videos &&
-            //     (recordObj.runs[0].run.videos.links[0].uri.includes('youtube') ||
-            //     recordObj.runs[0].run.videos.links[0].uri.includes('youtu.be') ||
-            //     recordObj.runs[0].run.videos.links[0].uri.includes('twitch.tv'))) {
-            //        console.log('Category Accepted.');
-            //        return true;
-            //    } else {
-            //        console.log('Category Rejected');
-            //        return false;
-            //    }
+               if(recordObj.videos &&
+                (recordObj.videos.links[0].uri.includes('youtube') ||
+                recordObj.videos.links[0].uri.includes('youtu.be') ||
+                recordObj.videos.links[0].uri.includes('twitch.tv'))) {
+                   return true;
+               } else {
+                   return false;
+               }
             },
             getVideoHost: function(videoURL) {
                 // Returns the video host of videoURL (either 'youtube' or 'twitch'). If videoURL is not hosted on either Twitch or Youtube,
