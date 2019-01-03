@@ -4,8 +4,8 @@ window.onload = function() {
         data: {
             totalNumOfGamesStartingOffset: 14000,
             totalNumOfGames: 0,
-            ytRegEx: /youtube\.com\/watch\?v=|youtu\.be\//g,
-            twitchRegEx: /twitch\.tv\/\w{3,15}\/v\/|twitch.tv\/videos\//g
+            ytRegEx: /youtube\.com\/watch\?v=|youtu\.be\//i,
+            twitchRegEx: /twitch\.tv\/\w{3,15}\/v\/|twitch.tv\/videos\//i
         },
         methods: {
             getTotalNumOfGames: function() {
@@ -97,11 +97,19 @@ window.onload = function() {
                 // For each element in arr, create a new promise
                 arr.forEach(item => promises.push(vm.getRecordFromCategoryObj(item)));
 
+                // When all promises are resolved, iterate through arr and if each item has a WR run and the run is suitable for viewing,
+                // get the run's video info. Otherwise, remove the category from arr. 
+
                 Promise.all(promises).then(() => {
+                    // Iterate through each item in arr and check to see that it has video proof and that its video proof is suitable for
+                    // viewing.
+                    console.log('Array Length: ' + arr.length);
                     arr.forEach(function(item) {
                         if(item.wr) {
-                            if(vm.isRecordViewable(item.wr)) {
-                                vm.getVideoInfo(item.wr.videos.links[0].uri);
+                            console.log(item);
+                            host = vm.getVideoHost(item.wr.videos.links[0].uri);
+                            if(host) {
+                                console.log('Video Host: ' + host);
                             } else {
                                 arr.splice(arr.indexOf(item), 1);
                             }
@@ -109,10 +117,12 @@ window.onload = function() {
                             arr.splice(arr.indexOf(item), 1);
                         }
                     });
-                }); 
+                    console.log('Array Length: ' + arr.length);
+                });
             },
             getRecordFromCategoryObj: function(categoryObj) {
-                // Fetches the world record run for a given category and then appends the response to categoryObj.
+                // Fetches the world record run for a given category and then appends the response to categoryObj. If the response has no runs,
+                // or the response has a run that does not have video, null is appended instead.
                 var promise = new Promise((resolve, reject) => {
                     const req = new XMLHttpRequest();
                     var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
@@ -123,25 +133,18 @@ window.onload = function() {
                 });
 
                 promise.then((response) => {
-                    categoryObj.wr = (response.runs.length > 0) ? response.runs[0].run : null;
+                    categoryObj.wr = (response.runs.length > 0 && response.runs[0].run.videos) ? response.runs[0].run : null;
                 });
 
                 return promise;
             },
-            isRecordViewable: function(recordObj) {
-                /*
-                    Checks a category to see whether or not it is suitable to show to the user. Records with no runs, records with no video
-                    links, records with multiple video links, and records with video links not hosted on either Twitch or YouTube are not
-                    viewable. All others that fall within these parameters are okay to show the user.
-                */
+            getVideoHost: function(uri) {
+                // Checks whether or not a record's video is usable. If the record has a video link and the link is hosted on a valid
+                // YouTube or Twitch url then the name of the host is returned. Otherwise, false is returned.
 
-               if(recordObj.videos &&
-                (vm.ytRegEx.test(recordObj.videos.links[0].uri) ||
-                vm.twitchRegEx.test(recordObj.videos.links[0].uri))){
-                   return true;
-               } else {
-                   return false;
-               }
+                return (vm.ytRegEx.test(uri)) ? 'youtube'
+                : (vm.twitchRegEx.test(uri)) ? 'twtich'
+                : false;
             },
             getVideoInfo: function(uri) {
                 var host = (vm.ytRegEx.test(uri)) ? 'youtube' : 'twitch';
