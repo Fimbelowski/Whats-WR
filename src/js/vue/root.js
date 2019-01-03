@@ -29,12 +29,21 @@ window.onload = function() {
                promise.then((response) => {
                     if(response.length < 1000) {
                         vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
-                        vm.getRandomGroupOfGames();
+                        vm.checkForHash();
                     } else {
                         vm.totalNumOfGamesStartingOffset += 1000;
                         vm.getTotalNumOfGames();
                     }
                });
+            },
+            checkForHash: function() {
+                // Check if the URL contains a location hash. If so, load a ran from that fragment. If not, load from a fresh start.
+                if(window.location.hash) {
+                    // Load from fragment
+                } else {
+                    // Load fresh
+                    vm.getRandomGroupOfGames();
+                }
             },
             getRandomGroupOfGames: function() {
                 /*
@@ -63,10 +72,6 @@ window.onload = function() {
                 var prunedCategorySet = categorySet.filter(category => category.type === 'per-game');
                 vm.getRandomSetOfCategories(prunedCategorySet);
             },
-            getRandomNumber: function(max) {
-                // Generates a random number between 0 and max, inclusive.
-                return Math.floor(Math.random() * (max + 1));
-            },
             getRandomSetOfCategories: function(setOfCategories, numOfCategories = 10) {
                 // Generate a set of unique, random numbers between 0 and the length of randomCategories minus 1
                 var randomIndices = [];
@@ -86,8 +91,19 @@ window.onload = function() {
                 }
                 vm.getRecordsFromCategoryArray(randomSetOfCategories);
             },
+            getRecordsFromCategoryArray: function(arr) {
+                // Create an empty array that will store all promise.
+                var promises = [];
+
+                // For each element in arr, create a new promise
+                arr.forEach(item => promises.push(vm.getRecordFromCategoryObj(item)));
+
+                Promise.all(promises).then(() => {
+                    console.log(arr);
+                }); 
+            },
             getRecordFromCategoryObj: function(categoryObj) {
-                // Fetches the world record run for a given category and then passes the result to isRecordViewable.
+                // Fetches the world record run for a given category and then appends the response to categoryObj.
                 var promise = new Promise((resolve, reject) => {
                     const req = new XMLHttpRequest();
                     var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
@@ -98,21 +114,10 @@ window.onload = function() {
                 });
 
                 promise.then((response) => {
-                    vm.isRecordViewable(response);
+                    categoryObj.wr = response.runs[0].run;
                 });
 
                 return promise;
-            },
-            getRecordsFromCategoryArray: function(arr) {
-                // Create an empty array that will store all promises
-                var promises = [];
-
-                // For each element in arr, create a new promise
-                arr.forEach(item => promises.push(vm.getRecordFromCategoryObj(item)));
-
-                Promise.all(promises).then((response) => {
-                    console.log(response);
-                }); 
             },
             isRecordViewable: function(recordObj) {
                 /*
@@ -164,6 +169,11 @@ window.onload = function() {
                     id = twitch.exec(videoURL);
                 }
                 console.log('Exec results: ' + id);
+            },
+            // Utility Methods
+            getRandomNumber: function(max) {
+                // Generates a random number between 0 and max, inclusive.
+                return Math.floor(Math.random() * (max + 1));
             }
         },
         created: function() {
