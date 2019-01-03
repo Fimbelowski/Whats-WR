@@ -4,9 +4,8 @@ window.onload = function() {
         data: {
             totalNumOfGamesStartingOffset: 14000,
             totalNumOfGames: 0,
-            randomCategories: [],
-            categoriesToCheck: [],
-            viewableCategories: []
+            ytRegEx: /youtube\.com\/watch\?v=|youtu\.be\//g,
+            twitchRegEx: /twitch\.tv\/\w{3,15}\/v\/|twitch.tv\/videos\//g
         },
         methods: {
             getTotalNumOfGames: function() {
@@ -99,14 +98,10 @@ window.onload = function() {
                 arr.forEach(item => promises.push(vm.getRecordFromCategoryObj(item)));
 
                 Promise.all(promises).then(() => {
-                    console.log(arr);
-
                     arr.forEach(function(item) {
-                        console.log(item);
-
                         if(item.wr) {
                             if(vm.isRecordViewable(item.wr)) {
-                                // Get video info
+                                vm.getVideoInfo(item.wr.videos.links[0].uri);
                             } else {
                                 arr.splice(arr.indexOf(item), 1);
                             }
@@ -114,8 +109,6 @@ window.onload = function() {
                             arr.splice(arr.indexOf(item), 1);
                         }
                     });
-
-                    console.log(arr);
                 }); 
             },
             getRecordFromCategoryObj: function(categoryObj) {
@@ -142,46 +135,27 @@ window.onload = function() {
                     viewable. All others that fall within these parameters are okay to show the user.
                 */
 
-                console.log(recordObj);
-
                if(recordObj.videos &&
-                (recordObj.videos.links[0].uri.includes('youtube') ||
-                recordObj.videos.links[0].uri.includes('youtu.be') ||
-                recordObj.videos.links[0].uri.includes('twitch.tv'))) {
+                (vm.ytRegEx.test(recordObj.videos.links[0].uri) ||
+                vm.twitchRegEx.test(recordObj.videos.links[0].uri))){
                    return true;
                } else {
                    return false;
                }
             },
-            getVideoHost: function(videoURL) {
-                // Returns the video host of videoURL (either 'youtube' or 'twitch'). If videoURL is not hosted on either Twitch or Youtube,
-                // null is returned.
-                host = '';
+            getVideoInfo: function(uri) {
+                var host = (vm.ytRegEx.test(uri)) ? 'youtube' : 'twitch';
+                console.log('Video URI: ' + uri);
 
-                if(videoURL.includes('youtube') || videoURL.includes('youtu.be')) {
-                    host = 'youtube';
-                    console.log('Video Host: ' + host);
-                } else if(videoURL.includes('twitch')) {
-                    host = 'twitch';
-                    console.log('Video Host: ' + host);
-                } else {
-                    host = null;
-                }
-
-                return host;
+                console.log('Video Host: ' + host);
             },
-            getVideoID: function(videoURL, videoHost) {
+            getVideoID: function(uri, host) {
+                console.log('This shouldnt run.');
                 // Returns the video ID of of videoURL based on videoHost
                 const yt = /youtu\.be\/(.{11})|youtube\.com\/watch\?v=(.{11})/;
                 const twitch = /twitch\.tv\/videos\/(\d+)|twitch\.tv\/\w{3,15}\/v\/(\d+)/;
-                var id = '';
 
-                if(videoHost === 'youtube') {
-                    id = yt.exec(videoURL);
-                } else {
-                    id = twitch.exec(videoURL);
-                }
-                console.log('Exec results: ' + id);
+                return (host === 'youtube') ? yt.exec(uri) : twitch.exec(uri);
             },
             // Utility Methods
             getRandomNumber: function(max) {
