@@ -97,8 +97,7 @@ window.onload = function() {
                 // For each element in arr, create a new promise
                 arr.forEach(item => promises.push(vm.getRecordFromCategoryObj(item)));
 
-                // When all promises are resolved, iterate through arr and if each item has a WR run and the run is suitable for viewing,
-                // get the run's video info. Otherwise, remove the category from arr. 
+                // When all promises are resolved, filter out any categories within arr that do not have a valid WR.
 
                 Promise.all(promises).then(() => {
                     // Filter out all categories that don't have a WR run.
