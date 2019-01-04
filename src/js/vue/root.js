@@ -101,32 +101,11 @@ window.onload = function() {
                 // get the run's video info. Otherwise, remove the category from arr. 
 
                 Promise.all(promises).then(() => {
-                    // Iterate through each item in arr and check to see that it has video proof and that its video proof is suitable for
-                    // viewing.
-                    console.log('Array Length: ' + arr.length);
-                    console.log(arr);
-                    arr.forEach(function(item) {
-                        if(item.wr) {
-                            console.log(item);
-                            var uri = item.wr.videos.links[0].uri;
-                            var host = (vm.ytRegEx.test(uri)) ? 'youtube'
-                                    : (vm.twitchRegEx.test(uri)) ? 'twitch'
-                                    : false;
-                            var id = '';
-                            if(host) {
-                                id = (host === 'youtube') ? vm.ytRegEx.exec(uri)[1] : vm.twitchRegEx.exec(uri)[1];
-                                console.log('Video URL: ' + uri);
-                                console.log('Video Host: ' + host);
-                                console.log('Video ID: ' + id);
-                            } else {
-                                arr.splice(arr.indexOf(item), 1);
-                            }
-                        } else {
-                            arr.splice(arr.indexOf(item), 1);
-                        }
-                    });
-                    console.log('Array Length: ' + arr.length);
-                    console.log(arr);
+                    // Filter out all categories that don't have a WR run.
+                    arr = arr.filter(item => item.wr);
+
+                    // Pass the resulting array into parseVideoInfo
+                    vm.parseVideoInfo(arr);
                 });
             },
             getRecordFromCategoryObj: function(categoryObj) {
@@ -146,6 +125,19 @@ window.onload = function() {
                 });
 
                 return promise;
+            },
+            parseVideoInfo: function(arr) {
+                // Get the video host for each category in arr.
+                arr.forEach(item => item.videoHost = (vm.ytRegEx.test(item.wr.videos.links[0].uri)) ? 'youtube'
+                        : (vm.twitchRegEx.test(item.wr.videos.links[0].uri)) ? 'twitch'
+                        : false);
+                
+                // Filter out all categories with an invalid video host.
+                arr = arr.filter(item => item.videoHost);
+
+                // Get the video ID for each category in arr
+                arr.forEach(item => item.videoID = (item.videoHost === 'youtube') ? vm.ytRegEx.exec(item.wr.videos.links[0].uri)[1]
+                                                                                : vm.twitchRegEx.exec(item.wr.videos.links[0].uri)[1]);
             },
             // Utility Methods
             getRandomNumber: function(max) {
