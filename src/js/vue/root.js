@@ -4,8 +4,8 @@ window.onload = function() {
         data: {
             totalNumOfGamesStartingOffset: 14000,
             totalNumOfGames: 0,
-            ytRegEx: /youtube\.com\/watch\?v=(.+)|youtu\.be\/(.+)/i,
-            twitchRegEx: /twitch\.tv\/\w{3,15}\/v\/(\d+)|twitch.tv\/videos\/(\d+)/i
+            ytRegEx: /(?:(?:youtube\.com\/watch\?v=)|(?:youtu\.be\/))(.+)/i,
+            twitchRegEx: /(?:twitch\.tv\/(?:\w{3,15}\/v\/)|(?:videos\/))(\d+)/i
         },
         methods: {
             getTotalNumOfGames: function() {
@@ -112,9 +112,9 @@ window.onload = function() {
                             var host = vm.getVideoHost(uri);
                             var id = '';
                             if(host) {
+                                id = vm.getVideoID(uri, host);
                                 console.log('Video URL: ' + uri);
                                 console.log('Video Host: ' + host);
-                                id = vm.getVideoID(uri, host);
                                 console.log('Video ID: ' + id);
                             } else {
                                 arr.splice(arr.indexOf(item), 1);
@@ -155,9 +155,7 @@ window.onload = function() {
             },
             getVideoID: function(uri, host) {
                 // Returns the video ID of of videoURL based on videoHost
-                id = (host === 'youtube') ? vm.ytRegEx.exec(uri) : vm.twitchRegEx.exec(uri);
-                console.log('Full Match: ' + id);
-                console.log('Last item: ' + id[id.length - 1]);
+                id = (host === 'youtube') ? vm.ytRegEx.exec(uri)[1] : vm.twitchRegEx.exec(uri)[1];
 
                 return id;
             },
