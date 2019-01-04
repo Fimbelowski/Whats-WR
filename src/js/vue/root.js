@@ -114,7 +114,8 @@ window.onload = function() {
                             if(host) {
                                 console.log('Video URL: ' + uri);
                                 console.log('Video Host: ' + host);
-                                
+                                id = vm.getVideoID(uri, host);
+                                console.log('Video ID: ' + id);
                             } else {
                                 arr.splice(arr.indexOf(item), 1);
                             }
@@ -154,7 +155,11 @@ window.onload = function() {
             },
             getVideoID: function(uri, host) {
                 // Returns the video ID of of videoURL based on videoHost
-                return (host === 'youtube') ? yt.exec(uri) : twitch.exec(uri);
+                id = (host === 'youtube') ? vm.ytRegEx.exec(uri) : vm.twitchRegEx.exec(uri);
+                console.log('Full Match: ' + id);
+                console.log('Last item: ' + id[id.length - 1]);
+
+                return id;
             },
             // Utility Methods
             getRandomNumber: function(max) {
