@@ -109,10 +109,12 @@ window.onload = function() {
                         if(item.wr) {
                             console.log(item);
                             var uri = item.wr.videos.links[0].uri;
-                            var host = vm.getVideoHost(uri);
+                            var host = (vm.ytRegEx.test(uri)) ? 'youtube'
+                                    : (vm.twitchRegEx.test(uri)) ? 'twitch'
+                                    : false;
                             var id = '';
                             if(host) {
-                                id = vm.getVideoID(uri, host);
+                                id = (host === 'youtube') ? vm.ytRegEx.exec(uri)[1] : vm.twitchRegEx.exec(uri)[1];
                                 console.log('Video URL: ' + uri);
                                 console.log('Video Host: ' + host);
                                 console.log('Video ID: ' + id);
@@ -144,20 +146,6 @@ window.onload = function() {
                 });
 
                 return promise;
-            },
-            getVideoHost: function(uri) {
-                // Checks whether or not a record's video is usable. If the record has a video link and the link is hosted on a valid
-                // YouTube or Twitch url then the name of the host is returned. Otherwise, false is returned.
-
-                return (vm.ytRegEx.test(uri)) ? 'youtube'
-                : (vm.twitchRegEx.test(uri)) ? 'twitch'
-                : false;
-            },
-            getVideoID: function(uri, host) {
-                // Returns the video ID of of videoURL based on videoHost
-                id = (host === 'youtube') ? vm.ytRegEx.exec(uri)[1] : vm.twitchRegEx.exec(uri)[1];
-
-                return id;
             },
             // Utility Methods
             getRandomNumber: function(max) {
