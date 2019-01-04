@@ -128,8 +128,8 @@ window.onload = function() {
             parseVideoInfo: function(arr) {
                 // Get the video host for each category in arr.
                 arr.forEach(item => item.videoHost = (vm.ytRegEx.test(item.wr.videos.links[0].uri)) ? 'youtube'
-                        : (vm.twitchRegEx.test(item.wr.videos.links[0].uri)) ? 'twitch'
-                        : false);
+                                                : (vm.twitchRegEx.test(item.wr.videos.links[0].uri)) ? 'twitch'
+                                                : false);
                 
                 // Filter out all categories with an invalid video host.
                 arr = arr.filter(item => item.videoHost);
@@ -137,6 +137,34 @@ window.onload = function() {
                 // Get the video ID for each category in arr
                 arr.forEach(item => item.videoID = (item.videoHost === 'youtube') ? vm.ytRegEx.exec(item.wr.videos.links[0].uri)[1]
                                                                                 : vm.twitchRegEx.exec(item.wr.videos.links[0].uri)[1]);
+                
+                // At this point we know that all remaining categories are fit to show the user. We can now select one at random to show the user.
+                // Get a random category from the remaining categories and pass it into cleanCategoryObject.
+                vm.cleanCategoryObject(arr[vm.getRandomNumber(arr.length - 1)]);
+            },
+            cleanCategoryObject: function(categoryObj) {
+                console.log(categoryObj);
+                var wrInfo = {};
+
+                // Set the game and category information
+                wrInfo.gameID = categoryObj.game.data.id;
+                wrInfo.gameTitle = (categoryObj.game.data.names.international) ? categoryObj.game.data.names.international : categoryObj.game.data.names.japanese;
+
+                wrInfo.categoryID = categoryObj.id;
+                wrInfo.categoryName = categoryObj.name;
+
+                // Set the category timing method and runtime
+                wrInfo.timingMethod = (categoryObj.wr.times.primary_t === categoryObj.wr.times.ingame_t) ? 'IGT'
+                                    : (categoryObj.wr.times.primary_t === categoryObj.wr.times.realtime_t) ? 'RTA'
+                                    : 'RTA (No Loads)';
+                wrInfo.runtime = (categoryObj.wr.times.primary_t === categoryObj.wr.times.ingame_t) ? categoryObj.wr.times.ingame_t
+                                : (categoryObj.wr.times.primary_t === categoryObj.wr.times.realtime_t) ? categoryObj.wr.times.realtime_t
+                                : categoryObj.wr.times.realtime_noloads_t;
+
+                // Set the player(s) info
+                wrInfo.players = categoryObj.wr.players;
+
+                console.log(wrInfo);
             },
             // Utility Methods
             getRandomNumber: function(max) {
