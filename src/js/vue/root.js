@@ -152,7 +152,8 @@ window.onload = function() {
                 wrInfo.categoryID = categoryObj.id;
                 wrInfo.categoryName = categoryObj.name;
 
-                // Set the category timing method and runtime
+                // Set the category timing method and runtime.
+                // Format the runtime.
                 if(categoryObj.wr.times.primary_t === categoryObj.wr.times.ingame_t) {
                     wrInfo.timingMethod = 'IGT';
                     wrInfo.runTime = vm.formatRuntime(categoryObj.wr.times.ingame_t);
@@ -169,6 +170,7 @@ window.onload = function() {
                 vm.getAllPlayersInfo(wrInfo);
             },
             formatRuntime: function(runtime) {
+                // Take a runtime (in seconds) and return it in HH:MM:SS or HH:MM:SS.SSS format.
                 var hours = Math.floor(runtime / 3600);
                 var minutes = Math.floor((runtime - (hours * 3600)) / 60);
                 var seconds = runtime - (hours * 3600) - (minutes * 60);
