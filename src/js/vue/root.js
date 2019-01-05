@@ -72,23 +72,22 @@ window.onload = function() {
                 // Pass the filtered category set into getRandomSetOfCategories.
                 vm.getRandomSetOfCategories(categorySet);
             },
-            getRandomSetOfCategories: function(setOfCategories, numOfCategories = 10) {
+            getRandomSetOfCategories: function(arr, numOfCategories = 10) {
                 // Generate a set of unique, random numbers between 0 and the length of randomCategories minus 1
                 var randomIndices = [];
                 var randomSetOfCategories = [];
 
                 while(randomIndices.length < numOfCategories) {
-                    var r = this.getRandomNumber(setOfCategories.length - 1);
+                    var r = this.getRandomNumber(arr.length - 1);
                     
-                    if(randomIndices.indexOf(r) === -1) {
-                        randomIndices.push(r);
-                    }
+                    if(randomIndices.indexOf(r) === -1) { randomIndices.push(r); }
                 }
 
                 // Pushes a category from randomCategories into categoriesToCheck at each index in randomIndices
-                for(var i = 0; i < randomIndices.length; i++) {
-                    randomSetOfCategories.push(setOfCategories[randomIndices[i]]);
-                }
+                randomIndices.forEach(item => {
+                    randomSetOfCategories.push(arr[item]);
+                });
+
                 vm.getRecordsFromCategoryArray(randomSetOfCategories);
             },
             getRecordsFromCategoryArray: function(arr) {
