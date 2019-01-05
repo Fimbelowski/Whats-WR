@@ -155,18 +155,29 @@ window.onload = function() {
                 // Set the category timing method and runtime
                 if(categoryObj.wr.times.primary_t === categoryObj.wr.times.ingame_t) {
                     wrInfo.timingMethod = 'IGT';
-                    wrInfo.runTime = categoryObj.wr.times.ingame_t;
+                    wrInfo.runTime = vm.formatRuntime(categoryObj.wr.times.ingame_t);
                 } else if(categoryObj.wr.times.primary_t === categoryObj.wr.times.realtime_t) {
                     wrInfo.timingMethod = 'RTA';
-                    wrInfo.runTime = categoryObj.wr.times.realtime_t;
+                    wrInfo.runTime = vm.formatRuntime(categoryObj.wr.times.realtime_t);
                 } else {
                     wrInfo.timingMethod = 'RTA (No Loads)';
-                    wrInfo.runTime = categoryObj.wr.times.realtime_noloads_t;
+                    wrInfo.runTime = vm.formatRuntime(categoryObj.wr.times.realtime_noloads_t);
                 }
 
                 // Set the player(s) info
                 wrInfo.players = categoryObj.wr.players;
                 vm.getAllPlayersInfo(wrInfo);
+            },
+            formatRuntime: function(runtime) {
+                var hours = Math.floor(runtime / 3600);
+                var minutes = Math.floor((runtime - (hours * 3600)) / 60);
+                var seconds = runtime - (hours * 3600) - (minutes * 60);
+
+                if(hours < 10) { hours = '0' + hours; }
+                if(minutes < 10) { minutes = '0' + minutes; }
+                if(seconds < 10) { seconds = '0' + seconds; }
+
+                return hours + ':' + minutes + ':' + seconds;
             },
             getAllPlayersInfo: function(wrObj) {
                 // Create an empty array to store all promises.
