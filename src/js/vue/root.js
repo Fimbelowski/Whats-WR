@@ -91,7 +91,7 @@ window.onload = function() {
                 vm.getRecordsFromCategoryArray(randomSetOfCategories);
             },
             getRecordsFromCategoryArray: function(arr) {
-                // Create an empty array that will store all promise.
+                // Create an empty array that will store all promises.
                 var promises = [];
 
                 // For each element in arr, create a new promise
@@ -143,7 +143,6 @@ window.onload = function() {
                 vm.cleanCategoryObject(arr[vm.getRandomNumber(arr.length - 1)]);
             },
             cleanCategoryObject: function(categoryObj) {
-                console.log(categoryObj);
                 var wrInfo = {};
 
                 // Set the game and category information
@@ -167,8 +166,46 @@ window.onload = function() {
 
                 // Set the player(s) info
                 wrInfo.players = categoryObj.wr.players;
+                vm.getAllPlayersInfo(wrInfo);
+            },
+            getAllPlayersInfo: function(wrObj) {
+                // Create an empty array to store all promises.
+                var promises = [];
 
-                console.log(wrInfo);
+                // For each element in arr, create a new promise.
+                wrObj.players.forEach(item => promises.push((item.rel !== 'guest') ? vm.getPlayerInfo(item) : item));
+
+                // When all promises are resolved then the run is ready to show to the user.
+                Promise.all(promises).then(() => {
+                    console.log(wrObj);
+                });
+            },
+            getPlayerInfo: function(playerObj) {
+                // If the player has the role of guest, we can resolve the promise right away since there is no other information about them available to us.
+                // Otherwise, we can proceed with making an API call to retrieve their information.
+                var promise = new Promise((resolve, reject) => {
+                    const req = new XMLHttpRequest();
+                    var url = playerObj.uri;
+                    req.open('GET', url);
+                    req.onload = () => resolve(JSON.parse(req.responseText).data);
+                    req.onerror = () => reject(req.statusText);
+                    req.send();
+                });
+
+                promise.then((response) => {
+                    // Append all relevant information to playerObj.
+                    
+                    // Append the player's name.
+                    playerObj.name = (response.names.japanese) ? response.names.japanese : response.names.international;
+
+                    // Append the player's social media links.
+                    playerObj.src = response.weblink;
+                    playerObj.twitch = (response.twitch) ? response.twitch.uri : null;
+                    playerObj.twitter = (response.twitter) ? response.twitter.uri : null;
+                    playerObj.youtube = (response.youtube) ? response.youtube.uri : null;
+                });
+
+                return promise;
             },
             // Utility Methods
             getRandomNumber: function(max) {
