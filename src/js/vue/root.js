@@ -59,10 +59,10 @@ window.onload = function() {
                 });
 
                 promise.then((response) => {
-                    vm.extractCategoriesFromGroupOfGames(response);
+                    vm.extractCategories(response);
                 });
             },
-            extractCategoriesFromGroupOfGames: function(arr) {
+            extractCategories: function(arr) {
                 // Break out all categories into their own objects.
                 var categorySet = [].concat.apply([], arr.map(item => item.categories.data));
 
