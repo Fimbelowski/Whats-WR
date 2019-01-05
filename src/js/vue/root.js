@@ -62,9 +62,9 @@ window.onload = function() {
                     vm.extractCategoriesFromGroupOfGames(response);
                 });
             },
-            extractCategoriesFromGroupOfGames: function(groupOfGames) {
+            extractCategoriesFromGroupOfGames: function(arr) {
                 // Break out all categories into their own objects.
-                var categorySet = [].concat.apply([], groupOfGames.map(item => item.categories.data));
+                var categorySet = [].concat.apply([], arr.map(item => item.categories.data));
 
                 // Filter out all 'per-level' categories.
                 categorySet = categorySet.filter(item => item.type === 'per-game');
