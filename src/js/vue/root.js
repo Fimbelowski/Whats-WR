@@ -63,13 +63,14 @@ window.onload = function() {
                 });
             },
             extractCategoriesFromGroupOfGames: function(groupOfGames) {
+                // Break out all categories into their own objects.
                 var categorySet = [].concat.apply([], groupOfGames.map(item => item.categories.data));
-                vm.removePerLevelCategories(categorySet);
-            },
-            removePerLevelCategories: function(categorySet) {
-                // Removes any categories from categorySet that are 'per-level' and calls getRandomSetOfCategories with the new array.
-                var prunedCategorySet = categorySet.filter(category => category.type === 'per-game');
-                vm.getRandomSetOfCategories(prunedCategorySet);
+
+                // Filter out all 'per-level' categories.
+                categorySet = categorySet.filter(item => item.type === 'per-game');
+
+                // Pass the filtered category set into getRandomSetOfCategories.
+                vm.getRandomSetOfCategories(categorySet);
             },
             getRandomSetOfCategories: function(setOfCategories, numOfCategories = 10) {
                 // Generate a set of unique, random numbers between 0 and the length of randomCategories minus 1
