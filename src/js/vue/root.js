@@ -154,12 +154,16 @@ window.onload = function() {
                 wrInfo.categoryName = categoryObj.name;
 
                 // Set the category timing method and runtime
-                wrInfo.timingMethod = (categoryObj.wr.times.primary_t === categoryObj.wr.times.ingame_t) ? 'IGT'
-                                    : (categoryObj.wr.times.primary_t === categoryObj.wr.times.realtime_t) ? 'RTA'
-                                    : 'RTA (No Loads)';
-                wrInfo.runtime = (categoryObj.wr.times.primary_t === categoryObj.wr.times.ingame_t) ? categoryObj.wr.times.ingame_t
-                                : (categoryObj.wr.times.primary_t === categoryObj.wr.times.realtime_t) ? categoryObj.wr.times.realtime_t
-                                : categoryObj.wr.times.realtime_noloads_t;
+                if(categoryObj.wr.times.primary_t === categoryObj.wr.times.ingame_t) {
+                    wrInfo.timingMethod = 'IGT';
+                    wrInfo.runTime = categoryObj.wr.times.ingame_t;
+                } else if(categoryObj.wr.times.primary_t === categoryObj.wr.times.realtime_t) {
+                    wrInfo.timingMethod = 'RTA';
+                    wrInfo.runTime = categoryObj.wr.times.realtime_t;
+                } else {
+                    wrInfo.timingMethod = 'RTA (No Loads)';
+                    wrInfo.runTime = categoryObj.wr.times.realtime_noloads_t;
+                }
 
                 // Set the player(s) info
                 wrInfo.players = categoryObj.wr.players;
