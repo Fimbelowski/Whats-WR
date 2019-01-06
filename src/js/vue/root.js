@@ -79,6 +79,9 @@ window.onload = function() {
                 var randomIndices = [];
                 var randomSetOfCategories = [];
 
+                // If the length of arr is less than numOfCategories, set numOfCategories equal to the length of arr to avoid out of bounds errors.
+                if(arr.length < numOfCategories) { numOfCategories = arr.length; }
+
                 while(randomIndices.length < numOfCategories) {
                     var r = this.getRandomNumber(arr.length - 1);
                     
