@@ -69,8 +69,10 @@ window.onload = function() {
                 // Filter out all 'per-level' categories.
                 categorySet = categorySet.filter(item => item.type === 'per-game');
 
-                // Pass the filtered category set into getRandomSetOfCategories.
-                vm.getRandomSetOfCategories(categorySet);
+
+                // If the resulting array is empty (no categories are suitable), call getRandomGroupOfGames.
+                // Otherwise, pass the filtered category set into getRandomSetOfCategories.
+                (categorySet.length === 0) ? vm.getRandomGroupOfGames() : vm.getRandomSetOfCategories(categorySet);
             },
             getRandomSetOfCategories: function(arr, numOfCategories = 10) {
                 // Generate a set of unique, random numbers between 0 and the length of randomCategories minus 1
@@ -103,8 +105,9 @@ window.onload = function() {
                     // Filter out all categories that don't have a WR run.
                     arr = arr.filter(item => item.wr);
 
-                    // Pass the resulting array into parseVideoInfo
-                    vm.parseVideoInfo(arr);
+                    // If the resulting array is empty (no categories are suitable), call getRandomGroupOfGames.
+                    // Otherwise, pass the resulting array into parseVideoInfo
+                    (arr.length === 0) ? vm.getRandomGroupOfGames() : vm.parseVideoInfo(arr);
                 });
             },
             getRecordFromCategoryObj: function(categoryObj) {
@@ -134,13 +137,20 @@ window.onload = function() {
                 // Filter out all categories with an invalid video host.
                 arr = arr.filter(item => item.videoHost);
 
-                // Get the video ID for each category in arr
-                arr.forEach(item => item.videoID = (item.videoHost === 'youtube') ? vm.ytRegEx.exec(item.wr.videos.links[0].uri)[1]
-                                                                                : vm.twitchRegEx.exec(item.wr.videos.links[0].uri)[1]);
-                
-                // At this point we know that all remaining categories are fit to show the user. We can now select one at random to show the user.
-                // Get a random category from the remaining categories and pass it into cleanCategoryObject.
-                vm.cleanCategoryObject(arr[vm.getRandomNumber(arr.length - 1)]);
+                // At this point we know that all remaining categories are fit to show the user.
+                // If the resulting array is empty (no categories are suitable), call getRandomGroupOfGames.
+                // Otherwise, continue with the normal flow.
+                if(arr.length === 0) {
+                    vm.getRandomGroupOfGames();
+                } else {
+                    // Get the video ID for each category in arr
+                    arr.forEach(item => item.videoID = (item.videoHost === 'youtube') ? vm.ytRegEx.exec(item.wr.videos.links[0].uri)[1]
+                                                                                    : vm.twitchRegEx.exec(item.wr.videos.links[0].uri)[1]);
+
+                    //We can now select one at random to show the user.
+                    // Get a random category from the remaining categories and pass it into cleanCategoryObject.
+                    vm.cleanCategoryObject(arr[vm.getRandomNumber(arr.length - 1)]);
+                }
             },
             cleanCategoryObject: function(categoryObj) {
                 var wrInfo = {};
