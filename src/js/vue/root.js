@@ -4,6 +4,9 @@ window.onload = function() {
         data: {
             totalNumOfGamesStartingOffset: 14000,
             totalNumOfGames: 0,
+            displayedRun: null,
+            backupRuns: [],
+            targetNumOfBackups: 3,
             ytRegEx: /(?:(?:youtube\.com\/watch\?v=)|(?:youtu\.be\/))(.+)/i,
             twitchRegEx: /(?:twitch\.tv\/(?:\w{3,15}\/v\/)|(?:videos\/))(\d+)/i
         },
@@ -204,7 +207,11 @@ window.onload = function() {
 
                 // When all promises are resolved then the run is ready to show to the user.
                 Promise.all(promises).then(() => {
-                    console.log(wrObj);
+                    // If there is no displayedRun, set displayedRun equal to wrObj. Otherwise, push wrObj onto backupRuns.
+                    (vm.displayedRun === null) ? vm.displayedRun = wrObj : vm.backupRuns.push(wrObj);
+
+                    // If the length of backupRuns is less than targetNumOfBackups, run the main code flow again.
+                    if(vm.backupRuns.length < vm.targetNumOfBackups) { vm.getRandomGroupOfGames(); }
                 });
             },
             getPlayerInfo: function(playerObj) {
