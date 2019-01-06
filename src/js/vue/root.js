@@ -10,6 +10,23 @@ window.onload = function() {
             ytRegEx: /(?:(?:youtube\.com\/watch\?v=)|(?:youtu\.be\/))(.+)/i,
             twitchRegEx: /(?:twitch\.tv\/(?:\w{3,15}\/v\/)|(?:videos\/))(\d+)/i
         },
+        computed: {
+            formattedRuntime: function() {
+                // Take a runtime (in seconds) and return it in HH:MM:SS or HH:MM:SS.SSS format.
+                var runtime = vm.displayedRun.runTime;
+
+                var hours = Math.floor(runtime / 3600);
+                var minutes = Math.floor((runtime - (hours * 3600)) / 60);
+                var seconds = runtime - (hours * 3600) - (minutes * 60);
+
+                if(hours < 10) { hours = '0' + hours; }
+                if(minutes < 10) { minutes = '0' + minutes; }
+                if(seconds % 1 !== 0) { seconds = seconds.toFixed(3); }
+                if(seconds < 10) { seconds = '0' + seconds; }
+
+                return hours + ':' + minutes + ':' + seconds;
+            }
+        },
         methods: {
             getTotalNumOfGames: function() {
                 /*
@@ -169,34 +186,20 @@ window.onload = function() {
                 wrInfo.categoryName = categoryObj.name;
 
                 // Set the category timing method and runtime.
-                // Format the runtime.
                 if(categoryObj.wr.times.primary_t === categoryObj.wr.times.ingame_t) {
                     wrInfo.timingMethod = 'IGT';
-                    wrInfo.runTime = vm.formatRuntime(categoryObj.wr.times.ingame_t);
+                    wrInfo.runTime = categoryObj.wr.times.ingame_t;
                 } else if(categoryObj.wr.times.primary_t === categoryObj.wr.times.realtime_t) {
                     wrInfo.timingMethod = 'RTA';
-                    wrInfo.runTime = vm.formatRuntime(categoryObj.wr.times.realtime_t);
+                    wrInfo.runTime = categoryObj.wr.times.realtime_t;
                 } else {
                     wrInfo.timingMethod = 'RTA (No Loads)';
-                    wrInfo.runTime = vm.formatRuntime(categoryObj.wr.times.realtime_noloads_t);
+                    wrInfo.runTime = categoryObj.wr.times.realtime_noloads_t;
                 }
 
                 // Set the player(s) info
                 wrInfo.players = categoryObj.wr.players;
                 vm.getAllPlayersInfo(wrInfo);
-            },
-            formatRuntime: function(runtime) {
-                // Take a runtime (in seconds) and return it in HH:MM:SS or HH:MM:SS.SSS format.
-                var hours = Math.floor(runtime / 3600);
-                var minutes = Math.floor((runtime - (hours * 3600)) / 60);
-                var seconds = runtime - (hours * 3600) - (minutes * 60);
-
-                if(hours < 10) { hours = '0' + hours; }
-                if(minutes < 10) { minutes = '0' + minutes; }
-                if(seconds % 1 !== 0) { seconds = seconds.toFixed(3); }
-                if(seconds < 10) { seconds = '0' + seconds; }
-
-                return hours + ':' + minutes + ':' + seconds;
             },
             getAllPlayersInfo: function(wrObj) {
                 // Create an empty array to store all promises.
