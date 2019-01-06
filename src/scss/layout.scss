@@ -2,10 +2,11 @@
 
 // Layout CSS Rules
 .l-main-primary {
-    width: 85%;
-    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
 
-    background-color: $gray-200;
+    width: 80%;
+    margin-right: 10px;
 }
 
 .l-main-secondary {
