@@ -30,8 +30,8 @@
         <wr-info v-if='displayedRun' :wr-info='wrInfo'></wr-info>
       </section>
       <div class='l-main-secondary'>
-        <section class='l-player-data'></section>
-        <wr-button :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
+        <players-info v-if='displayedRun' :players='displayedRun.players'></players-info>
+        <wr-button v-if='displayedRun' :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
       </div>
     </main>
     <footer></footer>
