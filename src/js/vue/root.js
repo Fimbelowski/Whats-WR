@@ -19,6 +19,12 @@ window.onload = function() {
                     timingMethod: this.displayedRun.timingMethod,
                     src: this.displayedRun.src
                 }
+            },
+            videoInfo: function() {
+                return {
+                    host: this.displayedRun.videoHost,
+                    id: this.displayedRun.videoID
+                }
             }
         },
         methods: {
@@ -172,14 +178,14 @@ window.onload = function() {
             cleanCategoryObject: function(categoryObj) {
                 var wrInfo = {};
 
-                // Set the game and category information
+                // Store the game and category information
                 wrInfo.gameID = categoryObj.game.data.id;
                 wrInfo.gameTitle = (categoryObj.game.data.names.international) ? categoryObj.game.data.names.international : categoryObj.game.data.names.japanese;
 
                 wrInfo.categoryID = categoryObj.id;
                 wrInfo.categoryName = categoryObj.name;
 
-                // Set the category timing method and runtime.
+                // Store the category timing method and runtime.
                 if(categoryObj.wr.times.primary_t === categoryObj.wr.times.ingame_t) {
                     wrInfo.timingMethod = 'IGT';
                     wrInfo.runtime = categoryObj.wr.times.ingame_t;
@@ -197,7 +203,11 @@ window.onload = function() {
                 // Store a link to the leaderboard
                 wrInfo.src = categoryObj.weblink;
 
-                // Set the player(s) info
+                // Store the wr run's video host and ID
+                wrInfo.videoHost = categoryObj.videoHost;
+                wrInfo.videoID = categoryObj.videoID;
+
+                // Store the player(s) info
                 wrInfo.players = categoryObj.wr.players;
                 vm.getAllPlayersInfo(wrInfo);
             },
