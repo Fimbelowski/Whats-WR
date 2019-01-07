@@ -11,6 +11,9 @@ window.onload = function() {
             twitchRegEx: /(?:twitch\.tv\/(?:\w{3,15}\/v\/)|(?:videos\/))(\d+)/i
         },
         computed: {
+            isButtonDisabled: function() {
+                return (!this.displayedRun) ? true : false;
+            },
             wrInfo: function() {
                 return {
                     gameTitle: this.displayedRun.gameTitle,
@@ -253,6 +256,19 @@ window.onload = function() {
                 });
 
                 return promise;
+            },
+            getNextRun: function() {
+                // Remove the current run from the display object.
+                vm.displayedRun = null;
+
+                // If backupRuns contains any elements...
+                if(vm.backupRuns.length > 0) {
+                    // Move the first element from backupRuns into displayedRun.
+                    vm.displayedRun = vm.backupRuns.shift();
+
+                    // If backupRuns was full, retart the main code flow.
+                    if(vm.backupRuns.length === (vm.targetNumOfBackups - 1)) { vm.getRandomGroupOfGames(); }
+                }
             },
             // Utility Methods
             getRandomNumber: function(max) {

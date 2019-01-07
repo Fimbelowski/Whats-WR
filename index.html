@@ -31,7 +31,7 @@
       </section>
       <div class='l-main-secondary'>
         <section class='l-player-data'></section>
-        <section class='l-wr-button'></section>
+        <wr-button :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
       </div>
     </main>
     <footer></footer>
