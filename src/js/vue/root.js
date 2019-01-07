@@ -17,7 +17,7 @@ window.onload = function() {
                     categoryName: this.displayedRun.categoryName,
                     formattedRuntime: this.displayedRun.formattedRuntime,
                     timingMethod: this.displayedRun.timingMethod,
-                    // Leaderboard link
+                    src: this.displayedRun.src
                 }
             }
         },
@@ -193,6 +193,9 @@ window.onload = function() {
 
                 // Format the runtime into HH:MM:SS or HH:MM:SS.sss and store the result
                 wrInfo.formattedRuntime = vm.formatRuntime(wrInfo.runtime);
+                
+                // Store a link to the leaderboard
+                wrInfo.src = categoryObj.weblink;
 
                 // Set the player(s) info
                 wrInfo.players = categoryObj.wr.players;
