@@ -20,7 +20,8 @@ window.onload = function() {
                     categoryName: this.displayedRun.categoryName,
                     runtime: this.displayedRun.runtime,
                     timingMethod: this.displayedRun.timingMethod,
-                    src: this.displayedRun.src
+                    src: this.displayedRun.src,
+                    runID: this.displayedRun.runID
                 }
             }
         },

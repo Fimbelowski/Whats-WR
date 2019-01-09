@@ -1,5 +1,10 @@
 Vue.component('wr-info', {
     props: ['wr-info'],
+    data: function() {
+        return {
+            urlToCopy: false
+        }
+    },
     computed: {
         formattedRuntime: function() {
             var runtime = this.wrInfo.runtime;
@@ -15,9 +20,29 @@ Vue.component('wr-info', {
             if(seconds < 10) { seconds = '0' + seconds; }
 
             return hours + ':' + minutes + ':' + seconds;
+        },
+        windowLocationHref: function() {
+            return window.location.hostname + ':' + window.location.port + '/#' + this.wrInfo.runID;
+        }
+    },
+    methods: {
+        copyURLToClipboard: function() {
+            // Change urlToCopy to true so that the textarea element will render.
+            this.urlToCopy = true;
+
+            // Select the text within the urlTextArea element.
+            this.$refs.urlTextArea.select();
+
+            // Copy the string onto the clipboard.
+            document.execCommand('copy');
+
+            // Change urlToCopy to false to de-render the textarea element.
+            this.urlToCopy = false;
         }
     },
     template:   '<section class="wr-info">\
                     <h2><a :href="wrInfo.src">{{ wrInfo.gameTitle }} - {{ wrInfo.categoryName }}</a> in {{  formattedRuntime }} ({{ wrInfo.timingMethod }})</h2>\
+                    <button type="button" @click="copyURLToClipboard">Copy URL</button>\
+                    <textarea ref="urlTextArea" style="height: 0">{{ windowLocationHref }}</textarea>\
                 </section>'
 });
