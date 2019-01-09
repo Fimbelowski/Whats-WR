@@ -207,7 +207,7 @@ window.onload = function() {
                     // If there is no displayedRun, set displayedRun equal to wrObj and update the location hash. Otherwise, push wrObj onto backupRuns.
                     if(vm.displayedRun === null) {
                         vm.displayedRun = wrObj;
-                        vm.updateLocationHash();
+                        window.location.hash = encodeURIComponent(vm.displayedRun.runID);
                     } else {
                         vm.backupRuns.push(wrObj);
                     }
@@ -251,14 +251,11 @@ window.onload = function() {
                 if(vm.backupRuns.length > 0) {
                     // Move the first element from backupRuns into displayedRun and update the location hash.
                     vm.displayedRun = vm.backupRuns.shift();
-                    vm.updateLocationHash();
+                    window.location.hash = encodeURIComponent(vm.displayedRun.runID);
 
                     // If backupRuns was full, retart the main code flow.
                     if(vm.backupRuns.length === (vm.targetNumOfBackups - 1)) { vm.getRandomGroupOfGames(); }
                 }
-            },
-            updateLocationHash: function() {
-                window.location.hash = (vm.displayedRun.runID) ? encodeURIComponent(vm.displayedRun.runID) : '';
             },
             getRunFromHash: function() {
                 var runID = decodeURIComponent(window.location.hash).slice(1);
@@ -328,7 +325,7 @@ window.onload = function() {
                 // If there is no displayedRun, set displayedRun equal to wrObj and update the location hash. Otherwise, push wrObj onto backupRuns.
                 if(vm.displayedRun === null) {
                     vm.displayedRun = wrInfo;
-                    vm.updateLocationHash();
+                    window.location.hash = encodeURIComponent(vm.displayedRun.runID);
                 } else {
                     vm.backupRuns.push(wrInfo);
                 }
