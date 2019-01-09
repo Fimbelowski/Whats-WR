@@ -18,7 +18,7 @@ window.onload = function() {
                 return {
                     gameTitle: this.displayedRun.gameTitle,
                     categoryName: this.displayedRun.categoryName,
-                    formattedRuntime: this.displayedRun.formattedRuntime,
+                    runtime: this.displayedRun.runtime,
                     timingMethod: this.displayedRun.timingMethod,
                     src: this.displayedRun.src
                 }
@@ -184,9 +184,6 @@ window.onload = function() {
                     wrInfo.timingMethod = 'RTA (No Loads)';
                     wrInfo.runtime = categoryObj.wr.times.realtime_noloads_t;
                 }
-
-                // Format the runtime into HH:MM:SS or HH:MM:SS.sss and store the result.
-                wrInfo.formattedRuntime = vm.formatRuntime(wrInfo.runtime);
                 
                 // Store a link to the leaderboard.
                 wrInfo.src = categoryObj.weblink;
@@ -305,9 +302,6 @@ window.onload = function() {
                     wrInfo.runtime = runObj.times.realtime_noloads_t;
                 }
 
-                // Format the runtime into HH:MM:SS or HH:MM:SS.sss and store the result.
-                wrInfo.formattedRuntime = vm.formatRuntime(wrInfo.runtime);
-
                 // Store a link to the leaderboard.
                 wrInfo.src = runObj.category.data.weblink;
 
@@ -346,19 +340,6 @@ window.onload = function() {
             getRandomNumber: function(max) {
                 // Generates a random number between 0 and max, inclusive.
                 return Math.floor(Math.random() * (max + 1));
-            },
-            formatRuntime: function(runtime) {
-                // Take a runtime (in seconds) and return it in HH:MM:SS or HH:MM:SS.SSS format.
-                var hours = Math.floor(runtime / 3600);
-                var minutes = Math.floor((runtime - (hours * 3600)) / 60);
-                var seconds = runtime - (hours * 3600) - (minutes * 60);
-
-                if(hours < 10) { hours = '0' + hours; }
-                if(minutes < 10) { minutes = '0' + minutes; }
-                if(seconds % 1 !== 0) { seconds = seconds.toFixed(3); }
-                if(seconds < 10) { seconds = '0' + seconds; }
-
-                return hours + ':' + minutes + ':' + seconds;
             }
         },
         created: function() {
