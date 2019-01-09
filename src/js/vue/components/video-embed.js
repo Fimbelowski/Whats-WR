@@ -12,12 +12,12 @@ Vue.component('video-embed', {
                     <iframe v-if="isYtEmbed" :src="videoURL"\
                     frameborder="0"\
                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"\
-                    allowfullscreen></iframe>\
+                    allowfullscreen="true"></iframe>\
                     \
                     <iframe v-else :src="videoURL"\
                     frameborder="0"\
                     scrolling="no"\
-                    allowfullscreen="true"\
+                    allowfullscreen="true">\
                     </iframe>\
                 </section>'
 });
