@@ -45,21 +45,14 @@ window.onload = function() {
                promise.then((response) => {
                     if(response.length < 1000) {
                         vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
-                        vm.checkForHash();
+                        
+                        // Check if the URL contains a location hash. If so, load a ran from that fragment. If not, load from a fresh start.
+                        (window.location.hash) ? vm.getRunFromHash() : vm.getRandomGroupOfGames();
                     } else {
                         vm.totalNumOfGamesStartingOffset += 1000;
                         vm.getTotalNumOfGames();
                     }
                });
-            },
-            checkForHash: function() {
-                // Check if the URL contains a location hash. If so, load a ran from that fragment. If not, load from a fresh start.
-                if(window.location.hash) {
-                    // Load from fragment
-                } else {
-                    // Load fresh
-                    vm.getRandomGroupOfGames();
-                }
             },
             getRandomGroupOfGames: function() {
                 /*
@@ -169,7 +162,6 @@ window.onload = function() {
                 }
             },
             cleanCategoryObject: function(categoryObj) {
-                console.log(categoryObj);
                 var wrInfo = {};
 
                 // Store the game, category, and run information
@@ -246,7 +238,7 @@ window.onload = function() {
                     playerObj.name = (response.names.japanese) ? response.names.japanese : response.names.international;
 
                     // Append the player's social media links.
-                    playerObj.src = response.weblink;
+                    playerObj.src = (response.weblink) ? response.weblink : null;
                     playerObj.twitch = (response.twitch) ? response.twitch.uri : null;
                     playerObj.twitter = (response.twitter) ? response.twitter.uri : null;
                     playerObj.youtube = (response.youtube) ? response.youtube.uri : null;
@@ -270,6 +262,85 @@ window.onload = function() {
             },
             updateLocationHash: function() {
                 window.location.hash = (vm.displayedRun.runID) ? encodeURIComponent(vm.displayedRun.runID) : '';
+            },
+            getRunFromHash: function() {
+                var runID = decodeURIComponent(window.location.hash).slice(1);
+                
+                var promise = new Promise((resolve, reject) => {
+                    const req = new XMLHttpRequest();
+                    var url = 'https://www.speedrun.com/api/v1/runs/' + runID + '?embed=game,category,players';
+                    req.open('GET', url);
+                    req.onload = () => resolve(JSON.parse(req.responseText).data);
+                    req.onerror = () => reject(req.statusText);
+                    req.send();
+                });
+
+                promise.then((response) => {
+                    vm.parseRunFromHash(response);
+                });
+
+                return promise;
+            },
+            parseRunFromHash: function(runObj) {
+                var wrInfo = {};
+
+                // Store the game, category, and run information
+                wrInfo.gameID = runObj.game.data.id;
+                wrInfo.gameTitle = (runObj.game.data.names.international) ? runObj.game.data.names.international : runObj.game.data.names.japanese;
+
+                wrInfo.categoryID = runObj.category.data.id;
+                wrInfo.categoryName = runObj.category.data.name;
+
+                wrInfo.runID = runObj.id;
+
+                // Store the category timing method and runtime.
+                if(runObj.times.primary_t === runObj.times.ingame_t) {
+                    wrInfo.timingMethod = 'IGT';
+                    wrInfo.runtime = runObj.times.ingame_t;
+                } else if(runObj.times.primary_t === runObj.times.realtime_t) {
+                    wrInfo.timingMethod = 'RTA';
+                    wrInfo.runtime = runObj.times.realtime_t;
+                } else {
+                    wrInfo.timingMethod = 'RTA (No Loads)';
+                    wrInfo.runtime = runObj.times.realtime_noloads_t;
+                }
+
+                // Format the runtime into HH:MM:SS or HH:MM:SS.sss and store the result.
+                wrInfo.formattedRuntime = vm.formatRuntime(wrInfo.runtime);
+
+                // Store a link to the leaderboard.
+                wrInfo.src = runObj.category.data.weblink;
+
+                // Store the wr run's video URL
+                wrInfo.videoURL = runObj.videos.links[0].uri;
+
+                // Create an array to store the player(s) info.
+                wrInfo.players = [];
+
+                // Store the player info for each player
+                runObj.players.data.forEach((item, i) => {
+                    wrInfo.players.push({});
+
+                    // Get the player's name.
+                    wrInfo.players[i].name = (item.names.japanese) ? item.names.japanese : item.names.international;
+
+                    // Get the player's social media info.
+                    wrInfo.players[i].src = (item.weblink) ? item.weblink : null;
+                    wrInfo.players[i].twitch = (item.twitch) ? item.twitch.uri : null;
+                    wrInfo.players[i].twitter = (item.twitter) ? item.twitter.uri : null;
+                    wrInfo.players[i].youtube = (item.youtube) ? item.youtube.uri : null;
+                });
+
+                // If there is no displayedRun, set displayedRun equal to wrObj and update the location hash. Otherwise, push wrObj onto backupRuns.
+                if(vm.displayedRun === null) {
+                    vm.displayedRun = wrInfo;
+                    vm.updateLocationHash();
+                } else {
+                    vm.backupRuns.push(wrInfo);
+                }
+
+                // If the length of backupRuns is less than targetNumOfBackups, run the main code flow again.
+                if(vm.backupRuns.length < vm.targetNumOfBackups) { vm.getRandomGroupOfGames(); }
             },
             // Utility Methods
             getRandomNumber: function(max) {
