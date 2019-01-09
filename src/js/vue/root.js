@@ -169,14 +169,17 @@ window.onload = function() {
                 }
             },
             cleanCategoryObject: function(categoryObj) {
+                console.log(categoryObj);
                 var wrInfo = {};
 
-                // Store the game and category information
+                // Store the game, category, and run information
                 wrInfo.gameID = categoryObj.game.data.id;
                 wrInfo.gameTitle = (categoryObj.game.data.names.international) ? categoryObj.game.data.names.international : categoryObj.game.data.names.japanese;
 
                 wrInfo.categoryID = categoryObj.id;
                 wrInfo.categoryName = categoryObj.name;
+
+                wrInfo.runID = categoryObj.wr.id;
 
                 // Store the category timing method and runtime.
                 if(categoryObj.wr.times.primary_t === categoryObj.wr.times.ingame_t) {
@@ -212,8 +215,13 @@ window.onload = function() {
 
                 // When all promises are resolved then the run is ready to show to the user.
                 Promise.all(promises).then(() => {
-                    // If there is no displayedRun, set displayedRun equal to wrObj. Otherwise, push wrObj onto backupRuns.
-                    (vm.displayedRun === null) ? vm.displayedRun = wrObj : vm.backupRuns.push(wrObj);
+                    // If there is no displayedRun, set displayedRun equal to wrObj and update the location hash. Otherwise, push wrObj onto backupRuns.
+                    if(vm.displayedRun === null) {
+                        vm.displayedRun = wrObj;
+                        vm.updateLocationHash();
+                    } else {
+                        vm.backupRuns.push(wrObj);
+                    }
 
                     // If the length of backupRuns is less than targetNumOfBackups, run the main code flow again.
                     if(vm.backupRuns.length < vm.targetNumOfBackups) { vm.getRandomGroupOfGames(); }
@@ -252,12 +260,16 @@ window.onload = function() {
 
                 // If backupRuns contains any elements...
                 if(vm.backupRuns.length > 0) {
-                    // Move the first element from backupRuns into displayedRun.
+                    // Move the first element from backupRuns into displayedRun and update the location hash.
                     vm.displayedRun = vm.backupRuns.shift();
+                    vm.updateLocationHash();
 
                     // If backupRuns was full, retart the main code flow.
                     if(vm.backupRuns.length === (vm.targetNumOfBackups - 1)) { vm.getRandomGroupOfGames(); }
                 }
+            },
+            updateLocationHash: function() {
+                window.location.hash = (vm.displayedRun.runID) ? encodeURIComponent(vm.displayedRun.runID) : '';
             },
             // Utility Methods
             getRandomNumber: function(max) {
