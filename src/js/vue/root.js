@@ -22,12 +22,6 @@ window.onload = function() {
                     timingMethod: this.displayedRun.timingMethod,
                     src: this.displayedRun.src
                 }
-            },
-            videoInfo: function() {
-                return {
-                    host: this.displayedRun.videoHost,
-                    id: this.displayedRun.videoID
-                }
             }
         },
         methods: {
@@ -169,10 +163,6 @@ window.onload = function() {
                 if(arr.length === 0) {
                     vm.getRandomGroupOfGames();
                 } else {
-                    // Get the video ID for each category in arr
-                    arr.forEach(item => item.videoID = (item.videoHost === 'youtube') ? vm.ytRegEx.exec(item.wr.videos.links[0].uri)[1]
-                                                                                    : vm.twitchRegEx.exec(item.wr.videos.links[0].uri)[1]);
-
                     //We can now select one at random to show the user.
                     // Get a random category from the remaining categories and pass it into cleanCategoryObject.
                     vm.cleanCategoryObject(arr[vm.getRandomNumber(arr.length - 1)]);
@@ -200,17 +190,16 @@ window.onload = function() {
                     wrInfo.runtime = categoryObj.wr.times.realtime_noloads_t;
                 }
 
-                // Format the runtime into HH:MM:SS or HH:MM:SS.sss and store the result
+                // Format the runtime into HH:MM:SS or HH:MM:SS.sss and store the result.
                 wrInfo.formattedRuntime = vm.formatRuntime(wrInfo.runtime);
                 
-                // Store a link to the leaderboard
+                // Store a link to the leaderboard.
                 wrInfo.src = categoryObj.weblink;
 
-                // Store the wr run's video host and ID
-                wrInfo.videoHost = categoryObj.videoHost;
-                wrInfo.videoID = categoryObj.videoID;
+                // Store the wr run's video URL
+                wrInfo.videoURL = categoryObj.wr.videos.links[0].uri;
 
-                // Store the player(s) info
+                // Store the player(s) info.
                 wrInfo.players = categoryObj.wr.players;
                 vm.getAllPlayersInfo(wrInfo);
             },

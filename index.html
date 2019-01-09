@@ -26,7 +26,7 @@
     <header></header>
     <main id='main'>
       <section class='l-main-primary'>
-        <video-embed v-if='displayedRun' :video-info='videoInfo'></video-embed>
+        <video-embed v-if='displayedRun' :video-url='displayedRun.videoURL'></video-embed>
         <wr-info v-if='displayedRun' :wr-info='wrInfo'></wr-info>
       </section>
       <div class='l-main-secondary'>
