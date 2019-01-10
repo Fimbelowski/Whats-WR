@@ -62,7 +62,7 @@ window.onload = function() {
                 */
                 var promise = new Promise((resolve, reject) => {
                     const xhr = new XMLHttpRequest();
-                    var url = 'https://www.speedrun.com/api/v1/games?offset=' + this.getRandomNumber(this.totalNumOfGames) + '&embed=categories.game';
+                    var url = 'https://www.speedrun.com/api/v1/games?offset=' + this.getRandomNumber(this.totalNumOfGames - 19) + '&embed=categories.game';
                     xhr.open('GET', url);
                     xhr.onload = () => resolve(JSON.parse(xhr.responseText).data);
                     xhr.onerror = () => reject(xhr.statusText);
