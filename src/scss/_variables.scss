@@ -1,3 +1,20 @@
+// Fonts
+@font-face {
+    font-family: Mohave;
+    src: url(/src/fonts/Mohave-Light.otf);
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: Mohave;
+    src: url(/src/fonts/Mohave-Medium.otf);
+    font-weight: 500;
+}
+
 // Variable declaration
-$gray-100: #5B5B5B;
-$gray-200: #999999;
+$gray-100: #1C1C1C;
+$gray-200: #303030;
+
+$primary: #ED2828;
+
+$main-font: Mohave;

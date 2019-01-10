@@ -25,7 +25,6 @@
   <body>
     <header>
       <h1>What's WR?</h1>
-      <h2>Find a random speedrun world record to watch!</h2>
     </header>
     <main id='main'>
       <section class='l-main-primary'>
@@ -33,7 +32,7 @@
         <wr-info v-if='displayedRun' :wr-info='wrInfo'></wr-info>
       </section>
       <div class='l-main-secondary'>
-        <players-info v-if='displayedRun' :players='displayedRun.players'></players-info>
+        <player-info-container v-if='displayedRun' :players='displayedRun.players'></player-info-container>
         <wr-button v-if='displayedRun' :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
       </div>
     </main>
