@@ -23,7 +23,10 @@
   </head>
 
   <body>
-    <header></header>
+    <header>
+      <h1>What's WR?</h1>
+      <h2>Find a random speedrun world record to watch!</h2>
+    </header>
     <main id='main'>
       <section class='l-main-primary'>
         <video-embed v-if='displayedRun' :video-url='displayedRun.videoURL'></video-embed>
@@ -34,6 +37,9 @@
         <wr-button v-if='displayedRun' :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
       </div>
     </main>
-    <footer></footer>
+    <footer>
+      <p>Copyright Christopher Fimbel 2018</p>
+      <p>Fork this repository on Github!</p>
+    </footer>
   </body>
 </html>
