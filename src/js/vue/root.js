@@ -46,9 +46,6 @@ window.onload = function() {
                promise.then((response) => {
                     if(response.length < 1000) {
                         vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
-                        
-                        // Check if the URL contains a location hash. If so, load a ran from that fragment. If not, load from a fresh start.
-                        (window.location.hash) ? vm.getRunFromHash() : vm.getRandomGroupOfGames();
                     } else {
                         vm.totalNumOfGamesStartingOffset += 1000;
                         vm.getTotalNumOfGames();
@@ -342,6 +339,9 @@ window.onload = function() {
         },
         created: function() {
             this.getTotalNumOfGames();
+        },
+        mounted: function() {
+            if(window.location.hash) { this.getRunFromHash(); }
         }
     });
 }
