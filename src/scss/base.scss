@@ -11,25 +11,32 @@ body {
     display: flex;
     flex-direction: column;
 
-    box-sizing: border-box;
-
-    height: 100%;
-
-    padding: 10px;
-
-    background-color: $gray-100;
+    background-color: $gray-200;
 }
 
 header, footer {
+    box-sizing: border-box;
+    padding: 0 10px;
+
     width: 100%;
+    background-color: $gray-100;
 }
 
-header {
+footer {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    justify-content: center;
+}
 
-    margin-bottom: 10px;
+main {
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    padding: 10px;
+
+    width: 100%;
+    flex: 1;
 }
 
 h1, h2 {
@@ -44,7 +51,6 @@ h3, h4, h5, h6, p {
 
 h1 {
     font-size: 3.75em;
-    font-weight: 500;
     color: $primary;
 
     margin: 0;
@@ -52,26 +58,14 @@ h1 {
 
 h2 {
     font-weight: 100;
+    font-size: 2.5em;
+    margin: 0;
+    color: $off-white;
 }
 
 h3 {
     font-size: 2em;
     margin: 0;
-}
-
-footer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-top: 10px;
-}
-
-main {
-    display: flex;
-    flex-direction: row;
-
-    width: 100%;
-    flex: 1;
 }
 
 iframe {
@@ -84,5 +78,5 @@ button:disabled {
 }
 
 a {
-    color: white;
+    color: $off-white;
 }

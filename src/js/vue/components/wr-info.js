@@ -40,9 +40,9 @@ Vue.component('wr-info', {
             this.urlToCopy = false;
         }
     },
-    template:   '<section class="wr-info">\
+    template:   '<section class="l-wr-info-container">\
                     <h2><a :href="wrInfo.src">{{ wrInfo.gameTitle }} - {{ wrInfo.categoryName }}</a> in {{  formattedRuntime }} ({{ wrInfo.timingMethod }})</h2>\
-                    <button type="button" @click="copyURLToClipboard">Copy URL</button>\
-                    <textarea ref="urlTextArea" style="height: 0">{{ windowLocationHref }}</textarea>\
+                    <button type="button" @click="copyURLToClipboard"><p>Copy URL</p></button>\
+                    <textarea ref="urlTextArea" class="url-text-area">{{ windowLocationHref }}</textarea>\
                 </section>'
 });

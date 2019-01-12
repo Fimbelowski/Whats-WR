@@ -27,12 +27,12 @@
       <h1>What's WR?</h1>
     </header>
     <main id='main'>
-      <section class='l-main-primary'>
+      <div class='l-main-primary'>
         <video-embed v-if='displayedRun' :video-url='displayedRun.videoURL'></video-embed>
-        <wr-info v-if='displayedRun' :wr-info='wrInfo'></wr-info>
-      </section>
-      <div class='l-main-secondary'>
         <player-info-container v-if='displayedRun' :players='displayedRun.players'></player-info-container>
+      </div>
+      <div class='l-main-secondary'>
+        <wr-info v-if='displayedRun' :wr-info='wrInfo'></wr-info>
         <wr-button v-if='displayedRun' :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
       </div>
     </main>

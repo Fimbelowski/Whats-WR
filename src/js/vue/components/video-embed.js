@@ -29,7 +29,7 @@ Vue.component('video-embed', {
             return url;
         }
     },
-    template:   '<section class="video-embed">\
+    template: ' <section class="video-embed-container">\
                     <iframe v-if="videoHost === \'youtube\'" :src="videoURL"\
                     frameborder="0"\
                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"\
