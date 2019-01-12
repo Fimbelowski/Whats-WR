@@ -1,6 +1,9 @@
 @import '../variables';
 
 .video-embed-container {
-    flex: 1;
-    margin-bottom: 10px;
+    width: 1440px;
+    height: 810px;
+
+    border-radius: 3px;
+    overflow: hidden;
 }

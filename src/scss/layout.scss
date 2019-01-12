@@ -4,25 +4,30 @@
 .l-main-primary {
     display: flex;
     flex-direction: row;
-    flex: 1;
+
+    margin-bottom: 5px;
 }
 
 .l-main-secondary {
+    flex: 1;
+
     display: flex;
     flex-direction: row;
 
     align-items: flex-start;
-
-    margin-top: 10px;
 }
 
 .l-wr-button-container {
+    flex: 1;
+
+    height: 100%;
+    margin-left: 5px;
     background-color: $gray-200;
 }
 
 .l-wr-info-container {
-    flex: 1;
-
     display: flex;
     flex-direction: row;
+    width: 1440px;
+    height: 100%;
 }

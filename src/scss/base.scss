@@ -11,21 +11,7 @@ body {
     display: flex;
     flex-direction: column;
 
-    background-color: $gray-200;
-}
-
-header, footer {
-    box-sizing: border-box;
-    padding: 0 10px;
-
-    width: 100%;
-    background-color: $gray-100;
-}
-
-footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+    background-color: $gray-300;
 }
 
 main {
@@ -39,33 +25,45 @@ main {
     flex: 1;
 }
 
-h1, h2 {
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    padding: 5px 0;
+
+    background-color: $gray-100;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
     font-family: $main-font;
+    color: $off-white;
+}
+
+h1, h2 {
     font-weight: 500;
 }
 
 h3, h4, h5, h6, p {
-    font-family: $main-font;
     font-weight: 100;
 }
 
 h1 {
     font-size: 3.75em;
-    color: $primary;
-
-    margin: 0;
 }
 
 h2 {
     font-weight: 100;
     font-size: 2.5em;
-    margin: 0;
-    color: $off-white;
 }
 
 h3 {
     font-size: 2em;
-    margin: 0;
+}
+
+p {
+    margin: 0 10px;
 }
 
 iframe {
