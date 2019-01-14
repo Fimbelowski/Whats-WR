@@ -42,7 +42,7 @@ Vue.component('wr-info', {
     },
     template:   '<section class="l-wr-info-container">\
                     <h2><a :href="wrInfo.src">{{ wrInfo.gameTitle }} - {{ wrInfo.categoryName }}</a> in {{  formattedRuntime }} ({{ wrInfo.timingMethod }})</h2>\
-                    <button type="button" @click="copyURLToClipboard"><p>Copy URL</p></button>\
+                    <img class="copy-url-button" src="dist/images/link-symbol.png" @click="copyURLToClipboard">\
                     <textarea ref="urlTextArea" class="url-text-area">{{ windowLocationHref }}</textarea>\
                 </section>'
 });
