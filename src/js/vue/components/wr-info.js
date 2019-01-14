@@ -2,7 +2,9 @@ Vue.component('wr-info', {
     props: ['wr-info'],
     data: function() {
         return {
-            urlToCopy: false
+            urlToCopy: false,
+            showTooltip: false,
+            tooltipClicked: false
         }
     },
     computed: {
@@ -23,6 +25,15 @@ Vue.component('wr-info', {
         },
         windowLocationHref: function() {
             return window.location.hostname + ':' + window.location.port + '/#' + this.wrInfo.runID;
+        },
+        tooltipMessage: function() {
+            return (this.tooltipClicked) ? 'URL Copied!' : 'Click here to copy the current run to your clipboard!';
+        },
+        tooltipContainerStyleObj: function() {
+            return {
+                width: (this.tooltipClicked) ? '80px' : '320px',
+                marginLeft: (this.tooltipClicked) ? '-40px' : '-160px'
+            };
         }
     },
     methods: {
@@ -42,7 +53,12 @@ Vue.component('wr-info', {
     },
     template:   '<section class="l-wr-info-container">\
                     <h2><a :href="wrInfo.src">{{ wrInfo.gameTitle }} - {{ wrInfo.categoryName }}</a> in {{  formattedRuntime }} ({{ wrInfo.timingMethod }})</h2>\
-                    <img class="copy-url-button" src="dist/images/link-symbol.png" @click="copyURLToClipboard">\
+                    <div class="tooltip" @mouseenter="showTooltip = true" @mouseleave="showTooltip = false; tooltipClicked = false" @click="tooltipClicked = true">\
+                        <img class="copy-url-button" src="dist/images/link-symbol.png" @click="copyURLToClipboard">\
+                        <div class="tooltip-container" :style="tooltipContainerStyleObj" v-if="showTooltip">\
+                            <p>{{ tooltipMessage }}</p>\
+                        </div>\
+                    </div>\
                     <textarea ref="urlTextArea" class="url-text-area">{{ windowLocationHref }}</textarea>\
                 </section>'
 });

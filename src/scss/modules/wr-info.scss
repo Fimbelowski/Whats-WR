@@ -12,3 +12,17 @@
     margin-left: 5px;
     cursor: pointer;
 }
+
+.tooltip {
+    position: relative;
+}
+
+.tooltip-container {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    background-color: rgba($gray-100, .8);
+    text-align: center;
+    padding: 3px 5px;
+    border-radius: 3px;
+}
