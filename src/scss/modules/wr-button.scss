@@ -17,6 +17,8 @@
 
     background-color: $primary-200;
 
+    transition: background-color, 0.2s;
+
     &:hover {
         background-color: $primary-300;
     }
