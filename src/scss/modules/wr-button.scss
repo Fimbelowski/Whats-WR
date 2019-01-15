@@ -1,5 +1,13 @@
 @import '../variables';
 
+.wr-button-container {
+    flex: 1;
+
+    height: 100%;
+    margin-right: 10px;
+    background-color: $gray-200;
+}
+
 .wr-button {
     width: 100%;
     height: 100%;

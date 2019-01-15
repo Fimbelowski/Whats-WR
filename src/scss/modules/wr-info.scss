@@ -1,5 +1,13 @@
 @import '../variables';
 
+.wr-info-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 1440px;
+    height: 100%;
+}
+
 .url-text-area {
     position: absolute;
     opacity: 0;

@@ -35,7 +35,7 @@ footer {
     background-color: $gray-100;
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1, h2, h3, h4, h5, h6, p, a {
     margin: 0;
     font-family: $main-font;
     color: $off-white;
@@ -69,8 +69,4 @@ iframe {
 
 button:disabled {
     cursor: not-allowed;
-}
-
-a {
-    color: $off-white;
 }

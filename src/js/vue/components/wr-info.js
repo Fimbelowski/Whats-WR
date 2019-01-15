@@ -51,7 +51,7 @@ Vue.component('wr-info', {
             this.urlToCopy = false;
         }
     },
-    template:   '<section class="l-wr-info-container">\
+    template:   '<section class="wr-info-container">\
                     <h2><a :href="wrInfo.src">{{ wrInfo.gameTitle }} - {{ wrInfo.categoryName }}</a> in {{  formattedRuntime }} ({{ wrInfo.timingMethod }})</h2>\
                     <div class="tooltip" @mouseenter="showTooltip = true" @mouseleave="showTooltip = false; tooltipClicked = false" @click="tooltipClicked = true">\
                         <img class="copy-url-button" src="dist/images/link.png" @click="copyURLToClipboard">\
