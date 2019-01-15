@@ -25,12 +25,12 @@
   <body>
     <main id='main'>
       <div class='l-main-primary'>
-        <video-embed v-if='displayedRun' :video-url='displayedRun.videoURL'></video-embed>
         <player-info-container v-if='displayedRun' :players='displayedRun.players'></player-info-container>
+        <video-embed v-if='displayedRun' :video-url='displayedRun.videoURL'></video-embed>
       </div>
       <div class='l-main-secondary'>
-        <wr-info v-if='displayedRun' :wr-info='wrInfo'></wr-info>
         <wr-button v-if='displayedRun' :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
+        <wr-info v-if='displayedRun' :wr-info='wrInfo'></wr-info>
       </div>
     </main>
     <footer>
