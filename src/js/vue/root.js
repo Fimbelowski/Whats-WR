@@ -46,7 +46,9 @@ window.onload = function() {
                promise.then((response) => {
                     if(response.length < 1000) {
                         vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
-                        vm.getRandomGroupOfGames();
+
+                        // If the window contains a URL hash, load from there. Otherwise start from scratch
+                        (window.location.hash) ? vm.getRunFromHash() : vm.getRandomGroupOfGames();
                     } else {
                         vm.totalNumOfGamesStartingOffset += 1000;
                         vm.getTotalNumOfGames();
@@ -340,9 +342,6 @@ window.onload = function() {
         },
         created: function() {
             this.getTotalNumOfGames();
-        },
-        mounted: function() {
-            if(window.location.hash) { this.getRunFromHash(); }
         }
     });
 }
