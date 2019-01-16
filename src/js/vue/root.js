@@ -48,12 +48,17 @@ window.onload = function() {
                         vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
 
                         // If the window contains a URL hash, load from there. Otherwise start from scratch
-                        (window.location.hash) ? vm.getRunFromHash() : vm.getRandomGroupOfGames();
+                        (window.location.hash) ? vm.getRunFromHash() : vm.fillRemainingBackups();
                     } else {
                         vm.totalNumOfGamesStartingOffset += 1000;
                         vm.getTotalNumOfGames();
                     }
                });
+            },
+            fillRemainingBackups: function() {
+                for(var i = 0; i < vm.targetNumOfBackups - vm.backupRuns.length; i++) {
+                    vm.getRandomGroupOfGames();
+                }
             },
             getRandomGroupOfGames: function() {
                 /*
@@ -209,12 +214,10 @@ window.onload = function() {
                     if(vm.displayedRun === null) {
                         vm.displayedRun = wrObj;
                         window.location.hash = encodeURIComponent(vm.displayedRun.runID);
+                        vm.getRandomGroupOfGames();
                     } else {
                         vm.backupRuns.push(wrObj);
                     }
-
-                    // If the length of backupRuns is less than targetNumOfBackups, run the main code flow again.
-                    if(vm.backupRuns.length < vm.targetNumOfBackups) { vm.getRandomGroupOfGames(); }
                 });
             },
             getPlayerInfo: function(playerObj) {
@@ -332,7 +335,7 @@ window.onload = function() {
                 }
 
                 // If the length of backupRuns is less than targetNumOfBackups, run the main code flow again.
-                if(vm.backupRuns.length < vm.targetNumOfBackups) { vm.getRandomGroupOfGames(); }
+                vm.fillRemainingBackups();
             },
             // Utility Methods
             getRandomNumber: function(max) {
