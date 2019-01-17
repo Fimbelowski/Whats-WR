@@ -24,16 +24,18 @@
 
   <body>
     <main id='main'>
-      <div v-if='!displayedRun' class='loading-message'>
-        <h2>Finding World Record...</h2>
+      <transition name='fade'>
+          <div v-if='!displayedRun' class='loading-message'>
+            <h2>Finding World Record...</h2>
+          </div>
+      </transition>
+      <div v-if='displayedRun' class='l-main-primary'>
+        <player-info-container :players='displayedRun.players'></player-info-container>
+        <video-embed :video-url='displayedRun.videoURL'></video-embed>
       </div>
-      <div class='l-main-primary'>
-        <player-info-container v-if='displayedRun' :players='displayedRun.players'></player-info-container>
-        <video-embed v-if='displayedRun' :video-url='displayedRun.videoURL'></video-embed>
-      </div>
-      <div class='l-main-secondary'>
-        <wr-button v-if='displayedRun' :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
-        <wr-info v-if='displayedRun' :wr-info='wrInfo'></wr-info>
+      <div v-if='displayedRun' class='l-main-secondary'>
+        <wr-button :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
+        <wr-info :wr-info='wrInfo'></wr-info>
       </div>
     </main>
     <footer>
