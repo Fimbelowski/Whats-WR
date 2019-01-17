@@ -35,10 +35,12 @@
             <video-embed :video-url='displayedRun.videoURL'></video-embed>
         </div>
       </transition>
-      <div v-if='displayedRun' class='l-main-secondary'>
-        <wr-button :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
-        <wr-info :wr-info='wrInfo'></wr-info>
-      </div>
+      <transition name='slide-up-in'>
+        <div v-if='displayedRun' class='l-main-secondary'>
+            <wr-button :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
+            <wr-info :wr-info='wrInfo'></wr-info>
+        </div>
+      </transition>
     </main>
     <footer>
       <a class='footer-link' href='https://github.com/Fimbelowski'>
