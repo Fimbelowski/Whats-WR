@@ -1,1 +1,18 @@
 // State CSS Rules
+.slide-in-down-enter-active {
+    animation: slide-in-down 0.2s;
+}
+
+.slide-in-down-leave-active {
+    animation: slide-in-down 0.2s reverse;
+}
+
+@keyframes slide-in-down {
+    0% {
+        transform: translate(0, -100%);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
