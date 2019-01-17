@@ -34,3 +34,11 @@
         transform: translate(0, 0);
     }
 }
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.15s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
