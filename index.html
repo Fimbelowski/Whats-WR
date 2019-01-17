@@ -24,6 +24,9 @@
 
   <body>
     <main id='main'>
+      <div v-if='!displayedRun' class='loading-message'>
+        <h2>Finding World Record...</h2>
+      </div>
       <div class='l-main-primary'>
         <player-info-container v-if='displayedRun' :players='displayedRun.players'></player-info-container>
         <video-embed v-if='displayedRun' :video-url='displayedRun.videoURL'></video-embed>
