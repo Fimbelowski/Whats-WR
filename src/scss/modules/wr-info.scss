@@ -20,6 +20,12 @@
     }
 }
 
+@mixin wr-info-container--desktop-lg {
+    .wr-info-container {
+        width: 1152px;
+    }
+}
+
 .url-text-area {
     position: absolute;
     opacity: 0;

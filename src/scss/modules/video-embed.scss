@@ -22,3 +22,10 @@
         height: 576px;
     }
 }
+
+@mixin video-embed-container--desktop-lg {
+    .video-embed-container {
+        width: 1152px;
+        height: 648px;
+    }
+}

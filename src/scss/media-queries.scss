@@ -18,8 +18,16 @@
             @include wr-info-container--desktop-sm();
         }
 
+        // Medium
         @media(min-width: #{$desktop-md-min}) {
             @include l-main-primary--desktop-md();
             @include video-embed-container--desktop-md();
             @include wr-info-container--desktop-md();
+        }
+
+        // Large
+        @media (min-width: #{$desktop-lg-min}) {
+            @include l-main-primary--desktop-lg();
+            @include video-embed-container--desktop-lg();
+            @include wr-info-container--desktop-lg();
         }
