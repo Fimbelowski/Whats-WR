@@ -17,3 +17,9 @@
             @include video-embed-container--desktop-sm();
             @include wr-info-container--desktop-sm();
         }
+
+        @media(min-width: #{$desktop-md-min}) {
+            @include l-main-primary--desktop-md();
+            @include video-embed-container--desktop-md();
+            @include wr-info-container--desktop-md();
+        }

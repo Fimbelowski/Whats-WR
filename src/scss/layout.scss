@@ -15,6 +15,12 @@
     }
 }
 
+@mixin l-main-primary--desktop-md {
+    .l-main-primary {
+        height: 576px;
+    }
+}
+
 .l-main-secondary {
     flex: 1;
 
