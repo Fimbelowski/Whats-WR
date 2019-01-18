@@ -30,13 +30,13 @@
         </div>
       </transition>
       <transition name='slide-in-down'>
-        <div v-show='displayedRun' class='l-main-primary'>
+        <div v-if='displayedRun' class='l-main-primary'>
             <player-info-container :players='displayedRun.players'></player-info-container>
             <video-embed :video-url='displayedRun.videoURL'></video-embed>
         </div>
       </transition>
       <transition name='slide-up-in'>
-        <div v-show='displayedRun' class='l-main-secondary'>
+        <div v-if='displayedRun' class='l-main-secondary'>
             <wr-button :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
             <wr-info :wr-info='wrInfo'></wr-info>
         </div>

@@ -248,6 +248,7 @@ window.onload = function() {
                 return promise;
             },
             getNextRun: function() {
+                console.log('Fetching next run.');
                 // Remove the current run from the display object.
                 vm.displayedRun = null;
 
@@ -257,8 +258,8 @@ window.onload = function() {
                     vm.displayedRun = vm.backupRuns.shift();
                     window.location.hash = encodeURIComponent(vm.displayedRun.runID);
 
-                    // If backupRuns was full, retart the main code flow.
-                    if(vm.backupRuns.length === (vm.targetNumOfBackups - 1)) { vm.getRandomGroupOfGames(); }
+                    // Fetch another run.
+                    vm.getRandomGroupOfGames();
                 }
             },
             getRunFromHash: function() {
@@ -316,14 +317,20 @@ window.onload = function() {
                 runObj.players.data.forEach((item, i) => {
                     wrInfo.players.push({});
 
-                    // Get the player's name.
-                    wrInfo.players[i].name = (item.names.japanese) ? item.names.japanese : item.names.international;
+                    // Check to see if the player is a guest or not.
+                    if(item.rel === 'guest') {
+                        // Store the guest's name.
+                        wrInfo.players[i].name = item.name;
+                    } else {
+                        // Get the player's name.
+                        wrInfo.players[i].name = (item.names.japanese) ? item.names.japanese : item.names.international;
 
-                    // Get the player's social media info.
-                    wrInfo.players[i].src = (item.weblink) ? item.weblink : null;
-                    wrInfo.players[i].twitch = (item.twitch) ? item.twitch.uri : null;
-                    wrInfo.players[i].twitter = (item.twitter) ? item.twitter.uri : null;
-                    wrInfo.players[i].youtube = (item.youtube) ? item.youtube.uri : null;
+                        // Get the player's social media info.
+                        wrInfo.players[i].src = (item.weblink) ? item.weblink : null;
+                        wrInfo.players[i].twitch = (item.twitch) ? item.twitch.uri : null;
+                        wrInfo.players[i].twitter = (item.twitter) ? item.twitter.uri : null;
+                        wrInfo.players[i].youtube = (item.youtube) ? item.youtube.uri : null;
+                    }
                 });
 
                 // If there is no displayedRun, set displayedRun equal to wrObj and update the location hash. Otherwise, push wrObj onto backupRuns.
