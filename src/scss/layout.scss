@@ -9,23 +9,6 @@
     margin-bottom: 10px;
 }
 
-@mixin l-main-primary--desktop-sm {
-    .l-main-primary {
-        height: 504px;
-    }
-}
-
-@mixin l-main-primary--desktop-md {
-    .l-main-primary {
-        height: 576px;
-    }
-}
-
-@mixin l-main-primary--desktop-lg {
-    .l-main-primary {
-        height: 648px;
-    }
-}
 .l-main-secondary {
     flex: 1;
 

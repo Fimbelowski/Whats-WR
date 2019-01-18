@@ -8,24 +8,6 @@
     height: 100%;
 }
 
-@mixin wr-info-container--desktop-sm {
-    .wr-info-container {
-        width: 896px;
-    }
-}
-
-@mixin wr-info-container--desktop-md {
-    .wr-info-container {
-        width: 1024px;
-    }
-}
-
-@mixin wr-info-container--desktop-lg {
-    .wr-info-container {
-        width: 1152px;
-    }
-}
-
 .url-text-area {
     position: absolute;
     opacity: 0;

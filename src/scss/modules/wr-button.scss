@@ -2,7 +2,7 @@
 
 .wr-button-container {
     flex: 1;
-
+    min-width: $left-column-min-width;
     height: 100%;
     margin-right: 10px;
     background-color: $gray-200;
