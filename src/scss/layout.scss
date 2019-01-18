@@ -2,19 +2,18 @@
 
 // Layout CSS Rules
 .l-main-primary {
+    flex: 1;
+    
     display: flex;
     flex-direction: row;
-    height: 810px;
 
     margin-bottom: 10px;
 }
 
 .l-main-secondary {
-    flex: 1;
-
     display: flex;
     flex-direction: row;
-    min-height: 75px;
+    height: 85px;
 
     align-items: flex-start;
 }

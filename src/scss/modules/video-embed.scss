@@ -1,8 +1,7 @@
 @import '../variables';
 
 .video-embed-container {
-    width: 1440px;
-    height: 810px;
+    flex: 1;
     background-color: $gray-200;
 
     border-radius: 3px;

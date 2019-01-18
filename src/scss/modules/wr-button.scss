@@ -1,8 +1,7 @@
 @import '../variables';
 
 .wr-button-container {
-    flex: 1;
-    min-width: $left-column-min-width;
+    width: $left-column-width;
     height: 100%;
     margin-right: 10px;
     background-color: $gray-200;
