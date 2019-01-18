@@ -8,6 +8,12 @@
     height: 100%;
 }
 
+@mixin wr-info-container--desktop-sm {
+    .wr-info-container {
+        width: 896px;
+    }
+}
+
 .url-text-area {
     position: absolute;
     opacity: 0;

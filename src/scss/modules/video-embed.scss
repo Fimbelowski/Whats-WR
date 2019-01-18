@@ -8,3 +8,10 @@
     border-radius: 3px;
     overflow: hidden;
 }
+
+@mixin video-embed-container--desktop-sm {
+    .video-embed-container {
+    width: 896px;
+    height: 504px;
+    }
+}

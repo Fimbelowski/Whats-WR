@@ -2,6 +2,8 @@
 @import 'variables';
 @import 'base';
 @import 'layout';
+@import 'modules/video-embed';
+@import 'modules/wr-info';
 
 // Media Queries
     // Mobile Phones
@@ -9,3 +11,9 @@
     // Tablets
 
     // Desktop
+        // Small
+        @media(min-width: #{$desktop-sm-min}) {
+            @include l-main-primary--desktop-sm();
+            @include video-embed-container--desktop-sm();
+            @include wr-info-container--desktop-sm();
+        }

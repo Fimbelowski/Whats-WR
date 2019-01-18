@@ -9,6 +9,12 @@
     margin-bottom: 10px;
 }
 
+@mixin l-main-primary--desktop-sm {
+    .l-main-primary {
+        height: 504px;
+    }
+}
+
 .l-main-secondary {
     flex: 1;
 

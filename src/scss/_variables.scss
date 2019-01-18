@@ -11,7 +11,9 @@
     font-weight: 500;
 }
 
-// Variable declaration
+$main-font: Mohave;
+
+// Colors
 $gray-100: #1C1C1C;
 $gray-200: #303030;
 $gray-300: #494949;
@@ -23,4 +25,5 @@ $primary-300: #FF4242;
 
 $off-white: #D3D3D3;
 
-$main-font: Mohave;
+// Media Query Breakpoints
+$desktop-sm-min: 1200px;
