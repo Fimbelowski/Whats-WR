@@ -29,18 +29,14 @@
             <h2>Finding World Record...</h2>
         </div>
       </transition>
-      <transition name='slide-in-down'>
-        <div v-if='displayedRun' class='l-main-primary'>
-            <player-info-container :players='displayedRun.players'></player-info-container>
-            <video-embed :video-url='displayedRun.videoURL'></video-embed>
-        </div>
-      </transition>
-      <transition name='slide-up-in'>
-        <div v-if='displayedRun' class='l-main-secondary'>
-            <wr-button :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
-            <wr-info :wr-info='wrInfo'></wr-info>
-        </div>
-      </transition>
+      <div v-if='displayedRun' class='l-main-primary'>
+          <video-embed :video-url='displayedRun.videoURL'></video-embed>
+          <wr-info :wr-info='wrInfo'></wr-info>
+      </div>
+      <div v-if='displayedRun' class='l-main-secondary'>
+          <player-info-container :players='displayedRun.players'></player-info-container>
+          <wr-button :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
+      </div>
     </main>
     <footer>
       <a class='footer-link' href='https://github.com/Fimbelowski'>
