@@ -26,16 +26,24 @@
     <main id='main'>
       <transition name='fade'>
         <div v-if='!displayedRun' class='loading-message'>
-            <h2>Finding World Record...</h2>
+          <h2>Finding World Record...</h2>
         </div>
       </transition>
-      <div v-if='displayedRun' class='l-main-primary'>
-          <video-embed :video-url='displayedRun.videoURL'></video-embed>
-          <wr-info :wr-info='wrInfo'></wr-info>
+      <div class='l-main-primary'>
+        <transition name='slide-in-down'>
+          <video-embed v-if='displayedRun' :video-url='displayedRun.videoURL'></video-embed>
+        </transition>
+        <transition name='slide-in-up'>
+          <wr-info v-if='displayedRun' :wr-info='wrInfo'></wr-info>
+        </transition>
       </div>
-      <div v-if='displayedRun' class='l-main-secondary'>
-          <player-info-container :players='displayedRun.players'></player-info-container>
-          <wr-button :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
+      <div class='l-main-secondary'>
+        <transition name='slide-in-down'>
+          <player-info-container v-if='displayedRun' :players='displayedRun.players'></player-info-container>
+        </transition>
+        <transition name='slide-in-up'>
+          <wr-button v-if='displayedRun' :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
+        </transition>
       </div>
     </main>
     <footer>
