@@ -27,6 +27,12 @@ main {
     flex: 1;
 }
 
+@mixin main--tablet() {
+    main {
+        flex-direction: column;
+    }
+}
+
 footer {
     display: flex;
     flex-direction: row;
@@ -67,6 +73,14 @@ h3 {
 iframe {
     width: 100%;
     height: 100%;
+}
+
+@mixin iframe--tablet() {
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 }
 
 button:disabled {
