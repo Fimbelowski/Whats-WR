@@ -16,6 +16,12 @@
     width: $left-column-width;
 }
 
+@mixin l-main-secondary--tablet-landscape() {
+    .l-main-secondary {
+        width: 250px;
+    }
+}
+
 @mixin l-main-secondary--laptop() {
     .l-main-secondary {
         width: 300px;

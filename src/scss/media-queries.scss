@@ -1,9 +1,23 @@
 @import 'variables';
 @import 'base';
 @import 'layout';
+@import 'modules/player-info';
+@import 'modules/wr-info';
 
 // Tablet
+    // Landscape
+    @media(min-width: #{$tablet-min-width}) and (max-width: #{$tablet-max-width}) {
+        @include font-size--tablet-landscape();
+        @include l-main-secondary--tablet-landscape();
+        @include player-social-icon--tablet();
+        @include h1--tablet();
+        @include h2--medium();
+        @include copy-url-button--tablet();
+    }
+
+// Laptop
 @media(min-width: #{$laptop-min-width}) and (max-width: #{$laptop-max-width}) {
+    @include font-size--laptop();
     @include l-main-secondary--laptop();
-    @include h2--laptop();
+    @include h2--medium();
 }

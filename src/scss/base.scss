@@ -11,8 +11,16 @@ html {
     font-size: 18px;
 }
 
-@mixin font-size--tablet() {
-    font-size: 16px;
+@mixin font-size--laptop() {
+    html {
+        font-size: 16px;
+    }
+}
+
+@mixin font-size--tablet-landscape() {
+    html {
+        font-size: 13px;
+    }
 }
 
 body {
@@ -63,12 +71,18 @@ h1 {
     font-size: 3.75em;
 }
 
+@mixin h1--tablet() {
+    h1 {
+        font-size: 3.5em;
+    }
+}
+
 h2 {
     font-weight: 100;
     font-size: 2.25em;
 }
 
-@mixin h2--laptop() {
+@mixin h2--medium() {
     h2 {
         font-size: 2em;
     }
