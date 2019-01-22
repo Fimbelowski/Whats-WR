@@ -7,6 +7,14 @@ html, body {
     margin: 0;
 }
 
+html {
+    font-size: 18px;
+}
+
+@mixin font-size--tablet() {
+    font-size: 16px;
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -58,6 +66,12 @@ h1 {
 h2 {
     font-weight: 100;
     font-size: 2.25em;
+}
+
+@mixin h2--laptop() {
+    h2 {
+        font-size: 2em;
+    }
 }
 
 h3 {

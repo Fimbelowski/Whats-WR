@@ -1,6 +1,9 @@
 @import 'variables';
+@import 'base';
+@import 'layout';
 
 // Tablet
-@media(min-width: #{$tablet-min-width}) and (max-width: #{$tablet-max-width}) {
-
+@media(min-width: #{$laptop-min-width}) and (max-width: #{$laptop-max-width}) {
+    @include l-main-secondary--laptop();
+    @include h2--laptop();
 }
