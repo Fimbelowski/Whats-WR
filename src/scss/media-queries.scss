@@ -1,13 +1,6 @@
 @import 'variables';
-@import 'base';
-@import 'layout';
-@import 'modules/video-embed.scss';
 
 // Tablet
-@media(min-width: #{$tablet-min-width - 1}) and (max-width: #{$tablet-max-width}) {
-    @include main--tablet();
-    @include l-main-primary--tablet();
-    @include l-main-secondary--tablet();
-    @include video-embed-container--tablet();
-    @include iframe--tablet();
+@media(min-width: #{$tablet-min-width}) and (max-width: #{$tablet-max-width}) {
+
 }

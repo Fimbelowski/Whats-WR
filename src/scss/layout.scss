@@ -10,21 +10,8 @@
     margin-left: 10px;
 }
 
-@mixin l-main-primary--tablet() {
-    .l-main-primary {
-        margin: 0;
-    }
-}
-
 .l-main-secondary {
     display: flex;
     flex-direction: column;
     width: $left-column-width;
-}
-
-@mixin l-main-secondary--tablet() {
-    .l-main-secondary {
-        flex-direction: row;
-        width: auto;
-    }
 }

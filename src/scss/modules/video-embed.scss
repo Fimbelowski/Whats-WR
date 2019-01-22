@@ -6,16 +6,5 @@
 
     border-radius: 3px;
     margin-bottom: 10px;
-}
-
-@mixin video-embed-container--tablet() {
-    .video-embed-container {
-        flex: 0;
-        width: 100%;
-
-        overflow: hidden;
-        height: 0;
-        padding-top: 56.25%;
-        position: relative;
-    }
+    overflow: hidden;
 }
