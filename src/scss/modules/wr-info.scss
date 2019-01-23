@@ -7,6 +7,12 @@
     height: $bottom-row-height;
 }
 
+@mixin wr-info-container--tablet-pt() {
+    .wr-info-container {
+        height: auto;
+    }
+}
+
 .url-text-area {
     position: absolute;
     opacity: 0;

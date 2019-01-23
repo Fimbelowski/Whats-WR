@@ -6,6 +6,13 @@
     margin-right: 50px;
 }
 
+@mixin footer-link--tablet-pt() {
+    .footer-link {
+        margin: 0 10px;
+        text-align: center;
+    }
+}
+
 .footer-link-icon {
     height: 20px;
     width: auto;

@@ -3,16 +3,32 @@
 @import 'layout';
 @import 'modules/player-info';
 @import 'modules/wr-info';
+@import 'modules/video-embed';
+@import 'modules/footer-link';
+@import 'modules/wr-button';
 
 // Tablet
     // Landscape
-    @media(min-width: #{$tablet-min-width}) and (max-width: #{$tablet-max-width}) {
+    @media(min-width: #{$tablet-min-width-ls}) and (max-width: #{$tablet-max-width-ls}) and (orientation: landscape) {
         @include font-size--tablet-landscape();
         @include l-main-secondary--tablet-landscape();
         @include player-social-icon--tablet();
         @include h1--tablet();
         @include h2--medium();
         @include copy-url-button--tablet();
+    }
+
+    // Portrait
+    @media(min-width: #{$tablet-min-width-pt}) and (max-width: #{$tablet-max-width-pt}) and (orientation: portrait) {
+        @include font-size--tablet-pt();
+        @include main--tablet-pt();
+        @include l-main-primary--tablet-pt();
+        @include l-main-secondary--tablet-pt();
+        @include video-embed-container--tablet-pt();
+        @include iframe--tablet-pt();
+        @include wr-info-container--tablet-pt();
+        @include footer-link--tablet-pt();
+        @include wr-button-container--tablet-pt();
     }
 
 // Laptop

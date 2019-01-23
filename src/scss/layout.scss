@@ -2,12 +2,19 @@
 
 // Layout CSS Rules
 .l-main-primary {
-    flex: 1;
+    flex: 1 0 auto;
     
     display: flex;
     flex-direction: column;
 
     margin-left: 10px;
+}
+
+@mixin l-main-primary--tablet-pt() {
+    .l-main-primary {
+        flex: 0 0 auto;
+        margin: 0 0 10px;
+    }
 }
 
 .l-main-secondary {
@@ -19,6 +26,13 @@
 @mixin l-main-secondary--tablet-landscape() {
     .l-main-secondary {
         width: 250px;
+    }
+}
+
+@mixin l-main-secondary--tablet-pt() {
+    .l-main-secondary {
+        flex: 1 1 auto;
+        width: 100%;
     }
 }
 
