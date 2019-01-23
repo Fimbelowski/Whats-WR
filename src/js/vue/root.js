@@ -248,7 +248,6 @@ window.onload = function() {
                 return promise;
             },
             getNextRun: function() {
-                console.log('Fetching next run.');
                 // Remove the current run from the display object.
                 vm.displayedRun = null;
 
