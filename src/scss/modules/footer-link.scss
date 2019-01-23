@@ -6,6 +6,12 @@
     margin-right: 50px;
 }
 
+@mixin footer-link--phone-sm() {
+    .footer-link {
+        margin-right: 10px;
+    }
+}
+
 @mixin footer-link--tablet-pt() {
     .footer-link {
         margin: 0 10px;

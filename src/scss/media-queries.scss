@@ -24,6 +24,8 @@
         @include l-main-secondary--phone-sm();
         @include player-info-container--phone-sm();
         @include wr-button-container--phone-sm();
+        @include footer--phone-sm();
+        @include footer-link--phone-sm();
     }
 
 // Tablet
