@@ -7,6 +7,25 @@
 @import 'modules/footer-link';
 @import 'modules/wr-button';
 
+// Phones
+    // Small
+    @media(max-width: #{$mobile-sm-max-width}) {
+        @include html-body--phone-sm();
+        @include font-size-sm();
+        @include main-flex-col();
+        @include main-padding-none();
+        @include main-overflow-auto();
+        @include l-main-primary--phone-sm();
+        @include video-embed-container-maintain-ar();
+        @include video-embed-container--phone-sm();
+        @include iframe-maintain-ar();
+        @include wr-info-container-height-auto();
+        @include wr-info-container--phone-sm();
+        @include l-main-secondary--phone-sm();
+        @include player-info-container--phone-sm();
+        @include wr-button-container--phone-sm();
+    }
+
 // Tablet
     // Landscape
     @media(min-width: #{$tablet-min-width-ls}) and (max-width: #{$tablet-max-width-ls}) and (orientation: landscape) {
@@ -21,12 +40,12 @@
     // Portrait
     @media(min-width: #{$tablet-min-width-pt}) and (max-width: #{$tablet-max-width-pt}) and (orientation: portrait) {
         @include font-size--tablet-pt();
-        @include main--tablet-pt();
+        @include main-flex-col();
         @include l-main-primary--tablet-pt();
         @include l-main-secondary--tablet-pt();
-        @include video-embed-container--tablet-pt();
-        @include iframe--tablet-pt();
-        @include wr-info-container--tablet-pt();
+        @include video-embed-container-maintain-ar();
+        @include iframe-maintain-ar();
+        @include wr-info-container-height-auto();
         @include footer-link--tablet-pt();
         @include wr-button-container--tablet-pt();
     }

@@ -7,9 +7,15 @@
     height: $bottom-row-height;
 }
 
-@mixin wr-info-container--tablet-pt() {
+@mixin wr-info-container-height-auto() {
     .wr-info-container {
         height: auto;
+    }
+}
+
+@mixin wr-info-container--phone-sm() {
+    .wr-info-container {
+        margin: 0 3px;
     }
 }
 

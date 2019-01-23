@@ -7,8 +7,21 @@ html, body {
     margin: 0;
 }
 
+@mixin html-body--phone-sm() {
+    html, body {
+        width: 100%;
+        height: auto;
+    }
+}
+
 html {
     font-size: 18px;
+}
+
+@mixin font-size-sm() {
+    html {
+        font-size: 11px;
+    }
 }
 
 @mixin font-size--laptop() {
@@ -49,7 +62,19 @@ main {
     flex: 1;
 }
 
-@mixin main--tablet-pt() {
+@mixin main-padding-none() {
+    main {
+        padding: 0;
+    }
+}
+
+@mixin main-overflow-auto() {
+    main {
+        overflow: auto;
+    }
+}
+
+@mixin main-flex-col() {
     main {
         flex-direction: column;
     }
@@ -109,7 +134,7 @@ iframe {
     height: 100%;
 }
 
-@mixin iframe--tablet-pt() {
+@mixin iframe-maintain-ar() {
     iframe {
         position: absolute;
         top: 0;

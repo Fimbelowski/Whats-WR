@@ -7,6 +7,13 @@
     background-color: $gray-200;
 }
 
+@mixin wr-button-container--phone-sm() {
+    .wr-button-container {
+        margin: 0 0 3px;
+        height: auto;
+    }
+}
+
 @mixin wr-button-container--tablet-pt() {
     .wr-button-container {
         margin: 0;
