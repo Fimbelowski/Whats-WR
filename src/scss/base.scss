@@ -43,12 +43,6 @@ html {
     }
 }
 
-@mixin font-size--tablet-pt() {
-    html {
-        font-size: 15px;
-    }
-}
-
 body {
     display: flex;
     flex-direction: column;
@@ -83,12 +77,6 @@ main {
 @mixin main-padding-none() {
     main {
         padding: 0;
-    }
-}
-
-@mixin main-flex-col() {
-    main {
-        flex-direction: column;
     }
 }
 

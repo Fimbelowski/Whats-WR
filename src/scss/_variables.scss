@@ -38,13 +38,10 @@ $bottom-row-height: 85px;
     $phone-max-width-ls: 896px;
 
 // Tablet
-    // Landscape
-    $tablet-min-width-ls: 920px;
-    $tablet-max-width-ls: 1279px;
-
     // Portrait
-    $tablet-min-width-pt: 520px;
-    $tablet-max-width-pt: 719px;
+    $tablet-md-max-width-pt: 768px;
+
+    // Landscape
 
 // Laptop
 $laptop-min-width: 1280px;
