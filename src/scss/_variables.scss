@@ -33,7 +33,10 @@ $bottom-row-height: 85px;
 // Phones
     // Small
         // Landscape
-        $mobile-sm-max-width: 480px;
+        $mobile-sm-ls-max-width: 480px;
+
+        // Portrait
+        $mobile-sm-pt-max-width: 270px;
 
 // Tablet
     // Landscape

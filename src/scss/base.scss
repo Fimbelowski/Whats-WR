@@ -19,7 +19,7 @@ html {
     font-size: 18px;
 }
 
-@mixin font-size-sm() {
+@mixin font-size--phone-sm() {
     html {
         font-size: 11px;
     }
@@ -61,7 +61,7 @@ main {
     flex: 1;
 }
 
-@mixin main--phone-sm-ls() {
+@mixin main--phone-sm() {
     main {
         flex-direction: column;
         padding: 0;

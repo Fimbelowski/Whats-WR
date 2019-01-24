@@ -9,10 +9,10 @@
 
 // Phones
     // Small
-    @media(max-width: #{$mobile-sm-max-width}) {
+    @media(max-width: #{$mobile-sm-ls-max-width}) {
         @include html-body--phone-sm();
-        @include font-size-sm();
-        @include main--phone-sm-ls();
+        @include font-size--phone-sm();
+        @include main--phone-sm();
         @include l-main-primary--phone-sm();
         @include video-embed-container-maintain-ar();
         @include video-embed-container--phone-sm();
