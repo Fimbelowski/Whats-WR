@@ -47,31 +47,27 @@
 
 
 // Tablet
-//     // Landscape
-//     @media(min-width: #{$tablet-min-width-ls}) and (max-width: #{$tablet-max-width-ls}) and (orientation: landscape) {
-//         @include font-size--tablet-landscape();
-//         @include l-main-secondary--tablet-landscape();
-//         @include player-social-icon--tablet();
-//         @include h1--tablet();
-//         @include h2--medium();
-//         @include copy-url-button--tablet();
-//     }
+    // Medium
+        // Portrait
+        @media(min-width: #{$phone-max-width-pt + 1}) and (max-width: #{$tablet-md-max-width-pt}) and (orientation: portrait) {
+            @include main--tablet-md-pt();
+            @include l-main-primary--tablet-md-pt();
+            @include video-embed-container--tablet-md-pt();
+            @include iframe--tablet-md-pt();
+            @include wr-info-container--tablet-md-pt();
+            @include l-main-secondary--tablet-md-pt();
+            @include player-info--tablet-md-pt();
+            @include h3--tablet-md-pt();
+            @include wr-button-container--tablet-md-pt();
+            @include footer--tablet-md-pt();
+            @include footer-link--tablet-md-pt();
+            @include p--tablet-md-pt();
+        }
 
-    // Portrait
-    @media(min-width: #{$phone-max-width-pt + 1}) and (max-width: #{$tablet-md-max-width-pt}) and (orientation: portrait) {
-        @include main--tablet-md-pt();
-        @include l-main-primary--tablet-md-pt();
-        @include video-embed-container--tablet-md-pt();
-        @include iframe--tablet-md-pt();
-        @include wr-info-container--tablet-md-pt();
-        @include l-main-secondary--tablet-md-pt();
-        @include player-info--tablet-md-pt();
-        @include h3--tablet-md-pt();
-        @include wr-button-container--tablet-md-pt();
-        @include footer--tablet-md-pt();
-        @include footer-link--tablet-md-pt();
-        @include p--tablet-md-pt();
-    }
+        // Landscape
+        @media(min-width: #{$phone-max-width-ls + 1}) and (max-width: #{$tablet-md-max-width-ls}) and (orientation: landscape) {
+            
+        }
 
 // // Laptop
 // @media(min-width: #{$laptop-min-width}) and (max-width: #{$laptop-max-width}) {
