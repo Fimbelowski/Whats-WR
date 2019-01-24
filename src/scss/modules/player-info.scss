@@ -19,6 +19,12 @@
     }
 }
 
+@mixin player-info-container--phone-ls() {
+    .player-info-container {
+        margin-bottom: 5px;
+    }
+}
+
 .player-info-container-header {
     flex: 0 0 auto;
 
@@ -57,6 +63,12 @@
 }
 
 @mixin player-social-icon--phone-pt() {
+    .player-social-icon {
+        height: 25px;
+    }
+}
+
+@mixin player-social-icon--phone-ls() {
     .player-social-icon {
         height: 25px;
     }

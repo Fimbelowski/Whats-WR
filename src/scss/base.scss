@@ -25,6 +25,12 @@ html {
     }
 }
 
+@mixin font-size--phone-ls() {
+    html {
+        font-size: 11px;
+    }
+}
+
 @mixin font-size--laptop() {
     html {
         font-size: 16px;
@@ -65,6 +71,12 @@ main {
     main {
         flex-direction: column;
         padding: 0;
+    }
+}
+
+@mixin main--phone-ls() {
+    main {
+        padding: 5px;
     }
 }
 
@@ -118,6 +130,12 @@ h1 {
     font-size: 3.75em;
 }
 
+@mixin h1--phone-ls() {
+    h1 {
+        font-size: 2.3em;
+    }
+}
+
 @mixin h1--tablet() {
     h1 {
         font-size: 3.5em;
@@ -132,6 +150,12 @@ h2 {
 @mixin h2--phone-pt() {
     h2 {
         font-size: 2em;
+    }
+}
+
+@mixin h2--phone-ls() {
+    h2 {
+        font-size: 1.8em;
     }
 }
 

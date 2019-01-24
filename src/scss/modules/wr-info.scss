@@ -14,6 +14,12 @@
     }
 }
 
+@mixin wr-info-container--phone-ls() {
+    .wr-info-container {
+        height: 50px;
+    }
+}
+
 .url-text-area {
     position: absolute;
     opacity: 0;
@@ -27,6 +33,12 @@
 }
 
 @mixin copy-url-button--phone-pt() {
+    .copy-url-button {
+        width: 25px;
+    }
+}
+
+@mixin copy-url-button--phone-ls() {
     .copy-url-button {
         width: 25px;
     }

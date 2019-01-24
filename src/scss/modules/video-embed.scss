@@ -18,3 +18,9 @@
         margin-bottom: 3px;
     }
 }
+
+@mixin video-embed-container--phone-ls() {
+    .video-embed-container {
+        margin-bottom: 5px;
+    }
+}

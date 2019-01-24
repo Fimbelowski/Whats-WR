@@ -14,6 +14,12 @@
     }
 }
 
+@mixin wr-button-container--phone-ls() {
+    .wr-button-container {
+        height: 50px;
+    }
+}
+
 @mixin wr-button-container--tablet-pt() {
     .wr-button-container {
         margin: 0;
