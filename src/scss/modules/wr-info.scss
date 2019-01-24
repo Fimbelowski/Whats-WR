@@ -20,6 +20,12 @@
     }
 }
 
+@mixin wr-info-container--tablet-md-pt() {
+    .wr-info-container {
+        height: auto;
+    }
+}
+
 .url-text-area {
     position: absolute;
     opacity: 0;

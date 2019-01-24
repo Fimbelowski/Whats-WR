@@ -74,6 +74,12 @@ main {
     }
 }
 
+@mixin main--tablet-md-pt() {
+    main {
+        flex-direction: column;
+    }
+}
+
 @mixin main-padding-none() {
     main {
         padding: 0;
@@ -97,6 +103,12 @@ footer {
         align-items: center;
         margin: 0;
         padding: 3px;
+    }
+}
+
+@mixin footer--tablet-md-pt() {
+    footer {
+        justify-content: space-around;
     }
 }
 
@@ -157,9 +169,21 @@ h3 {
     font-size: 2em;
 }
 
+@mixin h3--tablet-md-pt() {
+    h3 {
+        font-size: 2.2em;
+    }
+}
+
 @mixin p--phone-pt() {
     p {
         font-size: 1.5em;
+    }
+}
+
+@mixin p--tablet-md-pt() {
+    p {
+        font-size: 1.3em;
     }
 }
 
@@ -169,6 +193,14 @@ iframe {
 }
 
 @mixin iframe--phone-pt() {
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+
+@mixin iframe--tablet-md-pt() {
     iframe {
         position: absolute;
         top: 0;

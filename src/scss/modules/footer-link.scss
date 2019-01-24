@@ -13,6 +13,13 @@
     }
 }
 
+@mixin footer-link--tablet-md-pt() {
+    .footer-link {
+        margin: 0;
+        text-align: center;
+    }
+}
+
 .footer-link-icon {
     height: 20px;
     width: auto;

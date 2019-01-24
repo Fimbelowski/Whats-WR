@@ -20,6 +20,12 @@
     }
 }
 
+@mixin wr-button-container--tablet-md-pt() {
+    .wr-button-container {
+        margin: 0;
+    }
+}
+
 .wr-button {
     width: 100%;
     height: 100%;

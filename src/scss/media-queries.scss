@@ -59,7 +59,18 @@
 
     // Portrait
     @media(max-width: #{$tablet-md-max-width-pt}) and (orientation: portrait) {
-        
+        @include main--tablet-md-pt();
+        @include l-main-primary--tablet-md-pt();
+        @include video-embed-container--tablet-md-pt();
+        @include iframe--tablet-md-pt();
+        @include wr-info-container--tablet-md-pt();
+        @include l-main-secondary--tablet-md-pt();
+        @include player-info--tablet-md-pt();
+        @include h3--tablet-md-pt();
+        @include wr-button-container--tablet-md-pt();
+        @include footer--tablet-md-pt();
+        @include footer-link--tablet-md-pt();
+        @include p--tablet-md-pt();
     }
 
 // // Laptop

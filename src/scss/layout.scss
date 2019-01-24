@@ -23,6 +23,13 @@
     }
 }
 
+@mixin l-main-primary--tablet-md-pt() {
+    .l-main-primary {
+        flex: 0 0 auto;
+        margin: 0 0 10px;
+    }
+}
+
 .l-main-secondary {
     display: flex;
     flex-direction: column;
@@ -43,6 +50,16 @@
 @mixin l-main-secondary--phone-ls() {
     .l-main-secondary {
         width: 200px;
+    }
+}
+
+@mixin l-main-secondary--tablet-md-pt() {
+    .l-main-secondary {
+        flex: 1 1 auto;
+
+        width: 100%;
+        box-sizing: border-box;
+        align-items: center;
     }
 }
 
