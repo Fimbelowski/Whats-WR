@@ -7,7 +7,7 @@
     background-color: $gray-200;
 }
 
-@mixin wr-button-container--phone-sm() {
+@mixin wr-button-container--phone() {
     .wr-button-container {
         margin: 0 0 3px;
         height: auto;

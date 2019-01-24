@@ -7,7 +7,7 @@ html, body {
     margin: 0;
 }
 
-@mixin html-body--phone-sm() {
+@mixin html-body--phone() {
     html, body {
         width: 100%;
         height: auto;
@@ -19,7 +19,7 @@ html {
     font-size: 18px;
 }
 
-@mixin font-size--phone-sm() {
+@mixin font-size--phone() {
     html {
         font-size: 11px;
     }
@@ -61,7 +61,7 @@ main {
     flex: 1;
 }
 
-@mixin main--phone-sm() {
+@mixin main--phone() {
     main {
         flex-direction: column;
         padding: 0;

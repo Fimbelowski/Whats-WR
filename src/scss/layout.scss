@@ -10,7 +10,7 @@
     margin-left: 10px;
 }
 
-@mixin l-main-primary--phone-sm() {
+@mixin l-main-primary--phone() {
     .l-main-primary {
         flex: 0 0 auto;
         margin: 0 0 3px;
@@ -30,7 +30,7 @@
     width: $left-column-width;
 }
 
-@mixin l-main-secondary--phone-sm() {
+@mixin l-main-secondary--phone() {
     .l-main-secondary {
         width: 100%;
         box-sizing: border-box;
