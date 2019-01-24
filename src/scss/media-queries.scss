@@ -12,9 +12,7 @@
     @media(max-width: #{$mobile-sm-max-width}) {
         @include html-body--phone-sm();
         @include font-size-sm();
-        @include main-flex-col();
-        @include main-padding-none();
-        @include main-overflow-auto();
+        @include main--phone-sm-ls();
         @include l-main-primary--phone-sm();
         @include video-embed-container-maintain-ar();
         @include video-embed-container--phone-sm();

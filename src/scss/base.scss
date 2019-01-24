@@ -11,6 +11,7 @@ html, body {
     html, body {
         width: 100%;
         height: auto;
+        min-height: 100vh;
     }
 }
 
@@ -56,21 +57,20 @@ main {
     box-sizing: border-box;
     padding: 10px;
 
-    overflow: hidden;
-
     width: 100%;
     flex: 1;
+}
+
+@mixin main--phone-sm-ls() {
+    main {
+        flex-direction: column;
+        padding: 0;
+    }
 }
 
 @mixin main-padding-none() {
     main {
         padding: 0;
-    }
-}
-
-@mixin main-overflow-auto() {
-    main {
-        overflow: auto;
     }
 }
 
