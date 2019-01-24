@@ -58,7 +58,7 @@
 //     }
 
     // Portrait
-    @media(max-width: #{$tablet-md-max-width-pt}) and (orientation: portrait) {
+    @media(min-width: #{$phone-max-width-pt + 1}) and (max-width: #{$tablet-md-max-width-pt}) and (orientation: portrait) {
         @include main--tablet-md-pt();
         @include l-main-primary--tablet-md-pt();
         @include video-embed-container--tablet-md-pt();

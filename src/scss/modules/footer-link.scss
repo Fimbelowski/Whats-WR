@@ -8,21 +8,18 @@
 
 @mixin footer-link--phone-pt() {
     .footer-link {
-        margin: 0;
-        margin-bottom: 5px;
-    }
-}
+        flex: 1;
 
-@mixin footer-link--tablet-md-pt() {
-    .footer-link {
         margin: 0;
         text-align: center;
     }
 }
 
-.footer-link-icon {
-    height: 20px;
-    width: auto;
+@mixin footer-link--tablet-md-pt() {
+    .footer-link {
+        flex: 1;
 
-    margin-left: 4px;
+        margin: 0;
+        text-align: center;
+    }
 }
