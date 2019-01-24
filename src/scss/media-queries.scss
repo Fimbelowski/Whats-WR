@@ -9,22 +9,33 @@
 
 // Phones
     // Small
-    @media(max-width: #{$mobile-sm-ls-max-width}) {
-        @include html-body--phone-sm();
-        @include font-size--phone-sm();
-        @include main--phone-sm();
-        @include l-main-primary--phone-sm();
-        @include video-embed-container-maintain-ar();
-        @include video-embed-container--phone-sm();
-        @include iframe-maintain-ar();
-        @include wr-info-container-height-auto();
-        @include wr-info-container--phone-sm();
-        @include l-main-secondary--phone-sm();
-        @include player-info-container--phone-sm();
-        @include wr-button-container--phone-sm();
-        @include footer--phone-sm();
-        @include footer-link--phone-sm();
-    }
+        // All Orientations
+        @media(max-width: #{$mobile-sm-max-width}) {
+            @include html-body--phone-sm();
+            @include font-size--phone-sm();
+            @include main--phone-sm();
+            @include l-main-primary--phone-sm();
+            @include video-embed-container-maintain-ar();
+            @include video-embed-container--phone-sm();
+            @include iframe-maintain-ar();
+            @include wr-info-container-height-auto();
+            @include wr-info-container--phone-sm();
+            @include l-main-secondary--phone-sm();
+            @include player-info-container--phone-sm();
+            @include wr-button-container--phone-sm();
+            @include footer--phone-sm();
+            @include footer-link--phone-sm();
+            @include player-social-icon--phone-sm();
+            @include copy-url-button--phone-sm();
+            @include h2--phone-sm();
+        }
+
+        // Portrait
+        @media(max-width: #{$mobile-sm-max-width}) {
+            @include footer--phone-sm-pt();
+            @include footer-link--phone-sm-pt();
+        }
+
 
 // Tablet
     // Landscape

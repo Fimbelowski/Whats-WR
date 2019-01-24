@@ -31,6 +31,12 @@
     cursor: pointer;
 }
 
+@mixin copy-url-button--phone-sm() {
+    .copy-url-button {
+        width: 25px;
+    }
+}
+
 @mixin copy-url-button--tablet() {
     .copy-url-button {
         width: 25px;

@@ -12,6 +12,12 @@
     }
 }
 
+@mixin footer-link--phone-sm-pt() {
+    .footer-link {
+        margin-bottom: 5px;
+    }
+}
+
 @mixin footer-link--tablet-pt() {
     .footer-link {
         margin: 0 10px;
