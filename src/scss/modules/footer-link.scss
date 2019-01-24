@@ -6,14 +6,9 @@
     margin-right: 50px;
 }
 
-@mixin footer-link--phone-sm() {
+@mixin footer-link--phone-pt() {
     .footer-link {
         margin: 0;
-    }
-}
-
-@mixin footer-link--phone-sm-pt() {
-    .footer-link {
         margin-bottom: 5px;
     }
 }

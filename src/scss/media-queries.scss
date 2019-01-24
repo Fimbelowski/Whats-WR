@@ -8,31 +8,28 @@
 @import 'modules/wr-button';
 
 // Phones
-    // All Orientations
-    @media(max-width: #{$mobile-sm-max-width}) {
-        @include html-body--phone();
-        @include font-size--phone();
-        @include main--phone();
-        @include l-main-primary--phone();
-        @include video-embed-container-maintain-ar();
-        @include video-embed-container--phone();
-        @include iframe-maintain-ar();
-        @include wr-info-container-height-auto();
-        @include wr-info-container--phone();
-        @include l-main-secondary--phone();
-        @include player-info-container--phone();
-        @include wr-button-container--phone();
-        @include footer--phone-sm();
-        @include footer-link--phone-sm();
-        @include player-social-icon--phone-sm();
-        @include copy-url-button--phone-sm();
-        @include h2--phone-sm();
+    // Portrait
+    @media(max-width: #{$phone-max-width-pt}) {
+        @include html-body--phone-pt();
+        @include font-size--phone-pt();
+        @include main--phone-pt();
+        @include l-main-primary--phone-pt();
+        @include video-embed-container--phone-pt();
+        @include iframe--phone-pt();
+        @include wr-info-container--phone-pt();
+        @include l-main-secondary--phone-pt();
+        @include player-info-container--phone-pt();
+        @include wr-button-container--phone-pt();
+        @include footer--phone-pt();
+        @include footer-link--phone-pt();
+        @include player-social-icon--phone-pt();
+        @include copy-url-button--phone-pt();
+        @include h2--phone-pt();
     }
 
-    // Portrait
-    @media(max-width: #{$mobile-sm-max-width}) {
-        @include footer--phone-sm-pt();
-        @include footer-link--phone-sm-pt();
+    // Landscape
+    @media(max-width: #{$phone-max-width-ls}) {
+
     }
 
 
@@ -53,9 +50,9 @@
         @include main-flex-col();
         @include l-main-primary--tablet-pt();
         @include l-main-secondary--tablet-pt();
-        @include video-embed-container-maintain-ar();
-        @include iframe-maintain-ar();
-        @include wr-info-container-height-auto();
+        // @include video-embed-container-maintain-ar();
+        // @include iframe-maintain-ar();
+        // @include wr-info-container-height-auto();
         @include footer-link--tablet-pt();
         @include wr-button-container--tablet-pt();
     }

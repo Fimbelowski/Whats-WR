@@ -31,9 +31,11 @@ $bottom-row-height: 85px;
 
 // Viewport Resolutions
 // Phones
-    // Small
-        // All Orientations
-        $mobile-sm-max-width: 480px;
+    // Portrait
+    $phone-max-width-pt: 480px;
+
+    // Landscape
+    $phone-max-width-ls: 896px;
 
 // Tablet
     // Landscape

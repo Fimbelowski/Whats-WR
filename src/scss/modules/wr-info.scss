@@ -7,14 +7,9 @@
     height: $bottom-row-height;
 }
 
-@mixin wr-info-container-height-auto() {
+@mixin wr-info-container--phone-pt() {
     .wr-info-container {
         height: auto;
-    }
-}
-
-@mixin wr-info-container--phone() {
-    .wr-info-container {
         margin: 0 3px;
     }
 }
@@ -31,7 +26,7 @@
     cursor: pointer;
 }
 
-@mixin copy-url-button--phone-sm() {
+@mixin copy-url-button--phone-pt() {
     .copy-url-button {
         width: 25px;
     }
