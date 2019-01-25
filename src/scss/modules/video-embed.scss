@@ -8,12 +8,6 @@
     margin-bottom: 10px;
 }
 
-@mixin video-embed-container--phone-ls() {
-    .video-embed-container {
-        margin-bottom: 5px;
-    }
-}
-
 @mixin video-embed-container--tablet-md-pt() {
     .video-embed-container {
         width: 100%;
@@ -34,5 +28,11 @@
         overflow: hidden;
         margin-bottom: 3px;
         border-radius: 0;
+    }
+}
+
+@mixin video-embed--phone-ls() {
+    .video-embed-container {
+        margin-bottom: 5px;
     }
 }

@@ -11,12 +11,6 @@ html {
     font-size: 18px;
 }
 
-@mixin font-size--phone-ls() {
-    html {
-        font-size: 11px;
-    }
-}
-
 @mixin font-size--laptop() {
     html {
         font-size: 16px;
@@ -39,12 +33,6 @@ main {
 
     width: 100%;
     flex: 1;
-}
-
-@mixin main--phone-ls() {
-    main {
-        padding: 5px;
-    }
 }
 
 @mixin main--tablet-md-pt() {
@@ -93,21 +81,9 @@ h1 {
     font-size: 3.75em;
 }
 
-@mixin h1--phone-ls() {
-    h1 {
-        font-size: 2.3em;
-    }
-}
-
 h2 {
     font-weight: 100;
     font-size: 2.25em;
-}
-
-@mixin h2--phone-ls() {
-    h2 {
-        font-size: 1.8em;
-    }
 }
 
 h3 {
@@ -179,5 +155,19 @@ button:disabled {
 
     p {
         font-size: 1.5em;
+    }
+}
+
+@mixin base--phone-ls() {
+    html {
+        font-size: 11px;
+    }
+
+    main {
+        padding: 5px;
+    }
+
+    h1 {
+        font-size: 2.3em;
     }
 }

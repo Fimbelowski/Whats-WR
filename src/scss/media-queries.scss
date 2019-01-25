@@ -10,8 +10,13 @@
 // Phones
     // Portrait
     @media(max-width: #{$phone-max-width-pt}) and (orientation: portrait) {
+        // Base Rules
         @include base--phone-pt();
+
+        // Layout Rules
         @include layout--phone-pt();
+
+        // Modules
         @include video-embed--phone-pt();
         @include wr-info--phone-pt();
         @include player-info--phone-pt();
@@ -21,19 +26,17 @@
 
     // Landscape
     @media(max-width: #{$phone-max-width-ls}) and (orientation: landscape) {
-        @include font-size--phone-ls();
-        @include main--phone-ls();
-        @include l-main-primary--phone-ls();
-        @include l-main-secondary--phone-ls();
-        @include video-embed-container--phone-ls();
-        @include wr-info-container--phone-ls();
-        @include wr-button-container--phone-ls();
-        @include player-info-container--phone-ls();
+        // Base Rules
+        @include base--phone-ls();
+
+        // Layout Rules
+        @include layout--phone-ls();
+
+        // Modules
+        @include video-embed--phone-ls();
+        @include wr-info--phone-ls();
+        @include wr-button--phone-ls();
         @include player-info--phone-ls();
-        @include player-social-icon--phone-ls();
-        @include copy-url-button--phone-ls();
-        @include h1--phone-ls();
-        @include h2--phone-ls();
     }
 
 

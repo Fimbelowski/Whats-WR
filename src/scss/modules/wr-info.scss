@@ -7,12 +7,6 @@
     height: $bottom-row-height;
 }
 
-@mixin wr-info-container--phone-ls() {
-    .wr-info-container {
-        height: 50px;
-    }
-}
-
 @mixin wr-info-container--tablet-md-pt() {
     .wr-info-container {
         height: auto;
@@ -29,12 +23,6 @@
     width: 32px;
     margin-left: 5px;
     cursor: pointer;
-}
-
-@mixin copy-url-button--phone-ls() {
-    .copy-url-button {
-        width: 25px;
-    }
 }
 
 .tooltip {
@@ -55,6 +43,16 @@
     .wr-info-container {
         height: auto;
         margin: 0 5px 3px;
+    }
+
+    .copy-url-button {
+        width: 25px;
+    }
+}
+
+@mixin wr-info--phone-ls() {
+    .wr-info-container {
+        height: 50px;
     }
 
     .copy-url-button {

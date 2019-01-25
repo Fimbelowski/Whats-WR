@@ -10,12 +10,6 @@
     margin-left: 10px;
 }
 
-@mixin l-main-primary--phone-ls() {
-    .l-main-primary {
-        margin-left: 5px;
-    }
-}
-
 @mixin l-main-primary--tablet-md-pt() {
     .l-main-primary {
         flex: 0 0 auto;
@@ -27,12 +21,6 @@
     display: flex;
     flex-direction: column;
     width: $left-column-width;
-}
-
-@mixin l-main-secondary--phone-ls() {
-    .l-main-secondary {
-        width: 200px;
-    }
 }
 
 @mixin l-main-secondary--tablet-md-pt() {
@@ -70,5 +58,15 @@
         box-sizing: border-box;
         padding: 0 5px;
         align-items: center;
+    }
+}
+
+@mixin layout--phone-ls() {
+    .l-main-primary {
+        margin-left: 5px;
+    }
+
+    .l-main-secondary {
+        width: 200px;
     }
 }

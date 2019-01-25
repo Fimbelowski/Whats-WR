@@ -13,12 +13,6 @@
     margin-bottom: 10px;
 }
 
-@mixin player-info-container--phone-ls() {
-    .player-info-container {
-        margin-bottom: 5px;
-    }
-}
-
 .player-info-container-header {
     flex: 0 0 auto;
 
@@ -39,12 +33,6 @@
     background-color: $gray-300;
     margin: 10px 0;
     padding: 5px 0;
-}
-
-@mixin player-info--phone-ls() {
-    .player-info {
-        margin: 3px 0;
-    }
 }
 
 @mixin player-info--tablet-md-pt() {
@@ -69,15 +57,23 @@
     margin: 0 5px;
 }
 
-@mixin player-social-icon--phone-ls() {
+@mixin player-info--phone-pt() {
+    .player-info-container {
+        margin-bottom: 5px;
+    }
+
     .player-social-icon {
         height: 25px;
     }
 }
 
-@mixin player-info--phone-pt() {
+@mixin player-info--phone-ls() {
     .player-info-container {
         margin-bottom: 5px;
+    }
+
+    .player-info {
+        margin: 3px 0;
     }
 
     .player-social-icon {
