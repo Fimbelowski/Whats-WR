@@ -1,21 +1,4 @@
 .footer-link {
-    margin-right: 50px;
-}
-
-@mixin footer-link--phone-pt() {
-    .footer-link {
-        flex: 1 auto;
-
-        margin: 0;
-        text-align: center;
-    }
-}
-
-@mixin footer-link--tablet-md-pt() {
-    .footer-link {
-        flex: 1 auto;
-
-        margin: 0;
-        text-align: center;
-    }
+    flex: 1 auto auto;
+    text-align: center;
 }

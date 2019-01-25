@@ -38,7 +38,8 @@
     }
 
     .l-main-secondary {
-        width: 200px;
+        flex: 0 0 auto;
+        width: 150px;
     }
 }
 
@@ -54,5 +55,13 @@
         width: 100%;
         box-sizing: border-box;
         align-items: center;
+    }
+}
+
+@mixin layout--tablet-md-ls() {
+    .l-main-secondary {
+        flex: 0 0 auto;
+
+        width: 250px;
     }
 }
