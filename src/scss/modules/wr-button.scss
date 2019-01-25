@@ -41,3 +41,9 @@
         margin: 0;
     }
 }
+
+@mixin wr-button--tablet-lg-pt() {
+    .wr-button-container {
+        height: 100px;
+    }
+}

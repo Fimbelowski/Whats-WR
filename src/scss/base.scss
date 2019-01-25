@@ -157,3 +157,35 @@ button:disabled {
         font-size: 1.2em;
     }
 }
+
+@mixin base--tablet-lg-pt() {
+    html {
+        font-size: 21px;
+    }
+
+    main {
+        flex-direction: column;
+    }
+
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    h1 {
+        font-size: 5em;
+    }
+
+    h2 {
+        font-size: 2.75em;
+    }
+
+    h3 {
+        font-size: 2.5em;
+    }
+
+    p {
+        font-size: 1.75em;
+    }
+}

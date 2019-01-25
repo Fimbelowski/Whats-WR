@@ -38,12 +38,15 @@ $bottom-row-height: 85px;
     $phone-max-width-ls: 896px;
 
 // Tablet
-    // Portrait
-    $tablet-md-max-width-pt: 768px;
+    // Medium
+        // Portrait
+        $tablet-md-pt-max-width: 768px;
 
-    // Landscape
-    $tablet-md-max-width-ls: 1024px;
+        // Landscape
+        $tablet-md-ls-max-width: 1024px;
 
-// Laptop
-$laptop-min-width: 1280px;
-$laptop-max-width: 1599px;
+    // Large
+        // Portrait
+        $tablet-lg-pt-max-width: 1024px;
+
+        // Landscape

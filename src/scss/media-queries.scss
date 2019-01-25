@@ -42,7 +42,7 @@
 // Tablet
     // Medium
         // Portrait
-        @media(min-width: #{$phone-max-width-pt + 1}) and (max-width: #{$tablet-md-max-width-pt}) and (orientation: portrait) {
+        @media(min-width: #{$phone-max-width-pt + 1}) and (max-width: #{$tablet-md-pt-max-width}) and (orientation: portrait) {
             // Base Rules
             @include base--tablet-md-pt();
 
@@ -57,7 +57,7 @@
         }
 
         // Landscape
-        @media(min-width: #{$phone-max-width-ls + 1}) and (max-width: #{$tablet-md-max-width-ls}) and (orientation: landscape) {
+        @media(min-width: #{$phone-max-width-ls + 1}) and (max-width: #{$tablet-md-ls-max-width}) and (orientation: landscape) {
             // Base Rules
             @include base--tablet-md-ls();
 
@@ -65,4 +65,22 @@
             @include layout--tablet-md-ls();
 
             // Modules
+
         }
+
+    // Large
+        // Portrait
+        @media(min-width: #{$tablet-md-pt-max-width + 1}) and (max-width: #{$tablet-lg-pt-max-width}) and (orientation: portrait) {
+            // Base Rules
+            @include base--tablet-lg-pt();
+
+            // Layout Rules
+            @include layout--tablet-lg-pt();
+
+            // Modules
+            @include video-embed--tablet-lg-pt();
+            @include wr-info--tablet-lg-pt();
+            @include player-info--tablet-lg-pt();
+        }
+
+        // Landscape

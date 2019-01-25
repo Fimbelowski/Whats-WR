@@ -75,3 +75,23 @@
         width: 98%;
     }
 }
+
+@mixin player-info--tablet-lg-pt() {
+    .player-info-container {
+        flex: 1 1 auto;
+    }
+
+    .player-info {
+        width: 98%;
+        margin-top: 10px;
+    }
+
+    .player-social-container {
+        margin-top: 8px;
+    }
+
+    .player-social-icon {
+        height: 55px;
+        margin: 0 12px;
+    }
+}
