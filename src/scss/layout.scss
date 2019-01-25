@@ -10,27 +10,10 @@
     margin-left: 10px;
 }
 
-@mixin l-main-primary--tablet-md-pt() {
-    .l-main-primary {
-        flex: 0 0 auto;
-        margin: 0 0 10px;
-    }
-}
-
 .l-main-secondary {
     display: flex;
     flex-direction: column;
     width: $left-column-width;
-}
-
-@mixin l-main-secondary--tablet-md-pt() {
-    .l-main-secondary {
-        flex: 1 1 auto;
-
-        width: 100%;
-        box-sizing: border-box;
-        align-items: center;
-    }
 }
 
 @mixin l-main-secondary-full-width() {
@@ -68,5 +51,20 @@
 
     .l-main-secondary {
         width: 200px;
+    }
+}
+
+@mixin layout--tablet-md-pt() {
+    .l-main-primary {
+        flex: 0 0 auto;
+        margin: 0 0 10px;
+    }
+
+    .l-main-secondary {
+        flex: 1 1 auto;
+
+        width: 100%;
+        box-sizing: border-box;
+        align-items: center;
     }
 }

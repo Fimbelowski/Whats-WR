@@ -7,12 +7,6 @@
     height: $bottom-row-height;
 }
 
-@mixin wr-info-container--tablet-md-pt() {
-    .wr-info-container {
-        height: auto;
-    }
-}
-
 .url-text-area {
     position: absolute;
     opacity: 0;
@@ -57,5 +51,11 @@
 
     .copy-url-button {
         width: 25px;
+    }
+}
+
+@mixin wr-info--tablet-md-pt() {
+    .wr-info-container {
+        height: auto;
     }
 }
