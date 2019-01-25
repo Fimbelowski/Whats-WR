@@ -62,10 +62,3 @@
         @media(min-width: #{$phone-max-width-ls + 1}) and (max-width: #{$tablet-md-max-width-ls}) and (orientation: landscape) {
             
         }
-
-// // Laptop
-// @media(min-width: #{$laptop-min-width}) and (max-width: #{$laptop-max-width}) {
-//     @include font-size--laptop();
-//     @include l-main-secondary--laptop();
-//     @include h2--medium();
-// }

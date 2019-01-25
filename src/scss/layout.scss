@@ -16,18 +16,6 @@
     width: $left-column-width;
 }
 
-@mixin l-main-secondary-full-width() {
-    .l-main-secondary {
-        width: 100%;
-    }
-}
-
-@mixin l-main-secondary--laptop() {
-    .l-main-secondary {
-        width: 300px;
-    }
-}
-
 @mixin layout--phone-pt() {
     .l-main-primary {
         flex: 0 0 auto;
