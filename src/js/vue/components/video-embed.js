@@ -30,12 +30,12 @@ Vue.component('video-embed', {
         }
     },
     template: ' <section class="video-embed-container">\
-                    <iframe v-if="videoHost === \'youtube\'" :src="videoURL"\
+                    <iframe v-if="videoHost === \'youtube\'" class="video-embed" :src="videoURL"\
                     frameborder="0"\
                     allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"\
                     allowfullscreen="true"></iframe>\
                     \
-                    <iframe v-else :src="videoURL"\
+                    <iframe v-else class="video-embed" :src="videoURL"\
                     frameborder="0"\
                     scrolling="no"\
                     allowfullscreen="true">\

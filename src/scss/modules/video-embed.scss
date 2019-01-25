@@ -8,6 +8,11 @@
     margin-bottom: 10px;
 }
 
+.video-embed {
+    width: 100%;
+    height: 100%;
+}
+
 @mixin video-embed--phone-pt() {
     .video-embed-container {
         width: 100%;
@@ -17,6 +22,12 @@
         overflow: hidden;
         margin-bottom: 3px;
         border-radius: 0;
+    }
+
+    .video-embed {
+        position: absolute;
+        top: 0;
+        left: 0;
     }
 }
 
@@ -35,6 +46,12 @@
         overflow: hidden;
         margin-bottom: 5px;  
     }
+
+    .video-embed {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 }
 
 @mixin video-embed--tablet-lg-pt(){
@@ -46,5 +63,11 @@
         overflow: hidden;
         margin-bottom: 5px;
         border-radius: 0;
+    }
+
+    .video-embed {
+        position: absolute;
+        top: 0;
+        left: 0;
     }
 }
