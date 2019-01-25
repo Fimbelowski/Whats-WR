@@ -7,7 +7,7 @@ Vue.component('wr-button', {
     },
     template: ' <section class="wr-button-container">\
                     <button type="button" :disabled="isButtonDisabled" @click="emitButtonClicked" class="wr-button">\
-                        <h1>What\'s WR?</h1>\
+                        <h1 class="wr-button-text">What\'s WR?</h1>\
                     </button>\
                 </section>'
 });

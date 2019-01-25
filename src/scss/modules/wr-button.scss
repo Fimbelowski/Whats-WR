@@ -23,6 +23,10 @@
     }
 }
 
+.wr-button-text {
+    font-size: 3.75em;
+}
+
 @mixin wr-button--phone-pt() {
     .wr-button-container {
         margin: 0 0 5px;
@@ -33,6 +37,10 @@
 @mixin wr-button--phone-ls() {
     .wr-button-container {
         height: 50px;
+    }
+
+    .wr-button-text {
+        font-size: 2.3em;
     }
 }
 
@@ -45,5 +53,9 @@
 @mixin wr-button--tablet-lg-pt() {
     .wr-button-container {
         height: 100px;
+    }
+
+    .wr-button-text {
+        font-size: 5em;
     }
 }

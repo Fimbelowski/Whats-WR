@@ -2,3 +2,19 @@
     flex: 1 auto auto;
     text-align: center;
 }
+
+.footer-link-text {
+    font-size: 1em;
+}
+
+@mixin footer-link--phone-pt() {
+    .footer-link-text {
+        font-size: 1.5em;
+    }
+}
+
+@mixin footer-link--tablet-md-ls() {
+    .footer-link-text {
+        font-size: 1.2em;
+    }
+}

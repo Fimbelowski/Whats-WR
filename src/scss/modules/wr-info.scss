@@ -7,6 +7,10 @@
     height: $bottom-row-height;
 }
 
+.wr-info-text {
+    font-size: 2.25em;
+}
+
 .url-text-area {
     position: absolute;
     opacity: 0;
@@ -39,6 +43,10 @@
         margin: 0 5px 3px;
     }
 
+    .wr-info-text {
+        font-size: 2em;
+    }
+
     .copy-url-button {
         width: 25px;
     }
@@ -60,10 +68,20 @@
     }
 }
 
+@mixin wr-info--tablet-md-ls() {
+    .wr-info-text {
+        font-size: 2em;
+    }
+}
+
 @mixin wr-info--tablet-lg-pt() {
     .wr-info-container {
         height: auto;
         margin-bottom: 12px;
+    }
+
+    .wr-info-text {
+        font-size: 2.75em;
     }
 
     .copy-url-button {

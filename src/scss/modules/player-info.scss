@@ -22,6 +22,10 @@
     background-color: $gray-100;
 }
 
+.player-info-container-header-text {
+    font-size: 2em;
+}
+
 .player-info {
     flex: 0 0 auto;
 
@@ -74,11 +78,19 @@
     .player-info{
         width: 98%;
     }
+
+    .player-info-container-header-text {
+        font-size: 2.2em;
+    }
 }
 
 @mixin player-info--tablet-lg-pt() {
     .player-info-container {
         flex: 1 1 auto;
+    }
+
+    .player-info-container-header-text {
+        font-size: 2.5em;
     }
 
     .player-info {

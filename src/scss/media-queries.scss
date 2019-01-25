@@ -21,6 +21,7 @@
         @include wr-info--phone-pt();
         @include player-info--phone-pt();
         @include wr-button--phone-pt();
+        @include footer-link--phone-pt();
     }
 
     // Landscape
@@ -59,13 +60,13 @@
         // Landscape
         @media(min-width: #{$phone-max-width-ls + 1}) and (max-width: #{$tablet-md-ls-max-width}) and (orientation: landscape) {
             // Base Rules
-            @include base--tablet-md-ls();
 
             // Layout Rules
             @include layout--tablet-md-ls();
 
             // Modules
-
+            @include wr-info--tablet-md-ls();
+            @include footer-link--tablet-md-ls();
         }
 
     // Large

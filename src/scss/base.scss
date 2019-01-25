@@ -45,25 +45,12 @@ h1, h2, h3, h4, h5, h6, p, a {
     color: $off-white;
 }
 
-h1, h2 {
+h1 {
     font-weight: 500;
 }
 
-h3, h4, h5, h6, p {
+h2, h3, h4, h5, h6, p {
     font-weight: 100;
-}
-
-h1 {
-    font-size: 3.75em;
-}
-
-h2 {
-    font-weight: 100;
-    font-size: 2.25em;
-}
-
-h3 {
-    font-size: 2em;
 }
 
 button:disabled {
@@ -93,14 +80,6 @@ button:disabled {
         margin: 0;
         padding: 3px;
     }
-
-    h2 {
-        font-size: 2em;
-    }
-
-    p {
-        font-size: 1.5em;
-    }
 }
 
 @mixin base--phone-ls() {
@@ -111,10 +90,6 @@ button:disabled {
     main {
         padding: 5px;
     }
-
-    h1 {
-        font-size: 2.3em;
-    }
 }
 
 @mixin base--tablet-md-pt() {
@@ -122,22 +97,8 @@ button:disabled {
         flex-direction: column;
     }
 
-    h3 {
-        font-size: 2.2em;
-    }
-
     footer {
         justify-content: space-around;
-    }
-}
-
-@mixin base--tablet-md-ls() {
-    h2 {
-        font-size: 2em;
-    }
-
-    p {
-        font-size: 1.2em;
     }
 }
 
@@ -148,18 +109,6 @@ button:disabled {
 
     main {
         flex-direction: column;
-    }
-
-    h1 {
-        font-size: 5em;
-    }
-
-    h2 {
-        font-size: 2.75em;
-    }
-
-    h3 {
-        font-size: 2.5em;
     }
 
     p {
