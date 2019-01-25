@@ -7,22 +7,8 @@ html, body {
     margin: 0;
 }
 
-@mixin html-body--phone-pt() {
-    html, body {
-        width: 100%;
-        height: auto;
-        min-height: 100vh;
-    }
-}
-
 html {
     font-size: 18px;
-}
-
-@mixin font-size--phone-pt() {
-    html {
-        font-size: 11px;
-    }
 }
 
 @mixin font-size--phone-ls() {
@@ -55,13 +41,6 @@ main {
     flex: 1;
 }
 
-@mixin main--phone-pt() {
-    main {
-        flex-direction: column;
-        padding: 0;
-    }
-}
-
 @mixin main--phone-ls() {
     main {
         padding: 5px;
@@ -88,16 +67,6 @@ footer {
     padding: 5px 0;
 
     background-color: $gray-100;
-}
-
-@mixin footer--phone-pt() {
-    footer {
-        justify-content: space-around;
-        flex-direction: row;
-        align-items: center;
-        margin: 0;
-        padding: 3px;
-    }
 }
 
 @mixin footer--tablet-md-pt() {
@@ -135,12 +104,6 @@ h2 {
     font-size: 2.25em;
 }
 
-@mixin h2--phone-pt() {
-    h2 {
-        font-size: 2em;
-    }
-}
-
 @mixin h2--phone-ls() {
     h2 {
         font-size: 1.8em;
@@ -157,12 +120,6 @@ h3 {
     }
 }
 
-@mixin p--phone-pt() {
-    p {
-        font-size: 1.5em;
-    }
-}
-
 @mixin p--tablet-md-pt() {
     p {
         font-size: 1.3em;
@@ -172,14 +129,6 @@ h3 {
 iframe {
     width: 100%;
     height: 100%;
-}
-
-@mixin iframe--phone-pt() {
-    iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
 }
 
 @mixin iframe--tablet-md-pt() {
@@ -192,4 +141,43 @@ iframe {
 
 button:disabled {
     cursor: not-allowed;
+}
+
+@mixin base--phone-pt() {
+    html, body {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    html {
+        font-size: 11px;
+    }
+
+    main {
+        flex-direction: column;
+        padding: 0;
+    }
+
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    footer {
+        justify-content: space-around;
+        flex-direction: row;
+        align-items: center;
+        margin: 0;
+        padding: 3px;
+    }
+
+    h2 {
+        font-size: 2em;
+    }
+
+    p {
+        font-size: 1.5em;
+    }
 }

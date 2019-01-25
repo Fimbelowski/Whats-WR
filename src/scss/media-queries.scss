@@ -10,22 +10,13 @@
 // Phones
     // Portrait
     @media(max-width: #{$phone-max-width-pt}) and (orientation: portrait) {
-        @include html-body--phone-pt();
-        @include font-size--phone-pt();
-        @include main--phone-pt();
-        @include l-main-primary--phone-pt();
-        @include video-embed-container--phone-pt();
-        @include iframe--phone-pt();
-        @include wr-info-container--phone-pt();
-        @include l-main-secondary--phone-pt();
-        @include player-info-container--phone-pt();
-        @include wr-button-container--phone-pt();
-        @include footer--phone-pt();
+        @include base--phone-pt();
+        @include layout--phone-pt();
+        @include video-embed--phone-pt();
+        @include wr-info--phone-pt();
+        @include player-info--phone-pt();
+        @include wr-button--phone-pt();
         @include footer-link--phone-pt();
-        @include player-social-icon--phone-pt();
-        @include copy-url-button--phone-pt();
-        @include h2--phone-pt();
-        @include p--phone-pt();
     }
 
     // Landscape

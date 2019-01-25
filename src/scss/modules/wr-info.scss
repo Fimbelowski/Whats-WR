@@ -7,13 +7,6 @@
     height: $bottom-row-height;
 }
 
-@mixin wr-info-container--phone-pt() {
-    .wr-info-container {
-        height: auto;
-        margin: 0 5px 3px;
-    }
-}
-
 @mixin wr-info-container--phone-ls() {
     .wr-info-container {
         height: 50px;
@@ -38,12 +31,6 @@
     cursor: pointer;
 }
 
-@mixin copy-url-button--phone-pt() {
-    .copy-url-button {
-        width: 25px;
-    }
-}
-
 @mixin copy-url-button--phone-ls() {
     .copy-url-button {
         width: 25px;
@@ -62,4 +49,15 @@
     text-align: center;
     padding: 3px 5px;
     border-radius: 3px;
+}
+
+@mixin wr-info--phone-pt() {
+    .wr-info-container {
+        height: auto;
+        margin: 0 5px 3px;
+    }
+
+    .copy-url-button {
+        width: 25px;
+    }
 }

@@ -7,13 +7,6 @@
     background-color: $gray-200;
 }
 
-@mixin wr-button-container--phone-pt() {
-    .wr-button-container {
-        margin: 0 0 5px;
-        height: auto;
-    }
-}
-
 @mixin wr-button-container--phone-ls() {
     .wr-button-container {
         height: 50px;
@@ -39,5 +32,12 @@
 
     &:hover {
         background-color: $primary-300;
+    }
+}
+
+@mixin wr-button--phone-pt() {
+    .wr-button-container {
+        margin: 0 0 5px;
+        height: auto;
     }
 }

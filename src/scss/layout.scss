@@ -10,13 +10,6 @@
     margin-left: 10px;
 }
 
-@mixin l-main-primary--phone-pt() {
-    .l-main-primary {
-        flex: 0 0 auto;
-        margin: 0 0 3px;
-    }
-}
-
 @mixin l-main-primary--phone-ls() {
     .l-main-primary {
         margin-left: 5px;
@@ -34,17 +27,6 @@
     display: flex;
     flex-direction: column;
     width: $left-column-width;
-}
-
-@mixin l-main-secondary--phone-pt() {
-    .l-main-secondary {
-        flex: 1 1 auto;
-
-        width: 100%;
-        box-sizing: border-box;
-        padding: 0 5px;
-        align-items: center;
-    }
 }
 
 @mixin l-main-secondary--phone-ls() {
@@ -72,5 +54,21 @@
 @mixin l-main-secondary--laptop() {
     .l-main-secondary {
         width: 300px;
+    }
+}
+
+@mixin layout--phone-pt() {
+    .l-main-primary {
+        flex: 0 0 auto;
+        margin: 0 0 3px;
+    }
+
+    .l-main-secondary {
+        flex: 1 1 auto;
+
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 5px;
+        align-items: center;
     }
 }

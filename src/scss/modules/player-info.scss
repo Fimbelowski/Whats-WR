@@ -13,12 +13,6 @@
     margin-bottom: 10px;
 }
 
-@mixin player-info-container--phone-pt() {
-    .player-info-container {
-        margin-bottom: 5px;
-    }
-}
-
 @mixin player-info-container--phone-ls() {
     .player-info-container {
         margin-bottom: 5px;
@@ -75,13 +69,17 @@
     margin: 0 5px;
 }
 
-@mixin player-social-icon--phone-pt() {
+@mixin player-social-icon--phone-ls() {
     .player-social-icon {
         height: 25px;
     }
 }
 
-@mixin player-social-icon--phone-ls() {
+@mixin player-info--phone-pt() {
+    .player-info-container {
+        margin-bottom: 5px;
+    }
+
     .player-social-icon {
         height: 25px;
     }
