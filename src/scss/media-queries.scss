@@ -56,6 +56,7 @@
             @include wr-info--tablet-md-pt();
             @include player-info--tablet-md-pt();
             @include wr-button--tablet-md-pt();
+            @include footer-link--tablet-md-pt()
         }
 
         // Landscape
@@ -68,6 +69,7 @@
             // Modules
             @include wr-info--tablet-md-ls();
             @include footer-link--tablet-md-ls();
+            @include player-info--tablet-md-ls();
         }
 
     // Large
@@ -83,10 +85,12 @@
             @include video-embed--tablet-lg-pt();
             @include wr-info--tablet-lg-pt();
             @include player-info--tablet-lg-pt();
+            @include wr-button--tablet-lg-pt();
+            @include footer-link--tablet-lg-pt();
         }
 
         // Landscape
-        @media(min-width: #{$tablet-md-ls-max-width}) and (max-width: #{$tablet-lg-ls-max-width}) and (orientation: landscape) {
+        @media(min-width: #{$tablet-md-ls-max-width + 1}) and (max-width: #{$tablet-lg-ls-max-width}) and (orientation: landscape) {
             // Base Rules
             @include base--tablet-lg-ls();
 

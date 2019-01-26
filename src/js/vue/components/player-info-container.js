@@ -7,7 +7,7 @@ Vue.component('player-info-container', {
     },
     template: ' <section class="player-info-container">\
                     <div class="player-info-container-header">\
-                        <h3>{{ playersHeader }}</h3>\
+                        <h3 class="player-text">{{ playersHeader }}</h3>\
                     </div>\
                     <player-info v-for="player in players" :player="player" :key="player.id"></player-info>\
                 </section>'
