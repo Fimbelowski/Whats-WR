@@ -127,3 +127,9 @@ button:disabled {
         padding: 10px 0;
     }
 }
+
+@mixin base--desktop() {
+    footer {
+        justify-content: center;
+    }
+}

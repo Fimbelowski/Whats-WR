@@ -43,3 +43,9 @@
         font-size: 1.35em;
     }
 }
+
+@mixin footer-link--desktop() {
+    .footer-link {
+        margin: 0 20px;
+    }
+}

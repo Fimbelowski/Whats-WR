@@ -106,3 +106,14 @@
             @include loading-message-text--tablet-lg-ls();
             @include footer-link--tablet-lg-ls();
         }
+
+// Desktop
+@media(min-width: #{$tablet-lg-ls-max-width + 1}) {
+    // Base Rules
+    @include base--desktop();
+
+    // Layout Rules
+
+    // Modules
+    @include footer-link--desktop();
+}
