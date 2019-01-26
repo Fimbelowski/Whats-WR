@@ -88,3 +88,11 @@
         width: 55px;
     }
 }
+
+@mixin wr-info--tablet-lg-ls() {
+    .wr-info-container {
+        height: auto;
+        padding: 0;
+        margin-bottom: 10px;
+    }
+}

@@ -18,3 +18,9 @@
         font-size: 1.2em;
     }
 }
+
+@mixin footer-link--tablet-lg-ls() {
+    .footer-link-text {
+        font-size: 1.35em;
+    }
+}

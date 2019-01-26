@@ -59,3 +59,13 @@
         font-size: 5em;
     }
 }
+
+@mixin wr-button--tablet-lg-ls() {
+    .wr-button-container {
+        height: 100%;
+    }
+
+    .wr-button-text {
+        font-size: 6em;
+    }
+}

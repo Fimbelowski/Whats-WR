@@ -9,3 +9,13 @@
     justify-content: center;
     text-align: center;
 }
+
+.loading-message-text {
+
+}
+
+@mixin loading-message-text--tablet-lg-ls() {
+    .loading-message-text {
+        font-size: 3em;
+    }
+}

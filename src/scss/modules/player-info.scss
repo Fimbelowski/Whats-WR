@@ -39,6 +39,10 @@
     padding: 5px 0;
 }
 
+.player-text {
+
+}
+
 .player-social-container {
     display: flex;
     flex-direction: row;
@@ -105,5 +109,19 @@
     .player-social-icon {
         height: 55px;
         margin: 0 12px;
+    }
+}
+
+@mixin player-info--tablet-lg-ls() {
+    .player-info-container {
+        flex: 1 1 auto;
+
+        height: 100%;
+        padding: 0 0 10px;
+        box-sizing: border-box;
+    }
+
+    .player-text {
+        font-size: 1.7em;
     }
 }

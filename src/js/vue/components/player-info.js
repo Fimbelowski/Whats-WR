@@ -6,8 +6,8 @@ Vue.component('player-info', {
         }
     },
     template: ' <div class="player-info">\
-                    <a v-if="player.src" :href="player.src"><h3>{{ player.name }}</h3></a>\
-                    <h3 v-else>{{ player.name }}</h3>\
+                    <a v-if="player.src" :href="player.src"><h3 class="player-text">{{ player.name }}</h3></a>\
+                    <h3 v-else class="player-text">{{ player.name }}</h3>\
                     <div v-if="hasSocial" class="player-social-container">\
                         <a v-if="player.twitch" :href="player.twitch"><img src="/dist/images/Glitch_White_RGB.png" class="player-social-icon"></a>\
                         \
