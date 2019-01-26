@@ -64,6 +64,10 @@
     .player-social-icon {
         height: 25px;
     }
+
+    .player-text {
+        font-size: 2.5em;
+    }
 }
 
 @mixin player-info--phone-ls() {
@@ -73,6 +77,7 @@
 
     .player-social-icon {
         height: 20px;
+        margin: 0 3px;
     }
 }
 
