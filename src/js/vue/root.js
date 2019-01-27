@@ -53,10 +53,10 @@ window.onload = function() {
                             vm.totalNumOfGamesStartingOffset += 1000;
                             vm.getTotalNumOfGames();
                         }
-                });
-
-                promise.catch((error) => {
-                    vm.getTotalNumOfGames();
+                }).catch((error) => {
+                    window.setTimeout(function() {
+                        vm.getTotalNumOfGames();
+                    }, 1000);
                 });
             },
             fillRemainingBackups: function() {
@@ -80,10 +80,10 @@ window.onload = function() {
 
                 promise.then((response) => {
                     vm.extractCategories(response);
-                });
-
-                promise.catch((error) => {
-                    vm.getRandomGroupOfGames();
+                }).catch((error) => {
+                    window.setTimeout(function() {
+                        vm.getRandomGroupOfGames();
+                    }, 1000);
                 });
             },
             extractCategories: function(arr) {
@@ -151,10 +151,10 @@ window.onload = function() {
 
                 promise.then((response) => {
                     categoryObj.wr = (response.runs.length > 0 && response.runs[0].run.videos) ? response.runs[0].run : null;
-                });
-
-                promise.catch((error) => {
-                    vm.getRecordFromCategoryObj(categoryObj);
+                }).catch((error) => {
+                    window.setTimeout(function() {
+                        vm.getRecordFromCategoryObj(categoryObj);
+                    }, 1000);
                 });
 
                 return promise;
@@ -255,10 +255,10 @@ window.onload = function() {
                     playerObj.twitch = (response.twitch) ? response.twitch.uri : null;
                     playerObj.twitter = (response.twitter) ? response.twitter.uri : null;
                     playerObj.youtube = (response.youtube) ? response.youtube.uri : null;
-                });
-
-                promise.catch((error) => {
-                    vm.getPlayerInfo(playerObj);
+                }).catch((error) => {
+                    window.setTimeout(function() {
+                        vm.getPlayerInfo(playerObj);
+                    }, 1000);
                 });
 
                 return promise;
@@ -291,10 +291,10 @@ window.onload = function() {
 
                 promise.then((response) => {
                     vm.parseRunFromHash(response);
-                });
-
-                promise.catch((error) => {
-                    vm.getRunFromHash();
+                }).catch((error) => {
+                    window.setTimeout(function() {
+                        vm.getRunFromHash();
+                    }, 1000);
                 });
 
                 return promise;
