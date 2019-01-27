@@ -27,33 +27,37 @@ window.onload = function() {
         },
         methods: {
             getTotalNumOfGames: function() {
-                /*
-                    Fetch the total number of games on speedrun.com
+                    /*
+                        Fetch the total number of games on speedrun.com
 
-                    This function starts by taking a starting offset and querying speedrun.com for 1,000 games at a time.
-                    If 1,000 games are found, the offset is increased by 1,000 and this function is run again. If less than 1,000 games
-                    are found, the number of games found is added to the starting offset and this is the total number of games.
-                */
-               var promise = new Promise((resolve, reject) => {
-                    const xhr = new XMLHttpRequest();
-                    var url = 'https://www.speedrun.com/api/v1/games?_bulk=yes&max=1000&offset=' + this.totalNumOfGamesStartingOffset;
-                    xhr.open('GET', url);
-                    xhr.onload = () => resolve(JSON.parse(xhr.responseText).data);
-                    xhr.onerror = () => reject(xhr.statusText);
-                    xhr.send();
-               });
+                        This function starts by taking a starting offset and querying speedrun.com for 1,000 games at a time.
+                        If 1,000 games are found, the offset is increased by 1,000 and this function is run again. If less than 1,000 games
+                        are found, the number of games found is added to the starting offset and this is the total number of games.
+                    */
+                var promise = new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        var url = 'https://www.speedrun.com/api/v1/games?_bulk=yes&max=1000&offset=' + this.totalNumOfGamesStartingOffset;
+                        xhr.open('GET', url);
+                        xhr.onload = () => resolve(JSON.parse(xhr.responseText).data);
+                        xhr.onerror = () => reject(xhr.statusText);
+                        xhr.send();
+                });
 
-               promise.then((response) => {
-                    if(response.length < 1000) {
-                        vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
+                promise.then((response) => {
+                        if(response.length < 1000) {
+                            vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
 
-                        // If the window contains a URL hash, load from there. Otherwise start from scratch
-                        (window.location.hash) ? vm.getRunFromHash() : vm.fillRemainingBackups();
-                    } else {
-                        vm.totalNumOfGamesStartingOffset += 1000;
-                        vm.getTotalNumOfGames();
-                    }
-               });
+                            // If the window contains a URL hash, load from there. Otherwise start from scratch
+                            (window.location.hash) ? vm.getRunFromHash() : vm.fillRemainingBackups();
+                        } else {
+                            vm.totalNumOfGamesStartingOffset += 1000;
+                            vm.getTotalNumOfGames();
+                        }
+                });
+
+                promise.catch((error) => {
+                    vm.getTotalNumOfGames();
+                });
             },
             fillRemainingBackups: function() {
                 for(var i = 0; i < vm.targetNumOfBackups - vm.backupRuns.length; i++) {
@@ -76,6 +80,10 @@ window.onload = function() {
 
                 promise.then((response) => {
                     vm.extractCategories(response);
+                });
+
+                promise.catch((error) => {
+                    vm.getRandomGroupOfGames();
                 });
             },
             extractCategories: function(arr) {
@@ -143,6 +151,10 @@ window.onload = function() {
 
                 promise.then((response) => {
                     categoryObj.wr = (response.runs.length > 0 && response.runs[0].run.videos) ? response.runs[0].run : null;
+                });
+
+                promise.catch((error) => {
+                    vm.getRecordFromCategoryObj(categoryObj);
                 });
 
                 return promise;
@@ -245,6 +257,10 @@ window.onload = function() {
                     playerObj.youtube = (response.youtube) ? response.youtube.uri : null;
                 });
 
+                promise.catch((error) => {
+                    vm.getPlayerInfo(playerObj);
+                });
+
                 return promise;
             },
             getNextRun: function() {
@@ -275,6 +291,10 @@ window.onload = function() {
 
                 promise.then((response) => {
                     vm.parseRunFromHash(response);
+                });
+
+                promise.catch((error) => {
+                    vm.getRunFromHash();
                 });
 
                 return promise;
