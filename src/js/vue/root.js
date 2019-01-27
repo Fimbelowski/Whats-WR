@@ -11,9 +11,6 @@ window.onload = function() {
             twitchRegEx: /(?:twitch\.tv\/(?:\w{3,15}\/v\/)|(?:videos\/))(\d+)/i
         },
         computed: {
-            isButtonDisabled: function() {
-                return (!this.displayedRun) ? true : false;
-            },
             wrInfo: function() {
                 return {
                     gameTitle: this.displayedRun.gameTitle,

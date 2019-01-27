@@ -38,7 +38,7 @@
       <transition name='slide-in-left'>
         <div v-if='displayedRun' class='l-main-secondary'>
             <player-info-container :players='displayedRun.players'></player-info-container>
-            <wr-button :is-button-disabled='isButtonDisabled' @button-clicked='getNextRun'></wr-button>
+            <wr-button @button-clicked='getNextRun'></wr-button>
         </div>
       </transition>
     </main>
