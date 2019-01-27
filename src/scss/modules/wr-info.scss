@@ -59,6 +59,11 @@
 @mixin wr-info--phone-ls() {
     .wr-info-container {
         height: 50px;
+        padding: 0 6px;
+    }
+
+    .wr-info-text {
+        font-size: 1.8em;
     }
 
     .copy-url-button {
@@ -69,6 +74,11 @@
 @mixin wr-info--tablet-md-pt() {
     .wr-info-container {
         height: auto;
+        padding: 6px 10px;
+    }
+
+    .wr-info-text {
+        font-size: 2.1em;
     }
 }
 
@@ -81,6 +91,7 @@
 @mixin wr-info--tablet-lg-pt() {
     .wr-info-container {
         height: auto;
+        padding: 6px 10px;
         margin-bottom: 12px;
     }
 
@@ -96,7 +107,7 @@
 @mixin wr-info--tablet-lg-ls() {
     .wr-info-container {
         height: auto;
-        padding: 0;
+        padding: 10px;
         margin-bottom: 10px;
     }
 }
