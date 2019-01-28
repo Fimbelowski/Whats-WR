@@ -27,6 +27,8 @@
       <transition name='fade'>
         <div v-if='!displayedRun' class='loading-message'>
           <h2 class='loading-message-text'>Finding World Record...</h2>
+          <h2 v-if='pageIsIdle' class='idle-message-text'>Speedrun.com may be under a heavy load.</h2>
+          <h2 v-if='pageIsIdle' class='idle-message-text'>You may need to refresh the page if this persists.</h2>
         </div>
       </transition>
       <transition name='slide-in-right'>

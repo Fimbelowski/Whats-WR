@@ -12,6 +12,11 @@
 
 .loading-message-text {
     font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.idle-message-text {
+    font-size: 2em;
 }
 
 @mixin loading-message-text--tablet-lg-ls() {

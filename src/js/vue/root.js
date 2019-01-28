@@ -2,11 +2,14 @@ window.onload = function() {
     var vm = new Vue({
         el: '#main',
         data: {
-            totalNumOfGamesStartingOffset: 14000,
+            totalNumOfGamesStartingOffset: 15000,
             totalNumOfGames: 0,
             displayedRun: null,
             backupRuns: [],
             targetNumOfBackups: 3,
+            idleTimeout: null,
+            idleTimeoutDuration: 15,
+            pageIsIdle: false,
             ytRegEx: /(?:(?:youtube\.com\/watch\?v=)|(?:youtu\.be\/))(.+)/i,
             twitchRegEx: /(?:twitch\.tv\/(?:\w{3,15}\/v\/)|(?:videos\/))(\d+)/i
         },
@@ -221,6 +224,9 @@ window.onload = function() {
                 Promise.all(promises).then(() => {
                     // If there is no displayedRun, set displayedRun equal to wrObj and update the location hash. Otherwise, push wrObj onto backupRuns.
                     if(vm.displayedRun === null) {
+                        // Clear the idle timeout
+                        vm.clearIdleTimeout();
+
                         vm.displayedRun = wrObj;
                         window.location.hash = encodeURIComponent(vm.displayedRun.runID);
                         vm.getRandomGroupOfGames();
@@ -264,11 +270,17 @@ window.onload = function() {
                 // Remove the current run from the display object.
                 vm.displayedRun = null;
 
+                // Start idle timeout
+                vm.startIdleTimeout(vm.idleTimeoutDuration);
+
                 // If backupRuns contains any elements...
                 if(vm.backupRuns.length > 0) {
                     // Move the first element from backupRuns into displayedRun and update the location hash.
                     vm.displayedRun = vm.backupRuns.shift();
                     window.location.hash = encodeURIComponent(vm.displayedRun.runID);
+
+                    // Clear idle timeout
+                    vm.clearIdleTimeout();
 
                     // Fetch another run.
                     vm.getRandomGroupOfGames();
@@ -287,6 +299,7 @@ window.onload = function() {
                 });
 
                 promise.then((response) => {
+                    vm.clearIdleTimeout();
                     vm.parseRunFromHash(response);
                 }).catch((error) => {
                     window.setTimeout(function() {
@@ -364,10 +377,19 @@ window.onload = function() {
             getRandomNumber: function(max) {
                 // Generates a random number between 0 and max, inclusive.
                 return Math.floor(Math.random() * (max + 1));
+            },
+            startIdleTimeout: function(d) {
+                this.idleTimeout = window.setTimeout(function() {
+                    vm.pageIsIdle = true;
+                }, d * 1000);
+            },
+            clearIdleTimeout: function() {
+                window.clearTimeout(vm.idleTimeout);
             }
         },
         created: function() {
             this.getTotalNumOfGames();
+            this.startIdleTimeout(this.idleTimeoutDuration);
         }
     });
 }
