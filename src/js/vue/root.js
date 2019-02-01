@@ -25,6 +25,31 @@ window.onload = function() {
             }
         },
         methods: {
+            makeAsyncCall: function(url) {
+                return new Promise(function(resolve, reject) {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', url);
+                    xhr.onload = () => {
+                        if(this.status >= 200 && this.status < 300) {
+                            resolve(JSON.parse(xhr.responseText).data);
+                        } else {
+                            reject({
+                                satus: this.status,
+                                statusText: this.statusText
+                            });
+                        }
+                    }
+                    
+                    xhr.onerror = () => {
+                        reject({
+                            status: this.status,
+                            statusText: this.statusText
+                        });
+                    }
+
+                    xhr.send();
+                });
+            },
             getTotalNumOfGames: function() {
                 /*
                     Fetch the total number of games on speedrun.com
@@ -35,26 +60,18 @@ window.onload = function() {
 
                     Once the total number of games is found, runs can start being found.
                 */
-                var promise = new Promise((resolve, reject) => {
-                        const xhr = new XMLHttpRequest();
-                        var url = 'https://www.speedrun.com/api/v1/games?_bulk=yes&max=1000&offset=' + this.totalNumOfGamesStartingOffset;
-                        xhr.open('GET', url);
-                        xhr.onload = () => resolve(JSON.parse(xhr.responseText).data);
-                        xhr.onerror = () => reject(xhr.statusText);
-                        xhr.send();
-                });
+                vm.makeAsyncCall('https://www.speedrun.com/api/v1/games?_bulk=yes&max=1000&offset=' + this.totalNumOfGamesStartingOffset)
+                .then((response) => {
+                    if(response.length < 1000) { // If less than 1,000 games are found...
+                        vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
 
-                promise.then((response) => {
-                        if(response.length < 1000) { // If less than 1,000 games are found...
-                            vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
-
-                            // Begin finding random runs to show the user.
-                            vm.findRuns();
-                        } else {
-                            // Add 1,000 to the starting offset and run this function again.
-                            vm.totalNumOfGamesStartingOffset += 1000;
-                            vm.getTotalNumOfGames();
-                        }
+                        // Begin finding random runs to show the user.
+                        vm.findRuns();
+                    } else {
+                        // Add 1,000 to the starting offset and run this function again.
+                        vm.totalNumOfGamesStartingOffset += 1000;
+                        vm.getTotalNumOfGames();
+                    }
                 }).catch((error) => {
                     window.setTimeout(function() {
                         vm.getTotalNumOfGames();
