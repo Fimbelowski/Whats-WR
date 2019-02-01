@@ -147,13 +147,13 @@ window.onload = function() {
                     arr = arr.filter(item => item.wr);
 
                     // If the resulting array is empty (no categories are suitable), restart process by calling getRandomGroupOfGames.
-                    // Otherwise, pass the resulting array into parseVideoInfo
-                    (!arr.length) ? vm.getRandomGroupOfGames() : vm.parseVideoInfo(arr);
+                    // Otherwise, pass the resulting array into checkVideoHosts
+                    (!arr.length) ? vm.getRandomGroupOfGames() : vm.checkVideoHosts(arr);
                 });
             },
             getRecordFromCategoryObj: function(categoryObj) {
-                // Fetches the world record run for a given category and then appends the response to categoryObj. If the response has no runs,
-                // or the response has a run that does not have video, null is appended instead.
+                // Fetches the world record run for a given category and then appends the response to categoryObj.
+                // If the response has no runs, or the response has a run that does not have video, null is appended instead.
                 var promise = new Promise((resolve, reject) => {
                     const req = new XMLHttpRequest();
                     var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
@@ -164,6 +164,7 @@ window.onload = function() {
                 });
 
                 promise.then((response) => {
+                    // If the response has no runs, or the response has a run that does not have video, null is appended instead.
                     categoryObj.wr = (response.runs.length > 0 && response.runs[0].run.videos) ? response.runs[0].run : null;
                 }).catch((error) => {
                     window.setTimeout(function() {
@@ -173,27 +174,24 @@ window.onload = function() {
 
                 return promise;
             },
-            parseVideoInfo: function(arr) {
+            checkVideoHosts: function(arr) {
+                // For each item in arr, first check to see that the video is hosted on either Twitch or Youtube using regexp.
+                // Filter out all runs that do not have a valid video host.
+
                 // Get the video host for each category in arr.
                 arr.forEach(item => item.videoHost = (vm.ytRegEx.test(item.wr.videos.links[0].uri)) ? 'youtube'
                                                 : (vm.twitchRegEx.test(item.wr.videos.links[0].uri)) ? 'twitch'
-                                                : false);
+                                                : null);
                 
                 // Filter out all categories with an invalid video host.
                 arr = arr.filter(item => item.videoHost);
 
                 // At this point we know that all remaining categories are fit to show the user.
-                // If the resulting array is empty (no categories are suitable), call getRandomGroupOfGames.
-                // Otherwise, continue with the normal flow.
-                if(arr.length === 0) {
-                    vm.getRandomGroupOfGames();
-                } else {
-                    //We can now select one at random to show the user.
-                    // Get a random category from the remaining categories and pass it into cleanCategoryObject.
-                    vm.cleanCategoryObject(arr[vm.getRandomNumber(arr.length - 1)]);
-                    vm.pageIsIdle = false;
-                }
-            },
+
+                // If the resulting array is empty (no categories are suitable), restart the process by calling getRandomGroupOfGames.
+                // Otherwise, get a random category from the remaining categories and pass it into cleanCategoryObject.
+                (!arr.length) ? vm.getRandomGroupOfGames() : vm.cleanCategoryObject(arr[vm.getRandomNumber(arr.length - 1)]);
+            }, // Revisions through here.
             cleanCategoryObject: function(categoryObj) {
                 var wrInfo = {};
 
@@ -240,8 +238,8 @@ window.onload = function() {
                     // If there is no displayedRun, set displayedRun equal to wrObj and update the location hash. Otherwise, push wrObj onto backupRuns.
                     if(vm.displayedRun === null) {
                         vm.displayedRun = wrObj;
+                        vm.pageIsIdle = false;
                         window.location.hash = encodeURIComponent(vm.displayedRun.runID);
-                        vm.getRandomGroupOfGames();
                     } else {
                         vm.backupRuns.push(wrObj);
                     }
