@@ -26,13 +26,15 @@ window.onload = function() {
         },
         methods: {
             getTotalNumOfGames: function() {
-                    /*
-                        Fetch the total number of games on speedrun.com
+                /*
+                    Fetch the total number of games on speedrun.com
 
-                        This function starts by taking a starting offset and querying speedrun.com for 1,000 games at a time.
-                        If 1,000 games are found, the offset is increased by 1,000 and this function is run again. If less than 1,000 games
-                        are found, the number of games found is added to the starting offset and this is the total number of games.
-                    */
+                    This function starts by taking a starting offset and querying speedrun.com for 1,000 games at a time.
+                    If 1,000 games are found, the offset is increased by 1,000 and this function is run again. If less than 1,000 games
+                    are found, the number of games found is added to the starting offset and this is the total number of games.
+
+                    Once the total number of games is found, runs can start being found.
+                */
                 var promise = new Promise((resolve, reject) => {
                         const xhr = new XMLHttpRequest();
                         var url = 'https://www.speedrun.com/api/v1/games?_bulk=yes&max=1000&offset=' + this.totalNumOfGamesStartingOffset;
@@ -43,12 +45,13 @@ window.onload = function() {
                 });
 
                 promise.then((response) => {
-                        if(response.length < 1000) {
+                        if(response.length < 1000) { // If less than 1,000 games are found...
                             vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
 
-                            // If the window contains a URL hash, load from there. Otherwise start from scratch
-                            (window.location.hash) ? vm.getRunFromHash() : vm.fillRemainingBackups();
+                            // Begin finding random runs to show the user.
+                            vm.findRuns();
                         } else {
+                            // Add 1,000 to the starting offset and run this function again.
                             vm.totalNumOfGamesStartingOffset += 1000;
                             vm.getTotalNumOfGames();
                         }
@@ -58,8 +61,13 @@ window.onload = function() {
                     }, 1000);
                 });
             },
-            fillRemainingBackups: function() {
-                for(var i = 0; i < vm.targetNumOfBackups - vm.backupRuns.length; i++) {
+            findRuns: function() {
+                // Start the main code flow as many times as needed to fill both the displayedRun and backupRuns
+                var target = vm.targetNumOfBackups;
+                // If there is no displayedRun, increment target.
+                if(!vm.displayedRun) { target++; }
+
+                for(var i = 0; i < target; i++) {
                     vm.getRandomGroupOfGames();
                 }
             },
@@ -280,6 +288,9 @@ window.onload = function() {
                 }
             },
             getRunFromHash: function() {
+                // Queries speeddrun.com for a specific run based on a run ID located in the window's location hash.
+                // Once the run is returned, execute vm.getTotalNumOfGames in order to kick off the normal code flow.
+                
                 var runID = decodeURIComponent(window.location.hash).slice(1);
                 
                 var promise = new Promise((resolve, reject) => {
@@ -355,16 +366,11 @@ window.onload = function() {
                     }
                 });
 
-                // If there is no displayedRun, set displayedRun equal to wrObj and update the location hash. Otherwise, push wrObj onto backupRuns.
-                if(vm.displayedRun === null) {
-                    vm.displayedRun = wrInfo;
-                    window.location.hash = encodeURIComponent(vm.displayedRun.runID);
-                } else {
-                    vm.backupRuns.push(wrInfo);
-                }
+                // Move the run from the hash into displayedRun.
+                vm.displayedRun = wrInfo;
 
-                // If the length of backupRuns is less than targetNumOfBackups, run the main code flow again.
-                vm.fillRemainingBackups();
+                // Kick off the main code flow.
+                vm.getTotalNumOfGames();
             },
             // Utility Methods
             getRandomNumber: function(max) {
@@ -378,7 +384,8 @@ window.onload = function() {
             }
         },
         created: function() {
-            this.getTotalNumOfGames();
+            // First, check to see if a location hash exists. If one does, fetch the run from that hash. Otherwise, get the total number of games.
+            (window.location.hash) ? this.getRunFromHash() : this.getTotalNumOfGames();
             this.startIdleTimeout(this.idleTimeoutDuration);
         }
     });
