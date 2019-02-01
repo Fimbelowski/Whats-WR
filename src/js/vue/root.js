@@ -209,16 +209,7 @@ window.onload = function() {
                 wrInfo.runID = categoryObj.wr.id;
 
                 // Store the category timing method and runtime.
-                if(categoryObj.wr.times.primary_t === categoryObj.wr.times.ingame_t) {
-                    wrInfo.timingMethod = 'IGT';
-                    wrInfo.runtime = categoryObj.wr.times.ingame_t;
-                } else if(categoryObj.wr.times.primary_t === categoryObj.wr.times.realtime_t) {
-                    wrInfo.timingMethod = 'RTA';
-                    wrInfo.runtime = categoryObj.wr.times.realtime_t;
-                } else {
-                    wrInfo.timingMethod = 'RTA (No Loads)';
-                    wrInfo.runtime = categoryObj.wr.times.realtime_noloads_t;
-                }
+                vm.parseTimingInfo(wrInfo, categoryObj.wr);
                 
                 // Store the leaderboard's URL.
                 wrInfo.src = categoryObj.weblink;
@@ -231,6 +222,19 @@ window.onload = function() {
 
                 // Fetch information about the player(s).
                 vm.getAllPlayersInfo(wrInfo);
+            },
+            parseTimingInfo: function(wrInfoObj, runObj) {
+                // Takes a WR Info Object and a Run Object and parses information about the run's primary timing method and runtime and stores them within the WR Info Object.
+                if(runObj.times.primary_t === runObj.times.ingame_t) {
+                    wrInfoObj.timingMethod = 'IGT';
+                    wrInfoObj.runtime = runObj.times.ingame_t;
+                } else if(runObj.times.primary_t === runObj.times.realtime_t) {
+                    wrInfoObj.timingMethod = 'RTA';
+                    wrInfoObj.runtime = runObj.times.realtime_t;
+                } else {
+                    wrInfoObj.timingMethod = 'RTA (No Loads)';
+                    wrInfoObj.runtime = runObj.times.realtime_noloads_t;
+                }
             },
             getAllPlayersInfo: function(wrObj) {
                 // For each player, query speedrun.com to obtain information about them.
@@ -273,19 +277,9 @@ window.onload = function() {
                 });
 
                 promise.then((response) => {
-                    // Append all relevant information to playerObj.
-                    
-                    // If the player is a guest, store their name.
-                    // Otherwise, check for a name normally (Japanese vs International).
-                    playerObj.name = (response.rel === 'guest') ? response.name
-                                                                : (response.names.japanese) ? response.names.japanese : response.names.international;
-
-                    // Append the player's social media links.
-                    playerObj.src = (response.weblink) ? response.weblink : null;
-                    playerObj.twitch = (response.twitch) ? response.twitch.uri : null;
-                    playerObj.twitter = (response.twitter) ? response.twitter.uri : null;
-                    playerObj.youtube = (response.youtube) ? response.youtube.uri : null;
-                }).catch((error) => {
+                    vm.parsePlayerInfo(playerObj, response);
+                })
+                .catch((error) => {
                     window.setTimeout(function() {
                         vm.getPlayerInfo(playerObj);
                     }, 1000);
@@ -293,9 +287,23 @@ window.onload = function() {
 
                 return promise;
             },
+            parsePlayerInfo: function(playerObj, playerInfo) {
+                // Takes a Player Object and a Player Info Object and stores relevant information from the Player Info Object within the Player Object.
+                
+                // If the player is a guest, store their name.
+                // Otherwise, store either their Japanese or International name.
+                playerObj.name = (playerInfo.rel === 'guest') ? playerInfo.name
+                                                            : (playerInfo.names.japanese) ? playerInfo.names.japanese : playerInfo.names.international;
+
+                // Append the player's social media links.
+                playerObj.src = (playerInfo.weblink) ? playerInfo.weblink : null;
+                playerObj.twitch = (playerInfo.twitch) ? playerInfo.twitch.uri : null;
+                playerObj.twitter = (playerInfo.twitter) ? playerInfo.twitter.uri : null;
+                playerObj.youtube = (playerInfo.youtube) ? playerInfo.youtube.uri : null;
+            },
             getNextRun: function() {
                 // Remove the current run from displayedRun.
-                // If there are any runs within backupRuns, movw the first run into displayedRun and start the main code loop again to replace it.
+                // If there are any runs within backupRuns, move the first run into displayedRun and start the main code loop again to replace it.
                 // Otherwise, call startIdleTimeout(). 
 
                 // Remove the current run from the display object.
@@ -313,7 +321,7 @@ window.onload = function() {
                     // Start the idle timeout.
                     vm.startIdleTimeout(vm.idleTimeoutDuration);
                 }
-            }, // Revisions through here.
+            },
             getRunFromHash: function() {
                 // Queries speedrun.com for a specific run based on a run ID located in the window's location hash.
                 // Once the run is returned, execute vm.getTotalNumOfGames in order to kick off the normal code flow.
@@ -341,6 +349,8 @@ window.onload = function() {
                 return promise;
             },
             parseRunFromHash: function(runObj) {
+                // Takes the response from getRunFromHash() and stores the relevant info.
+
                 var wrInfo = {};
 
                 // Store the game, category, and run information
@@ -353,16 +363,7 @@ window.onload = function() {
                 wrInfo.runID = runObj.id;
 
                 // Store the category timing method and runtime.
-                if(runObj.times.primary_t === runObj.times.ingame_t) {
-                    wrInfo.timingMethod = 'IGT';
-                    wrInfo.runtime = runObj.times.ingame_t;
-                } else if(runObj.times.primary_t === runObj.times.realtime_t) {
-                    wrInfo.timingMethod = 'RTA';
-                    wrInfo.runtime = runObj.times.realtime_t;
-                } else {
-                    wrInfo.timingMethod = 'RTA (No Loads)';
-                    wrInfo.runtime = runObj.times.realtime_noloads_t;
-                }
+                vm.parseTimingInfo(wrInfo, runObj);
 
                 // Store a link to the leaderboard.
                 wrInfo.src = runObj.category.data.weblink;
@@ -375,22 +376,11 @@ window.onload = function() {
 
                 // Store the player info for each player
                 runObj.players.data.forEach((item, i) => {
+                    // Create a new player object and push it onto wrInfo.players.
                     wrInfo.players.push({});
 
-                    // Check to see if the player is a guest or not.
-                    if(item.rel === 'guest') {
-                        // Store the guest's name.
-                        wrInfo.players[i].name = item.name;
-                    } else {
-                        // Get the player's name.
-                        wrInfo.players[i].name = (item.names.japanese) ? item.names.japanese : item.names.international;
-
-                        // Get the player's social media info.
-                        wrInfo.players[i].src = (item.weblink) ? item.weblink : null;
-                        wrInfo.players[i].twitch = (item.twitch) ? item.twitch.uri : null;
-                        wrInfo.players[i].twitter = (item.twitter) ? item.twitter.uri : null;
-                        wrInfo.players[i].youtube = (item.youtube) ? item.youtube.uri : null;
-                    }
+                    // Parse information about the player and store it within the newly created Player Object.
+                    vm.parsePlayerInfo(wrInfo.players[i], item);
                 });
 
                 // Move the run from the hash into displayedRun.
@@ -405,6 +395,8 @@ window.onload = function() {
                 return Math.floor(Math.random() * (max + 1));
             },
             startIdleTimeout: function(duration) {
+                // Starts a timer to determine if the page is idle or not (no displayed game for an extended period of time).
+                // If there is still no displayed run at the end of the timeout, pageIsIdle is set to true.
                 setTimeout(function() {
                     if(!vm.displayedRun) { vm.pageIsIdle = true; }
                 }, duration * 1000);
@@ -413,6 +405,7 @@ window.onload = function() {
         created: function() {
             // First, check to see if a location hash exists. If one does, fetch the run from that hash. Otherwise, get the total number of games.
             (window.location.hash) ? this.getRunFromHash() : this.getTotalNumOfGames();
+            // Start an initial idle timeout check.
             this.startIdleTimeout(this.idleTimeoutDuration);
         }
     });
