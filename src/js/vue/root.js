@@ -73,7 +73,7 @@ window.onload = function() {
             },
             getRandomGroupOfGames: function() {
                 /*
-                    Fetches a group of 20 games at a random offset with all their categories embedded, then break the set up
+                    Fetches a group of 20 games at a random offset with all their categories embedded, then breaks the set up
                     into individual categories.
                 */
                 var promise = new Promise((resolve, reject) => {
@@ -101,18 +101,23 @@ window.onload = function() {
                 categorySet = categorySet.filter(item => item.type === 'per-game');
 
 
-                // If the resulting array is empty (no categories are suitable), call getRandomGroupOfGames.
-                // Otherwise, pass the filtered category set into getRandomSetOfCategories.
-                (categorySet.length === 0) ? vm.getRandomGroupOfGames() : vm.getRandomSetOfCategories(categorySet);
+                // If the resulting array is empty (no categories are suitable), restart the process by calling getRandomGroupOfGames.
+                // Otherwise, call getRandomSetOfCategories and pass in the filtered category set.
+                (!categorySet.length) ? vm.getRandomGroupOfGames() : vm.getRandomSetOfCategories(categorySet);
             },
             getRandomSetOfCategories: function(arr, numOfCategories = 10) {
-                // Generate a set of unique, random numbers between 0 and the length of randomCategories minus 1
+                // Given an array, find and store a number of categories (default 10) into a new array.
+                // All entries must be unique.
+
+                // Generate a set of unique, random numbers between 0 and the length of randomCategories minus 1 inclusive.
                 var randomIndices = [];
                 var randomSetOfCategories = [];
 
                 // If the length of arr is less than numOfCategories, set numOfCategories equal to the length of arr to avoid out of bounds errors.
                 if(arr.length < numOfCategories) { numOfCategories = arr.length; }
 
+                // While there are fewer random indices than numOfCategories, generate a random index.
+                // If the index does not already exist, add it the randomIndices.
                 while(randomIndices.length < numOfCategories) {
                     var r = this.getRandomNumber(arr.length - 1);
                     
@@ -124,24 +129,26 @@ window.onload = function() {
                     randomSetOfCategories.push(arr[item]);
                 });
 
+                // Get the world record for each category in randomSetOfCategories.
                 vm.getRecordsFromCategoryArray(randomSetOfCategories);
             },
             getRecordsFromCategoryArray: function(arr) {
+                // For each category in a given array, fetch that category's world record information from speedrun.com
+
                 // Create an empty array that will store all promises.
                 var promises = [];
 
-                // For each element in arr, create a new promise
+                // For each element in arr, create a new promise.
                 arr.forEach(item => promises.push(vm.getRecordFromCategoryObj(item)));
 
                 // When all promises are resolved, filter out any categories within arr that do not have a valid WR.
-
                 Promise.all(promises).then(() => {
                     // Filter out all categories that don't have a WR run.
                     arr = arr.filter(item => item.wr);
 
-                    // If the resulting array is empty (no categories are suitable), call getRandomGroupOfGames.
+                    // If the resulting array is empty (no categories are suitable), restart process by calling getRandomGroupOfGames.
                     // Otherwise, pass the resulting array into parseVideoInfo
-                    (arr.length === 0) ? vm.getRandomGroupOfGames() : vm.parseVideoInfo(arr);
+                    (!arr.length) ? vm.getRandomGroupOfGames() : vm.parseVideoInfo(arr);
                 });
             },
             getRecordFromCategoryObj: function(categoryObj) {
