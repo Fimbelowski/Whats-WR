@@ -191,17 +191,21 @@ window.onload = function() {
                 // If the resulting array is empty (no categories are suitable), restart the process by calling getRandomGroupOfGames.
                 // Otherwise, get a random category from the remaining categories and pass it into cleanCategoryObject.
                 (!arr.length) ? vm.getRandomGroupOfGames() : vm.cleanCategoryObject(arr[vm.getRandomNumber(arr.length - 1)]);
-            }, // Revisions through here.
+            },
             cleanCategoryObject: function(categoryObj) {
+                // Given a category object, trim down its contents into only data relevant to usage within the site.
+                // Relevant data: game ID, game title, category ID, category title, run ID, timing method, runtime, weblink, video URL, players.
                 var wrInfo = {};
 
-                // Store the game, category, and run information
+                // Store the game ID and title.
                 wrInfo.gameID = categoryObj.game.data.id;
                 wrInfo.gameTitle = (categoryObj.game.data.names.international) ? categoryObj.game.data.names.international : categoryObj.game.data.names.japanese;
 
+                // Store the category ID and name.
                 wrInfo.categoryID = categoryObj.id;
                 wrInfo.categoryName = categoryObj.name;
 
+                // Store the run ID.
                 wrInfo.runID = categoryObj.wr.id;
 
                 // Store the category timing method and runtime.
@@ -216,52 +220,65 @@ window.onload = function() {
                     wrInfo.runtime = categoryObj.wr.times.realtime_noloads_t;
                 }
                 
-                // Store a link to the leaderboard.
+                // Store the leaderboard's URL.
                 wrInfo.src = categoryObj.weblink;
 
-                // Store the wr run's video URL
+                // Store the video URL.
                 wrInfo.videoURL = categoryObj.wr.videos.links[0].uri;
 
                 // Store the player(s) info.
                 wrInfo.players = categoryObj.wr.players;
+
+                // Fetch information about the player(s).
                 vm.getAllPlayersInfo(wrInfo);
             },
             getAllPlayersInfo: function(wrObj) {
+                // For each player, query speedrun.com to obtain information about them.
+
                 // Create an empty array to store all promises.
                 var promises = [];
 
-                // For each element in arr, create a new promise.
-                wrObj.players.forEach(item => promises.push((item.rel !== 'guest') ? vm.getPlayerInfo(item) : item));
+                // For each player, create a new promise.
+                wrObj.players.forEach(item => promises.push(vm.getPlayerInfo(item))); 
 
                 // When all promises are resolved then the run is ready to show to the user.
                 Promise.all(promises).then(() => {
-                    // If there is no displayedRun, set displayedRun equal to wrObj and update the location hash. Otherwise, push wrObj onto backupRuns.
+                    // If there is no displayedRun, set displayedRun equal to wrObj, update the location hash, and set pageIsIdle to false.
+                    // Otherwise, push wrObj onto backupRuns.
                     if(vm.displayedRun === null) {
                         vm.displayedRun = wrObj;
-                        vm.pageIsIdle = false;
                         window.location.hash = encodeURIComponent(vm.displayedRun.runID);
+                        vm.pageIsIdle = false;
                     } else {
                         vm.backupRuns.push(wrObj);
                     }
                 });
             },
             getPlayerInfo: function(playerObj) {
-                // If the player has the role of guest, we can resolve the promise right away since there is no other information about them available to us.
+                // If the player has the role of guest, we can resolve the promise immediately since there is no other information about them available to us.
                 // Otherwise, we can proceed with making an API call to retrieve their information.
                 var promise = new Promise((resolve, reject) => {
-                    const req = new XMLHttpRequest();
-                    var url = playerObj.uri;
-                    req.open('GET', url);
-                    req.onload = () => resolve(JSON.parse(req.responseText).data);
-                    req.onerror = () => reject(req.statusText);
-                    req.send();
+                    // If the player is a guest, resolve the promise immediately.
+                    // Otherwise, continue the call normally.
+                    if(playerObj.rel === 'guest') {
+                        resolve(playerObj);
+                    } else {
+                        const req = new XMLHttpRequest();
+                        var url = playerObj.uri;
+                        req.open('GET', url);
+                        req.onload = () => resolve(JSON.parse(req.responseText).data);
+                        req.onerror = () => reject(req.statusText);
+                        req.send();
+                    }
                 });
 
                 promise.then((response) => {
                     // Append all relevant information to playerObj.
                     
-                    // Append the player's name.
-                    playerObj.name = (response.names.japanese) ? response.names.japanese : response.names.international;
+                    // If the player is a guest, store their name.
+                    // Otherwise, check for a name normally (Japanese vs International).
+                    playerObj.name = (response.rel === 'guest') ? response.name
+                                                                : (response.names.japanese) ? response.names.japanese : response.names.international;
 
                     // Append the player's social media links.
                     playerObj.src = (response.weblink) ? response.weblink : null;
@@ -277,23 +294,28 @@ window.onload = function() {
                 return promise;
             },
             getNextRun: function() {
+                // Remove the current run from displayedRun.
+                // If there are any runs within backupRuns, movw the first run into displayedRun and start the main code loop again to replace it.
+                // Otherwise, call startIdleTimeout(). 
+
                 // Remove the current run from the display object.
                 vm.displayedRun = null;
 
-                // If backupRuns contains any elements...
-                if(vm.backupRuns.length > 0) {
+                // If backupRuns contains any runs...
+                if(vm.backupRuns.length) {
                     // Move the first element from backupRuns into displayedRun and update the location hash.
                     vm.displayedRun = vm.backupRuns.shift();
                     window.location.hash = encodeURIComponent(vm.displayedRun.runID);
 
-                    // Fetch another run.
+                    // Restart the main code loop.
                     vm.getRandomGroupOfGames();
                 } else {
+                    // Start the idle timeout.
                     vm.startIdleTimeout(vm.idleTimeoutDuration);
                 }
-            },
+            }, // Revisions through here.
             getRunFromHash: function() {
-                // Queries speeddrun.com for a specific run based on a run ID located in the window's location hash.
+                // Queries speedrun.com for a specific run based on a run ID located in the window's location hash.
                 // Once the run is returned, execute vm.getTotalNumOfGames in order to kick off the normal code flow.
                 
                 var runID = decodeURIComponent(window.location.hash).slice(1);
