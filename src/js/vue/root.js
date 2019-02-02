@@ -29,21 +29,12 @@ window.onload = function() {
                 return new Promise(function(resolve, reject) {
                     const xhr = new XMLHttpRequest();
                     xhr.open('GET', url);
-                    xhr.onload = () => {
-                        if(this.status >= 200 && this.status < 300) {
-                            resolve(JSON.parse(xhr.responseText).data);
-                        } else {
-                            reject({
-                                satus: this.status,
-                                statusText: this.statusText
-                            });
-                        }
-                    }
-                    
+                    xhr.onload = () => { resolve(JSON.parse(xhr.responseText).data); }
                     xhr.onerror = () => {
+                        console.log('Error during promise.');
                         reject({
-                            status: this.status,
-                            statusText: this.statusText
+                            status: xhr.status,
+                            statusText: xhr.statusText
                         });
                     }
 
@@ -60,7 +51,9 @@ window.onload = function() {
 
                     Once the total number of games is found, runs can start being found.
                 */
-                vm.makeAsyncCall('https://www.speedrun.com/api/v1/games?_bulk=yes&max=1000&offset=' + this.totalNumOfGamesStartingOffset)
+                var url = 'https://www.speedrun.com/api/v1/games?_bulk=yes&max=1000&offset=' + this.totalNumOfGamesStartingOffset;
+
+                this.makeAsyncCall(url)
                 .then((response) => {
                     if(response.length < 1000) { // If less than 1,000 games are found...
                         vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
@@ -93,16 +86,10 @@ window.onload = function() {
                     Fetches a group of 20 games at a random offset with all their categories embedded, then breaks the set up
                     into individual categories.
                 */
-                var promise = new Promise((resolve, reject) => {
-                    const xhr = new XMLHttpRequest();
-                    var url = 'https://www.speedrun.com/api/v1/games?offset=' + this.getRandomNumber(this.totalNumOfGames - 19) + '&embed=categories.game';
-                    xhr.open('GET', url);
-                    xhr.onload = () => resolve(JSON.parse(xhr.responseText).data);
-                    xhr.onerror = () => reject(xhr.statusText);
-                    xhr.send();
-                });
+                var url = 'https://www.speedrun.com/api/v1/games?offset=' + this.getRandomNumber(this.totalNumOfGames - 19) + '&embed=categories.game';
 
-                promise.then((response) => {
+                vm.makeAsyncCall(url)
+                .then((response) => {
                     vm.extractCategories(response);
                 }).catch((error) => {
                     window.setTimeout(function() {
@@ -117,10 +104,9 @@ window.onload = function() {
                 // Filter out all 'per-level' categories.
                 categorySet = categorySet.filter(item => item.type === 'per-game');
 
-
                 // If the resulting array is empty (no categories are suitable), restart the process by calling getRandomGroupOfGames.
                 // Otherwise, call getRandomSetOfCategories and pass in the filtered category set.
-                (!categorySet.length) ? vm.getRandomGroupOfGames() : vm.getRandomSetOfCategories(categorySet);
+                (categorySet.length === 0) ? vm.getRandomGroupOfGames() : vm.getRandomSetOfCategories(categorySet);
             },
             getRandomSetOfCategories: function(arr, numOfCategories = 10) {
                 // Given an array, find and store a number of categories (default 10) into a new array.
@@ -165,31 +151,23 @@ window.onload = function() {
 
                     // If the resulting array is empty (no categories are suitable), restart process by calling getRandomGroupOfGames.
                     // Otherwise, pass the resulting array into checkVideoHosts
-                    (!arr.length) ? vm.getRandomGroupOfGames() : vm.checkVideoHosts(arr);
+                    (arr.length === 0) ? vm.getRandomGroupOfGames() : vm.checkVideoHosts(arr);
                 });
             },
             getRecordFromCategoryObj: function(categoryObj) {
                 // Fetches the world record run for a given category and then appends the response to categoryObj.
                 // If the response has no runs, or the response has a run that does not have video, null is appended instead.
-                var promise = new Promise((resolve, reject) => {
-                    const req = new XMLHttpRequest();
-                    var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
-                    req.open('GET', url);
-                    req.onload = () => resolve(JSON.parse(req.responseText).data[0]);
-                    req.onerror = () => reject(req.statusText);
-                    req.send();
-                });
+                var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
 
-                promise.then((response) => {
+                vm.makeAsyncCall(url)
+                .then((response) => {
                     // If the response has no runs, or the response has a run that does not have video, null is appended instead.
                     categoryObj.wr = (response.runs.length > 0 && response.runs[0].run.videos) ? response.runs[0].run : null;
                 }).catch((error) => {
                     window.setTimeout(function() {
-                        vm.getRecordFromCategoryObj(categoryObj);
+                        // vm.getRecordFromCategoryObj(categoryObj);
                     }, 1000);
                 });
-
-                return promise;
             },
             checkVideoHosts: function(arr) {
                 // For each item in arr, first check to see that the video is hosted on either Twitch or Youtube using regexp.
@@ -278,31 +256,42 @@ window.onload = function() {
             getPlayerInfo: function(playerObj) {
                 // If the player has the role of guest, we can resolve the promise immediately since there is no other information about them available to us.
                 // Otherwise, we can proceed with making an API call to retrieve their information.
-                var promise = new Promise((resolve, reject) => {
-                    // If the player is a guest, resolve the promise immediately.
-                    // Otherwise, continue the call normally.
-                    if(playerObj.rel === 'guest') {
-                        resolve(playerObj);
-                    } else {
-                        const req = new XMLHttpRequest();
-                        var url = playerObj.uri;
-                        req.open('GET', url);
-                        req.onload = () => resolve(JSON.parse(req.responseText).data);
-                        req.onerror = () => reject(req.statusText);
-                        req.send();
-                    }
-                });
+                var url = playerObj.uri;
 
-                promise.then((response) => {
+                vm.makeAsyncCall(url)
+                .then((response) => {
                     vm.parsePlayerInfo(playerObj, response);
-                })
-                .catch((error) => {
+                }).catch((error) => {
                     window.setTimeout(function() {
                         vm.getPlayerInfo(playerObj);
                     }, 1000);
                 });
 
-                return promise;
+                // var promise = new Promise((resolve, reject) => {
+                //     // If the player is a guest, resolve the promise immediately.
+                //     // Otherwise, continue the call normally.
+                //     if(playerObj.rel === 'guest') {
+                //         resolve(playerObj);
+                //     } else {
+                //         const req = new XMLHttpRequest();
+                //         var url = playerObj.uri;
+                //         req.open('GET', url);
+                //         req.onload = () => resolve(JSON.parse(req.responseText).data);
+                //         req.onerror = () => reject(req.statusText);
+                //         req.send();
+                //     }
+                // });
+
+                // promise.then((response) => {
+                //     vm.parsePlayerInfo(playerObj, response);
+                // })
+                // .catch((error) => {
+                //     window.setTimeout(function() {
+                //         vm.getPlayerInfo(playerObj);
+                //     }, 1000);
+                // });
+
+                // return promise;
             },
             parsePlayerInfo: function(playerObj, playerInfo) {
                 // Takes a Player Object and a Player Info Object and stores relevant information from the Player Info Object within the Player Object.
