@@ -31,7 +31,6 @@ window.onload = function() {
                     xhr.open('GET', url);
                     xhr.onload = () => { resolve(JSON.parse(xhr.responseText).data); }
                     xhr.onerror = () => {
-                        console.log('Error during promise.');
                         reject({
                             status: xhr.status,
                             statusText: xhr.statusText
@@ -59,7 +58,7 @@ window.onload = function() {
                         vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
 
                         // Begin finding random runs to show the user.
-                        vm.findRuns();
+                        vm.getNewRun();
                     } else {
                         // Add 1,000 to the starting offset and run this function again.
                         vm.totalNumOfGamesStartingOffset += 1000;
@@ -71,103 +70,91 @@ window.onload = function() {
                     }, 1000);
                 });
             },
-            findRuns: function() {
-                // Start the main code flow as many times as needed to fill both the displayedRun and backupRuns
-                var target = vm.targetNumOfBackups;
-                // If there is no displayedRun, increment target.
-                if(!vm.displayedRun) { target++; }
-
-                for(var i = 0; i < target; i++) {
-                    vm.getRandomGroupOfGames();
-                }
-            },
-            getRandomGroupOfGames: function() {
-                /*
-                    Fetches a group of 20 games at a random offset with all their categories embedded, then breaks the set up
-                    into individual categories.
-                */
-                var url = 'https://www.speedrun.com/api/v1/games?offset=' + this.getRandomNumber(this.totalNumOfGames - 19) + '&embed=categories.game';
-
-                vm.makeAsyncCall(url)
-                .then((response) => {
-                    vm.extractCategories(response);
-                }).catch((error) => {
-                    window.setTimeout(function() {
-                        vm.getRandomGroupOfGames();
-                    }, 1000);
+            getNewRun: function() {
+                // Start by getting a random group of games.
+                vm.getRandomGroupOfGames()
+                .then((arr) => {
+                    // Break the categories out into their own objects with the game information stored inside.
+                    arr = vm.extractCategories(arr);
+                    // Filter out all 'per-level' categories.
+                    arr = arr.filter((category) => category.type === 'per-game');
+                    // Get a random set of categories.
+                    arr = vm.getRandomSetOfCategories(arr);
+                    // Fetch the world records for every category within arr.
+                    vm.getRecordsFromCategoryArray(arr)
+                    .then((records) => {
+                        // Append all records to their respective categories
+                        arr.forEach((category, i) => {
+                            category.wr = records[i][0];
+                        });
+                        // Filter out all categories whose records have no runs or whose runs have no video.
+                        arr = arr.filter((category) => category.wr.runs.length && category.wr.runs[0].run.videos);
+                        console.log(arr);
+                    });
                 });
             },
-            extractCategories: function(arr) {
-                // Break out all categories into their own objects.
-                var categorySet = [].concat.apply([], arr.map(item => item.categories.data));
+            getRandomGroupOfGames: function() {
+                // Fetches a group of 20 games at a random offset with all their categories embedded.
+                var url = 'https://www.speedrun.com/api/v1/games?offset=' + this.getRandomNumber(this.totalNumOfGames - 19) + '&embed=categories';
 
-                // Filter out all 'per-level' categories.
-                categorySet = categorySet.filter(item => item.type === 'per-game');
-
-                // If the resulting array is empty (no categories are suitable), restart the process by calling getRandomGroupOfGames.
-                // Otherwise, call getRandomSetOfCategories and pass in the filtered category set.
-                (categorySet.length === 0) ? vm.getRandomGroupOfGames() : vm.getRandomSetOfCategories(categorySet);
+                return vm.makeAsyncCall(url);
             },
-            getRandomSetOfCategories: function(arr, numOfCategories = 10) {
+            extractCategories: function(arrayOfGames) {
+                var newArr = [];
+
+                // Break out all categories into their own objects.
+                arrayOfGames.forEach((game) => { // For each game in arrayOfGames...
+                    game.categories.data.forEach((category) => { // For each category within a game...
+                        var newItem = category;
+                        newItem.gameID = game.id;
+                        newItem.gameTitle = (game.names.japanese) ? game.names.japanese + ' (' + game.names.international + ')' : game.names.international;
+
+                        newArr.push(newItem);
+                    });
+                });
+
+                return newArr;
+            },
+            getRandomSetOfCategories: function(arrayOfCategories, numOfCategories = 10) {
                 // Given an array, find and store a number of categories (default 10) into a new array.
                 // All entries must be unique.
 
                 // Generate a set of unique, random numbers between 0 and the length of randomCategories minus 1 inclusive.
                 var randomIndices = [];
-                var randomSetOfCategories = [];
+                var newArr = [];
 
                 // If the length of arr is less than numOfCategories, set numOfCategories equal to the length of arr to avoid out of bounds errors.
-                if(arr.length < numOfCategories) { numOfCategories = arr.length; }
+                if(arrayOfCategories.length < numOfCategories) { numOfCategories = arrayOfCategories.length; }
 
                 // While there are fewer random indices than numOfCategories, generate a random index.
                 // If the index does not already exist, add it the randomIndices.
                 while(randomIndices.length < numOfCategories) {
-                    var r = this.getRandomNumber(arr.length - 1);
+                    var r = this.getRandomNumber(arrayOfCategories.length - 1);
                     
                     if(randomIndices.indexOf(r) === -1) { randomIndices.push(r); }
                 }
 
                 // Pushes a category from randomCategories into categoriesToCheck at each index in randomIndices
                 randomIndices.forEach(item => {
-                    randomSetOfCategories.push(arr[item]);
+                    newArr.push(arrayOfCategories[item]);
                 });
 
-                // Get the world record for each category in randomSetOfCategories.
-                vm.getRecordsFromCategoryArray(randomSetOfCategories);
+                return newArr;
             },
-            getRecordsFromCategoryArray: function(arr) {
+            getRecordsFromCategoryArray: function(arrayOfCategories) {
                 // For each category in a given array, fetch that category's world record information from speedrun.com
 
                 // Create an empty array that will store all promises.
                 var promises = [];
 
                 // For each element in arr, create a new promise.
-                arr.forEach(item => promises.push(vm.getRecordFromCategoryObj(item)));
-
-                // When all promises are resolved, filter out any categories within arr that do not have a valid WR.
-                Promise.all(promises).then(() => {
-                    // Filter out all categories that don't have a WR run.
-                    arr = arr.filter(item => item.wr);
-
-                    // If the resulting array is empty (no categories are suitable), restart process by calling getRandomGroupOfGames.
-                    // Otherwise, pass the resulting array into checkVideoHosts
-                    (arr.length === 0) ? vm.getRandomGroupOfGames() : vm.checkVideoHosts(arr);
+                arrayOfCategories.forEach((category) => {
+                    var url = 'https://www.speedrun.com/api/v1/categories/' + category.id + '/records?top=1';
+                    
+                    promises.push(vm.makeAsyncCall(url));
                 });
-            },
-            getRecordFromCategoryObj: function(categoryObj) {
-                // Fetches the world record run for a given category and then appends the response to categoryObj.
-                // If the response has no runs, or the response has a run that does not have video, null is appended instead.
-                var url = 'https://www.speedrun.com/api/v1/categories/' + categoryObj.id + '/records?top=1';
 
-                vm.makeAsyncCall(url)
-                .then((response) => {
-                    // If the response has no runs, or the response has a run that does not have video, null is appended instead.
-                    categoryObj.wr = (response.runs.length > 0 && response.runs[0].run.videos) ? response.runs[0].run : null;
-                }).catch((error) => {
-                    window.setTimeout(function() {
-                        // vm.getRecordFromCategoryObj(categoryObj);
-                    }, 1000);
-                });
+                return Promise.all(promises);
             },
             checkVideoHosts: function(arr) {
                 // For each item in arr, first check to see that the video is hosted on either Twitch or Youtube using regexp.
