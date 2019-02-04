@@ -71,26 +71,46 @@ window.onload = function() {
                 });
             },
             getNewRun: function() {
+                // Create an empty array to hold results throughout the main code flow.
+                var masterArray = [];
+                // Create a variable to hold the eventual result.
+                var result = null;
+
                 // Start by getting a random group of games.
                 vm.getRandomGroupOfGames()
-                .then((arr) => {
+                .then((response) => {
+                    // Set masterArray
+                    masterArray = response;
                     // Break the categories out into their own objects with the game information stored inside.
-                    arr = vm.extractCategories(arr);
+                    masterArray = vm.extractCategories(masterArray);
                     // Filter out all 'per-level' categories.
-                    arr = arr.filter((category) => category.type === 'per-game');
+                    masterArray = masterArray.filter((category) => category.type === 'per-game');
                     // Get a random set of categories.
-                    arr = vm.getRandomSetOfCategories(arr);
-                    // Fetch the world records for every category within arr.
-                    vm.getRecordsFromCategoryArray(arr)
-                    .then((records) => {
-                        // Append all records to their respective categories
-                        arr.forEach((category, i) => {
-                            category.wr = records[i][0];
-                        });
-                        // Filter out all categories whose records have no runs or whose runs have no video.
-                        arr = arr.filter((category) => category.wr.runs.length && category.wr.runs[0].run.videos);
-                        console.log(arr);
+                    masterArray = vm.getRandomSetOfCategories(masterArray);
+                    // Fetch the world records for every category within masterArray.
+                    return vm.getRecordsFromCategoryArray(masterArray);
+                }).then((response) => {
+                    // Append all records within response to their respective categories within masterArray.
+                    // If the record has no runs or the runs have no video, append null instead.
+                    masterArray.forEach((category, i) => {
+                        var record = response[i][0];
+                        category.run = (record.runs.length && record.runs[0].run.videos) ? record.runs[0].run : null;
                     });
+
+                    // Filter out all categories with an unsuitable (null) records.
+                    masterArray = masterArray.filter((category) => category.run);
+
+                    // Filter out all categories with videos NOT hosted on Twitch or YouTube.
+                    masterArray = masterArray.filter((category) => {
+                        var videoURL = category.run.videos.links[0].uri;
+                        return vm.twitchRegEx.test(videoURL) || vm.ytRegEx.test(videoURL);
+                    });
+
+                    // At this point all remaining categories can be deemed suitable to use.
+                    // Pick one remaining category at random and store it in result.
+                    result = masterArray[vm.getRandomNumber(masterArray.length - 1)];
+
+                    console.log(result);
                 });
             },
             getRandomGroupOfGames: function() {
@@ -106,8 +126,9 @@ window.onload = function() {
                 arrayOfGames.forEach((game) => { // For each game in arrayOfGames...
                     game.categories.data.forEach((category) => { // For each category within a game...
                         var newItem = category;
-                        newItem.gameID = game.id;
-                        newItem.gameTitle = (game.names.japanese) ? game.names.japanese + ' (' + game.names.international + ')' : game.names.international;
+                        newItem.game = {};
+                        newItem.game.id = game.id;
+                        newItem.game.names = game.names;
 
                         newArr.push(newItem);
                     });
@@ -156,23 +177,14 @@ window.onload = function() {
 
                 return Promise.all(promises);
             },
-            checkVideoHosts: function(arr) {
+            checkVideoHost: function(categoryObj) {
                 // For each item in arr, first check to see that the video is hosted on either Twitch or Youtube using regexp.
                 // Filter out all runs that do not have a valid video host.
 
                 // Get the video host for each category in arr.
-                arr.forEach(item => item.videoHost = (vm.ytRegEx.test(item.wr.videos.links[0].uri)) ? 'youtube'
-                                                : (vm.twitchRegEx.test(item.wr.videos.links[0].uri)) ? 'twitch'
-                                                : null);
-                
-                // Filter out all categories with an invalid video host.
-                arr = arr.filter(item => item.videoHost);
-
-                // At this point we know that all remaining categories are fit to show the user.
-
-                // If the resulting array is empty (no categories are suitable), restart the process by calling getRandomGroupOfGames.
-                // Otherwise, get a random category from the remaining categories and pass it into cleanCategoryObject.
-                (!arr.length) ? vm.getRandomGroupOfGames() : vm.cleanCategoryObject(arr[vm.getRandomNumber(arr.length - 1)]);
+                categoryObj.videoHost = (vm.ytRegEx.test(categoryObj.wr.videos.links[0].uri)) ? 'youtube'
+                                        : (vm.twitchRegEx.test(categoryObj.wr.videos.links[0].uri)) ? 'twitch'
+                                        : null;
             },
             cleanCategoryObject: function(categoryObj) {
                 // Given a category object, trim down its contents into only data relevant to usage within the site.
