@@ -8,10 +8,14 @@ Vue.component('video-embed', {
     },
     computed: {
         videoHost: function() {
-            return (this.ytRegEx.test(this.videoUrl)) ? 'youtube' : 'twitch';
+            return (this.ytRegEx.test(this.videos.links[0].uri)) ? 'youtube' : 'twitch';
         },
         videoID: function() {
-            return (this.videoHost === 'youtube') ? this.ytRegEx.exec(this.videoUrl)[1].replace(/&/, '?').replace(/t=/, 'start=') : this.twitchRegEx.exec(this.videoUrl)[1];
+            if(this.videoHost === 'youtube') {
+                return this.ytRegEx.exec(this.videos.links[0].uri)[1].replace(/&/, '?').replace(/t=/, 'start=');
+            } else {
+                return this.twitchRegEx.exec(this.videos.links[0].uri)[1];
+            }
         },
         videoURL: function() {
             var url = '';
