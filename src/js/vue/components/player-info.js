@@ -2,12 +2,16 @@ Vue.component('player-info', {
     props: ['player'],
     computed: {
         name: function() {
-            if(this.player.names.japanese && this.player.names.international) {
-                return this.player.names.japanese + ' (' + this.player.names.international + ')';
-            } else if(this.player.names.japanese) {
-                return this.player.names.japanese;
+            if(this.player.rel) {
+                return this.player.name;
             } else {
-                return this.player.names.international;
+                if(this.player.names.japanese && this.player.names.international) {
+                    return this.player.names.japanese + ' (' + this.player.names.international + ')';
+                } else if(this.player.names.japanese) {
+                    return this.player.names.japanese;
+                } else {
+                    return this.player.names.international;
+                }
             }
         },
         hasSocial: function() {

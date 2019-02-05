@@ -59,17 +59,20 @@ window.onload = function() {
                         vm.totalNumOfGames = vm.totalNumOfGamesStartingOffset + response.length;
 
                         // Begin finding random runs to show the user.
-                        vm.getNewRun();
+                        vm.getNewRuns();
                     } else {
                         // Add 1,000 to the starting offset and run this function again.
                         vm.totalNumOfGamesStartingOffset += 1000;
                         vm.getTotalNumOfGames();
                     }
-                }).catch((error) => {
-                    window.setTimeout(function() {
-                        vm.getTotalNumOfGames();
-                    }, 1000);
                 });
+            },
+            getNewRuns: function() {
+                var target = vm.targetNumOfBackups;
+                if(!vm.displayedRun) { target++; }
+                for(var i = 0; i < target; i++) {
+                    vm.getNewRun();
+                }
             },
             getNewRun: function() {
                 // Create an empty array to hold results throughout the main code flow.
@@ -204,14 +207,20 @@ window.onload = function() {
                 return Promise.all(promises);
             },
             setDisplayedRun: function(newRunObj) {
-                // Reset displayedRun entirely.
-                vm.displayedRun = null;
+                // If null is passed in instead of a newRunObj...
+                if(!newRunObj) {
+                    // Reset the displayedRun.
+                    vm.displayedRun = null;
 
-                // Move the new run into displayedRun.
-                vm.displayedRun = newRunObj;
+                    // Start the idle timeout.
+                    vm.startIdleTimeout(vm.idleTimeoutDuration);
+                } else {
+                    // Move the new run into displayedRun.
+                    vm.displayedRun = newRunObj;
 
-                // Update the location hash
-                window.location.hash = encodeURIComponent(vm.displayedRun.id);
+                    // Update the location hash
+                    window.location.hash = encodeURIComponent(vm.displayedRun.id);
+                }
             },
             getAllPlayersInfo: function(categoryObj) {
                 // For each player, query speedrun.com to obtain information about them.
@@ -231,22 +240,17 @@ window.onload = function() {
                 return Promise.all(promises);
             },
             getNextRun: function() {
-                // Remove the current run from displayedRun.
-                // If there are any runs within backupRuns, move the first run into displayedRun and start the main code loop again to replace it.
-                // Otherwise, call startIdleTimeout(). 
-
-                // Remove the current run from the display object.
-                vm.displayedRun = null;
-
                 // If backupRuns contains any runs...
                 if(vm.backupRuns.length) {
-                    // Move the first element from backupRuns into displayedRun and update the location hash.
-                    vm.displayedRun = vm.backupRuns.shift();
-                    window.location.hash = encodeURIComponent(vm.displayedRun.runID);
+                    // Set the displayedRun to be the first run in backupRuns.
+                    vm.setDisplayedRun(vm.backupRuns.shift());
 
-                    // Restart the main code loop.
-                    vm.getRandomGroupOfGames();
+                    // Find another game to replace the game moved into displayedRun.
+                    vm.getNewRun();
                 } else {
+                    // Reset the displayedRun.
+                    vm.setDisplayedRun(null);
+
                     // Start the idle timeout.
                     vm.startIdleTimeout(vm.idleTimeoutDuration);
                 }
@@ -260,7 +264,8 @@ window.onload = function() {
 
                 this.makeAsyncCall(url)
                 .then((response) => {
-                    vm.displayedRun = response;
+                    vm.setDisplayedRun(response);
+                    vm.getTotalNumOfGames();
                 });
             },
             // Utility Methods
