@@ -2,6 +2,8 @@ Vue.component('wr-info', {
     props: ['wr-info'],
     data: function() {
         return {
+            game: this.wrInfo.game.data,
+            category: this.wrInfo.category.data,
             urlToCopy: false,
             showTooltip: false,
             tooltipClicked: false
@@ -9,7 +11,13 @@ Vue.component('wr-info', {
     },
     computed: {
         gameTitle: function() {
-            return (this.wrInfo.game.names.japanese) ? this.wrInfo.game.names.japanese : this.wrInfo.game.names.international;
+            if(this.game.names.japanese && this.game.names.international) {
+                return this.game.names.japanese + ' (' + this.game.names.international + ')';
+            } else if(this.game.names.japanese) {
+                return this.game.names.japanese;
+            } else {
+                return this.game.names.international;
+            }
         },
         primaryTimingMethod: function() {
             if(this.wrInfo.times.primary_t === this.wrInfo.times.ingame_t) {
@@ -64,7 +72,7 @@ Vue.component('wr-info', {
         }
     },
     template:   '<section class="wr-info-container">\
-                    <h2 class="wr-info-text"><a :href="wrInfo.src">{{ gameTitle }} - {{ wrInfo.category.name }}</a> in {{ formattedRuntime }} ({{ primaryTimingMethod }})</h2>\
+                    <h2 class="wr-info-text"><a :href="wrInfo.src">{{ gameTitle }} - {{ category.name }}</a> in {{ formattedRuntime }} ({{ primaryTimingMethod }})</h2>\
                     <div class="tooltip" @mouseenter="showTooltip = true" @mouseleave="showTooltip = false; tooltipClicked = false" @click="tooltipClicked = true">\
                         <img class="copy-url-button" src="dist/images/link.png" @click="copyURLToClipboard">\
                         <div class="tooltip-container" :style="tooltipContainerStyleObj" v-if="showTooltip">\

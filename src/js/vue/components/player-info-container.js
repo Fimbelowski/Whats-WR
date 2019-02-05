@@ -9,6 +9,6 @@ Vue.component('player-info-container', {
                     <div class="player-info-container-header">\
                         <h3 class="player-text">{{ playersHeader }}</h3>\
                     </div>\
-                    <player-info v-for="player in players" :player="player" :key="player.id"></player-info>\
+                    <player-info v-for="player in players.data" :player="player" :key="player.id"></player-info>\
                 </section>'
 });

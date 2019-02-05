@@ -119,15 +119,15 @@ window.onload = function() {
                         result.run.players[i] = response[i];
                     });
 
-                    console.log(result);
-
                     // Restructure the result to mimic the result of fetching a specific run with game, category, and players embedded.
                     // Set the root of the object equal to the run object itself.
                     var newObj = result.run;
                     // Embed the game.
-                    newObj.game = result.game;
+                    newObj.game = { data: result.game };
                     // Embed the category.
-                    newObj.category = { name: result.name };
+                    newObj.category = { data: { name: result.name } };
+                    // Embed the players
+                    newObj.players = { data: result.run.players };
 
                     // If no displayedRun exists, move newObj into displayedRun. Otherwise, move newObj into backupRuns.
                     if(!vm.displayedRun) {
@@ -213,59 +213,6 @@ window.onload = function() {
                 // Update the location hash
                 window.location.hash = encodeURIComponent(vm.displayedRun.id);
             },
-            checkVideoHost: function(categoryObj) {
-                // For each item in arr, first check to see that the video is hosted on either Twitch or Youtube using regexp.
-                // Filter out all runs that do not have a valid video host.
-
-                // Get the video host for each category in arr.
-                categoryObj.videoHost = (vm.ytRegEx.test(categoryObj.wr.videos.links[0].uri)) ? 'youtube'
-                                        : (vm.twitchRegEx.test(categoryObj.wr.videos.links[0].uri)) ? 'twitch'
-                                        : null;
-            },
-            cleanCategoryObject: function(categoryObj) {
-                // Given a category object, trim down its contents into only data relevant to usage within the site.
-                // Relevant data: game ID, game title, category ID, category title, run ID, timing method, runtime, weblink, video URL, players.
-                var wrInfo = {};
-
-                // Store the game ID and title.
-                wrInfo.gameID = categoryObj.game.data.id;
-                wrInfo.gameTitle = (categoryObj.game.data.names.international) ? categoryObj.game.data.names.international : categoryObj.game.data.names.japanese;
-
-                // Store the category ID and name.
-                wrInfo.categoryID = categoryObj.id;
-                wrInfo.categoryName = categoryObj.name;
-
-                // Store the run ID.
-                wrInfo.runID = categoryObj.wr.id;
-
-                // Store the category timing method and runtime.
-                vm.parseTimingInfo(wrInfo, categoryObj.wr);
-                
-                // Store the leaderboard's URL.
-                wrInfo.src = categoryObj.weblink;
-
-                // Store the video URL.
-                wrInfo.videoURL = categoryObj.wr.videos.links[0].uri;
-
-                // Store the player(s) info.
-                wrInfo.players = categoryObj.wr.players;
-
-                // Fetch information about the player(s).
-                vm.getAllPlayersInfo(wrInfo);
-            },
-            parseTimingInfo: function(wrInfoObj, runObj) {
-                // Takes a WR Info Object and a Run Object and parses information about the run's primary timing method and runtime and stores them within the WR Info Object.
-                if(runObj.times.primary_t === runObj.times.ingame_t) {
-                    wrInfoObj.timingMethod = 'IGT';
-                    wrInfoObj.runtime = runObj.times.ingame_t;
-                } else if(runObj.times.primary_t === runObj.times.realtime_t) {
-                    wrInfoObj.timingMethod = 'RTA';
-                    wrInfoObj.runtime = runObj.times.realtime_t;
-                } else {
-                    wrInfoObj.timingMethod = 'RTA (No Loads)';
-                    wrInfoObj.runtime = runObj.times.realtime_noloads_t;
-                }
-            },
             getAllPlayersInfo: function(categoryObj) {
                 // For each player, query speedrun.com to obtain information about them.
 
@@ -282,20 +229,6 @@ window.onload = function() {
                 });
 
                 return Promise.all(promises);
-            },
-            parsePlayerInfo: function(playerObj, playerInfo) {
-                // Takes a Player Object and a Player Info Object and stores relevant information from the Player Info Object within the Player Object.
-                
-                // If the player is a guest, store their name.
-                // Otherwise, store either their Japanese or International name.
-                playerObj.name = (playerInfo.rel === 'guest') ? playerInfo.name
-                                                            : (playerInfo.names.japanese) ? playerInfo.names.japanese : playerInfo.names.international;
-
-                // Append the player's social media links.
-                playerObj.src = (playerInfo.weblink) ? playerInfo.weblink : null;
-                playerObj.twitch = (playerInfo.twitch) ? playerInfo.twitch.uri : null;
-                playerObj.twitter = (playerInfo.twitter) ? playerInfo.twitter.uri : null;
-                playerObj.youtube = (playerInfo.youtube) ? playerInfo.youtube.uri : null;
             },
             getNextRun: function() {
                 // Remove the current run from displayedRun.
@@ -323,67 +256,12 @@ window.onload = function() {
                 // Once the run is returned, execute vm.getTotalNumOfGames in order to kick off the normal code flow.
                 
                 var runID = decodeURIComponent(window.location.hash).slice(1);
-                
-                var promise = new Promise((resolve, reject) => {
-                    const req = new XMLHttpRequest();
-                    var url = 'https://www.speedrun.com/api/v1/runs/' + runID + '?embed=game,category,players';
-                    req.open('GET', url);
-                    req.onload = () => resolve(JSON.parse(req.responseText).data);
-                    req.onerror = () => reject(req.statusText);
-                    req.send();
+                var url = 'https://www.speedrun.com/api/v1/runs/' + runID + '?embed=game,category,players';
+
+                this.makeAsyncCall(url)
+                .then((response) => {
+                    vm.displayedRun = response;
                 });
-
-                promise.then((response) => {
-                    vm.pageIsIdle = false;
-                    vm.parseRunFromHash(response);
-                }).catch((error) => {
-                    window.setTimeout(function() {
-                        vm.getRunFromHash();
-                    }, 1000);
-                });
-
-                return promise;
-            },
-            parseRunFromHash: function(runObj) {
-                // Takes the response from getRunFromHash() and stores the relevant info.
-
-                var wrInfo = {};
-
-                // Store the game, category, and run information
-                wrInfo.gameID = runObj.game.data.id;
-                wrInfo.gameTitle = (runObj.game.data.names.international) ? runObj.game.data.names.international : runObj.game.data.names.japanese;
-
-                wrInfo.categoryID = runObj.category.data.id;
-                wrInfo.categoryName = runObj.category.data.name;
-
-                wrInfo.runID = runObj.id;
-
-                // Store the category timing method and runtime.
-                vm.parseTimingInfo(wrInfo, runObj);
-
-                // Store a link to the leaderboard.
-                wrInfo.src = runObj.category.data.weblink;
-
-                // Store the wr run's video URL
-                wrInfo.videoURL = runObj.videos.links[0].uri;
-
-                // Create an array to store the player(s) info.
-                wrInfo.players = [];
-
-                // Store the player info for each player
-                runObj.players.data.forEach((item, i) => {
-                    // Create a new player object and push it onto wrInfo.players.
-                    wrInfo.players.push({});
-
-                    // Parse information about the player and store it within the newly created Player Object.
-                    vm.parsePlayerInfo(wrInfo.players[i], item);
-                });
-
-                // Move the run from the hash into displayedRun.
-                vm.displayedRun = wrInfo;
-
-                // Kick off the main code flow.
-                vm.getTotalNumOfGames();
             },
             // Utility Methods
             getRandomNumber: function(max) {
