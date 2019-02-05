@@ -1,5 +1,5 @@
 Vue.component('video-embed', {
-    props: ['video-url'],
+    props: ['videos'],
     data: function() {
         return {
             ytRegEx: /(?:(?:youtube\.com\/watch\?v=)|(?:youtu\.be\/))(.+)/i,

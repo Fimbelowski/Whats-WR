@@ -14,13 +14,14 @@ window.onload = function() {
         },
         computed: {
             wrInfo: function() {
-                return {
-                    gameTitle: this.displayedRun.gameTitle,
-                    categoryName: this.displayedRun.categoryName,
-                    runtime: this.displayedRun.runtime,
-                    timingMethod: this.displayedRun.timingMethod,
-                    src: this.displayedRun.src,
-                    runID: this.displayedRun.runID
+                if(!vm.displayedRun) {
+                    return null;
+                } else {
+                    return {
+                        category: this.displayedRun.category,
+                        game: this.displayedRun.game,
+                        times: this.displayedRun.times
+                    }
                 }
             }
         },
@@ -110,7 +111,32 @@ window.onload = function() {
                     // Pick one remaining category at random and store it in result.
                     result = masterArray[vm.getRandomNumber(masterArray.length - 1)];
 
+                    // Fetch information about the player(s).
+                    return vm.getAllPlayersInfo(result);
+                }).then((response) => {
+                    // Append information about the player onto the original player object.
+                    result.run.players.forEach((player, i) => {
+                        result.run.players[i] = response[i];
+                    });
+
                     console.log(result);
+
+                    // Restructure the result to mimic the result of fetching a specific run with game, category, and players embedded.
+                    // Set the root of the object equal to the run object itself.
+                    var newObj = result.run;
+                    // Embed the game.
+                    newObj.game = result.game;
+                    // Embed the category.
+                    newObj.category = { name: result.name };
+
+                    // If no displayedRun exists, move newObj into displayedRun. Otherwise, move newObj into backupRuns.
+                    if(!vm.displayedRun) {
+                        // Move newObj into displayedRun.
+                        vm.setDisplayedRun(newObj);
+                    } else { vm.backupRuns.push(newObj); }
+                }).catch(() => {
+                    // Restart the main code flow
+                    // vm.getNewRun();
                 });
             },
             getRandomGroupOfGames: function() {
@@ -177,6 +203,16 @@ window.onload = function() {
 
                 return Promise.all(promises);
             },
+            setDisplayedRun: function(newRunObj) {
+                // Reset displayedRun entirely.
+                vm.displayedRun = null;
+
+                // Move the new run into displayedRun.
+                vm.displayedRun = newRunObj;
+
+                // Update the location hash
+                window.location.hash = encodeURIComponent(vm.displayedRun.id);
+            },
             checkVideoHost: function(categoryObj) {
                 // For each item in arr, first check to see that the video is hosted on either Twitch or Youtube using regexp.
                 // Filter out all runs that do not have a valid video host.
@@ -230,67 +266,22 @@ window.onload = function() {
                     wrInfoObj.runtime = runObj.times.realtime_noloads_t;
                 }
             },
-            getAllPlayersInfo: function(wrObj) {
+            getAllPlayersInfo: function(categoryObj) {
                 // For each player, query speedrun.com to obtain information about them.
 
                 // Create an empty array to store all promises.
                 var promises = [];
 
                 // For each player, create a new promise.
-                wrObj.players.forEach(item => promises.push(vm.getPlayerInfo(item))); 
-
-                // When all promises are resolved then the run is ready to show to the user.
-                Promise.all(promises).then(() => {
-                    // If there is no displayedRun, set displayedRun equal to wrObj, update the location hash, and set pageIsIdle to false.
-                    // Otherwise, push wrObj onto backupRuns.
-                    if(vm.displayedRun === null) {
-                        vm.displayedRun = wrObj;
-                        window.location.hash = encodeURIComponent(vm.displayedRun.runID);
-                        vm.pageIsIdle = false;
+                categoryObj.run.players.forEach((player) => {
+                    if(player.rel === 'guest') {
+                        promises.push(Promise.resolve(player));
                     } else {
-                        vm.backupRuns.push(wrObj);
+                        promises.push(vm.makeAsyncCall(player.uri));
                     }
                 });
-            },
-            getPlayerInfo: function(playerObj) {
-                // If the player has the role of guest, we can resolve the promise immediately since there is no other information about them available to us.
-                // Otherwise, we can proceed with making an API call to retrieve their information.
-                var url = playerObj.uri;
 
-                vm.makeAsyncCall(url)
-                .then((response) => {
-                    vm.parsePlayerInfo(playerObj, response);
-                }).catch((error) => {
-                    window.setTimeout(function() {
-                        vm.getPlayerInfo(playerObj);
-                    }, 1000);
-                });
-
-                // var promise = new Promise((resolve, reject) => {
-                //     // If the player is a guest, resolve the promise immediately.
-                //     // Otherwise, continue the call normally.
-                //     if(playerObj.rel === 'guest') {
-                //         resolve(playerObj);
-                //     } else {
-                //         const req = new XMLHttpRequest();
-                //         var url = playerObj.uri;
-                //         req.open('GET', url);
-                //         req.onload = () => resolve(JSON.parse(req.responseText).data);
-                //         req.onerror = () => reject(req.statusText);
-                //         req.send();
-                //     }
-                // });
-
-                // promise.then((response) => {
-                //     vm.parsePlayerInfo(playerObj, response);
-                // })
-                // .catch((error) => {
-                //     window.setTimeout(function() {
-                //         vm.getPlayerInfo(playerObj);
-                //     }, 1000);
-                // });
-
-                // return promise;
+                return Promise.all(promises);
             },
             parsePlayerInfo: function(playerObj, playerInfo) {
                 // Takes a Player Object and a Player Info Object and stores relevant information from the Player Info Object within the Player Object.

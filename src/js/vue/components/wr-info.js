@@ -8,8 +8,20 @@ Vue.component('wr-info', {
         }
     },
     computed: {
+        gameTitle: function() {
+            return (this.wrInfo.game.names.japanese) ? this.wrInfo.game.names.japanese : this.wrInfo.game.names.international;
+        },
+        primaryTimingMethod: function() {
+            if(this.wrInfo.times.primary_t === this.wrInfo.times.ingame_t) {
+                return 'IGT';
+            } else if(this.wrInfo.times.primary_t === this.wrInfo.times.realtime_t) {
+                return 'RTA';
+            } else {
+                return 'RTA (No Loads)';
+            }
+        },
         formattedRuntime: function() {
-            var runtime = this.wrInfo.runtime;
+            var runtime = this.wrInfo.times.primary_t;
 
             // Take a runtime (in seconds) and return it in HH:MM:SS or HH:MM:SS.SSS format.
             var hours = Math.floor(runtime / 3600);
@@ -51,8 +63,11 @@ Vue.component('wr-info', {
             this.urlToCopy = false;
         }
     },
+    created: function() {
+
+    },
     template:   '<section class="wr-info-container">\
-                    <h2 class="wr-info-text"><a :href="wrInfo.src">{{ wrInfo.gameTitle }} - {{ wrInfo.categoryName }}</a> in {{  formattedRuntime }} ({{ wrInfo.timingMethod }})</h2>\
+                    <h2 class="wr-info-text"><a :href="wrInfo.src">{{ gameTitle }} - {{ wrInfo.category.name }}</a> in {{ formattedRuntime }} ({{ primaryTimingMethod }})</h2>\
                     <div class="tooltip" @mouseenter="showTooltip = true" @mouseleave="showTooltip = false; tooltipClicked = false" @click="tooltipClicked = true">\
                         <img class="copy-url-button" src="dist/images/link.png" @click="copyURLToClipboard">\
                         <div class="tooltip-container" :style="tooltipContainerStyleObj" v-if="showTooltip">\
