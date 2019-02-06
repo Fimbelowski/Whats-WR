@@ -22,6 +22,9 @@ Vue.component('wr-info', {
         categoryName: function() {
             return this.wrInfo.category.data.name;
         },
+        categoryWeblink: function() {
+            return this.wrInfo.category.data.weblink;
+        },
         primaryTimingMethod: function() {
             if(this.wrInfo.times.primary_t === this.wrInfo.times.ingame_t) {
                 return 'IGT';
@@ -75,7 +78,7 @@ Vue.component('wr-info', {
         }
     },
     template:   '<section class="wr-info-container">\
-                    <h2 class="wr-info-text"><a :href="wrInfo.weblink">{{ gameTitle }} - {{ categoryName }}</a> in {{ formattedRuntime }} ({{ primaryTimingMethod }})</h2>\
+                    <h2 class="wr-info-text"><a :href="categoryWeblink">{{ gameTitle }} - {{ categoryName }}</a> in {{ formattedRuntime }} ({{ primaryTimingMethod }})</h2>\
                     <div class="tooltip" @mouseenter="showTooltip = true" @mouseleave="showTooltip = false; tooltipClicked = false" @click="tooltipClicked = true">\
                         <img class="copy-url-button" src="dist/images/link.png" @click="copyURLToClipboard">\
                         <div class="tooltip-container" :style="tooltipContainerStyleObj" v-if="showTooltip">\
