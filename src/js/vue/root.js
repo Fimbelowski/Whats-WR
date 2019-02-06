@@ -20,6 +20,7 @@ window.onload = function() {
                     return {
                         category: this.displayedRun.category,
                         game: this.displayedRun.game,
+                        weblink: this.displayedRun.weblink,
                         times: this.displayedRun.times
                     }
                 }
