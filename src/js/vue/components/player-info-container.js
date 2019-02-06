@@ -2,7 +2,7 @@ Vue.component('player-info-container', {
     props: ['players'],
     computed: {
         playersHeader: function() {
-            return (this.players.length === 1) ? 'Runner' : 'Runners';
+            return (this.players.data.length === 1) ? 'Runner' : 'Runners';
         }
     },
     template: ' <section class="player-info-container">\
