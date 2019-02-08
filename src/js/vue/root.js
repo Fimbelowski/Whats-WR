@@ -145,7 +145,7 @@ window.onload = function() {
                     } else { vm.backupRuns.push(newObj); }
                 }).catch(() => {
                     // Restart the main code flow
-                    // vm.getNewRun();
+                    vm.getNewRun();
                 });
             },
             getRandomGroupOfGames: function() {
