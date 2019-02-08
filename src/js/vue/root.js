@@ -20,7 +20,6 @@ window.onload = function() {
                     return {
                         category: this.displayedRun.category,
                         game: this.displayedRun.game,
-                        weblink: this.displayedRun.weblink,
                         times: this.displayedRun.times
                     }
                 }
@@ -129,7 +128,13 @@ window.onload = function() {
                     // Embed the game.
                     newObj.game = { data: result.game };
                     // Embed the category.
-                    newObj.category = { data: { name: result.name } };
+                    newObj.category = {
+                        data: {
+                            name: result.name,
+                            weblink: result.weblink
+                        }
+                    };
+
                     // Embed the players
                     newObj.players = { data: result.run.players };
 
