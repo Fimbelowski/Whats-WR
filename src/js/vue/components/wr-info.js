@@ -12,7 +12,7 @@ Vue.component('wr-info', {
             var game = this.wrInfo.game.data;
 
             if(game.names.japanese && game.names.international) {
-                return game.names.japanese + ' (' + game.names.international + ')';
+                return game.names.international + ' (' + game.names.japanese + ')';
             } else if(game.names.japanese) {
                 return game.names.japanese;
             } else {
