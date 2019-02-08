@@ -222,6 +222,9 @@ window.onload = function() {
                     // Start the idle timeout.
                     vm.startIdleTimeout(vm.idleTimeoutDuration);
                 } else {
+                    // If the page was idle before, reset it.
+                    this.pageIsIdle = false;
+
                     // Move the new run into displayedRun.
                     vm.displayedRun = newRunObj;
 
