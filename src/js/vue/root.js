@@ -20,7 +20,8 @@ window.onload = function() {
                     return {
                         category: this.displayedRun.category,
                         game: this.displayedRun.game,
-                        times: this.displayedRun.times
+                        times: this.displayedRun.times,
+                        run: { id: this.displayedRun.id }
                     }
                 }
             }

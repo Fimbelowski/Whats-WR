@@ -50,7 +50,7 @@ Vue.component('wr-info', {
             return hours + ':' + minutes + ':' + seconds;
         },
         windowLocationHref: function() {
-            return window.location.hostname + ':' + window.location.port + '/#' + this.wrInfo.runID;
+            return window.location.hostname + '/#' + this.wrInfo.run.id;
         },
         tooltipMessage: function() {
             return (this.tooltipClicked) ? 'URL Copied!' : 'Click here to copy the current run to your clipboard!';
