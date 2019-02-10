@@ -5,55 +5,13 @@
   <meta charset='utf-8'>
   <meta name='author' content='Christopher Fimbel'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <!-- <link rel='icon' href='dist/images/favicon.png'> -->
   <link rel='stylesheet' href='dist/css/styles.css'>
-  <!-- <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet'> -->
-  <script src='dist/js/vue.js'></script>
-  <script src='dist/js/main.js'></script>
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116536708-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-116536708-1');
-    </script>
   </head>
 
   <body>
     <main id='main'>
-      <transition name='fade'>
-        <div v-if='!displayedRun' class='loading-message'>
-          <h2 class='loading-message-text'>Finding World Record...</h2>
-          <h2 v-if='pageIsIdle' class='idle-message-text'>Speedrun.com may be under a heavy load.</h2>
-          <h2 v-if='pageIsIdle' class='idle-message-text'>You may need to refresh the page if this persists.</h2>
-        </div>
-      </transition>
-      <transition name='slide-in-right'>
-        <div v-if='displayedRun' class='l-main-primary'>
-          <video-embed :videos='displayedRun.videos'></video-embed>
-          <wr-info :wr-info='wrInfo'></wr-info>
-        </div>
-      </transition>
-      <transition name='slide-in-left'>
-        <div v-if='displayedRun' class='l-main-secondary'>
-            <player-info-container :players='displayedRun.players'></player-info-container>
-            <wr-button @button-clicked='getNextRun'></wr-button>
-        </div>
-      </transition>
+      <h1>This site has been remade and is now live over at <a href='http://whatswr.tv'>WhatsWR.tv</a>.</h1>
+      <h1>Thanks for watching!</h1>
     </main>
-    <footer>
-      <a class='footer-link' href='https://github.com/Fimbelowski'>
-        <p class='footer-link-text'>Copyright &copy; Christopher Fimbel 2019</p>
-      </a>
-      <a class='footer-link' href='https://www.freepik.com/'>
-        <p class='footer-link-text'>Icons by Freepik on FlatIcon.com</p>
-      </a>
-      <a class='footer-link' href='https://github.com/Fimbelowski/Whats-WR'>
-        <p class='footer-link-text'>Fork this Repository on GitHub!</p>
-      </a>
-    </footer>
   </body>
 </html>
