@@ -1,53 +1,31 @@
-var gulp = require('gulp');
-var sass = require('gulp-sass');
-var concatCss = require('gulp-concat-css');
-var cleanCSS = require('gulp-clean-css');
+var gulp = require('gulp'),
+    sass = require('gulp-sass'),
+    cleanCSS = require('gulp-clean-css'),
+    changed = require('gulp-changed'),
+    imagemin = require('gulp-imagemin');
 
-var imagemin = require('gulp-imagemin');
-
-var minify = require('gulp-minify');
-var concat = require('gulp-concat');
-
-var del = require('del');
-
-gulp.task('sass', function() {
-  return gulp.src(['src/scss/_variables.scss', 'src/scss/base.scss',
-                    'src/scss/layout.scss', 'src/scss/modules/*.scss',
-                    'src/scss/media-queries.scss', 'src/scss/state.scss'])
-  .pipe(sass().on('error', sass.logError))
-  .pipe(concatCss('styles.css'))
-  .pipe(cleanCSS())
-  .pipe(gulp.dest('dist/css'));
+// Configure build-css task.
+gulp.task('build-css', function() {
+    return gulp.src('source/scss/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(cleanCSS())
+    .pipe(gulp.dest('dist/css'));
 });
 
-gulp.task('sass:watch', function() {
-  gulp.watch('src/scss/**/*.scss', ['sass']);
+// Configure a task to watch scss files and run build-scss on any changes.
+gulp.task('build-css:watch', function() {
+    gulp.watch('source/scss/**/*.scss', gulp.series('build-css'));
 });
 
-gulp.task('images', function() {
-  gulp.src('src/images/**/*')
-  .pipe(imagemin([
-    imagemin.jpegtran(),
-    imagemin.optipng()
-  ]))
-  .pipe(gulp.dest('dist/images'));
+// Configure a task to optimize images.
+gulp.task('imagemin', function() {
+    var imgDist = 'dist/images'
+
+    return gulp.src('source/images/*')
+    .pipe(changed(imgDist))
+    .pipe(imagemin())
+    .pipe(gulp.dest(imgDist));
 });
 
-gulp.task('js', function() {
-  gulp.src(['src/js/**/*.js', '!src/js/vue.js'])
-  .pipe(concat('main.js'))
-  .pipe(minify({ ext: { min: '.js' }, noSource: true }))
-  .pipe(gulp.dest('dist/js'));
-});
-
-gulp.task('js:watch', function() {
-  gulp.watch('src/js/**/*.js', ['js']);
-});
-
-gulp.task('clean', function() {
-  del(['*', '!dist/**', '!index.html']);
-});
-
-gulp.task('watch', ['sass:watch', 'js:watch']);
-
-gulp.task('default', ['sass', 'images', 'js']);
+// Configure the default task.
+gulp.task('default', gulp.series('build-css', 'imagemin', 'build-css:watch'));
