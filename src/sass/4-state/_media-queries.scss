@@ -1,13 +1,3 @@
-@import 'variables';
-@import 'base';
-@import 'layout';
-@import 'modules/player-info';
-@import 'modules/wr-info';
-@import 'modules/video-embed';
-@import 'modules/footer-link';
-@import 'modules/wr-button';
-@import 'modules/loading-message';
-
 // Phones
     // Portrait
     @media(max-width: #{$phone-pt-max-width}) and (orientation: portrait) {
