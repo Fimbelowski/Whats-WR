@@ -1,0 +1,44 @@
+// State CSS Rules
+.slide-in-left-enter-active {
+    animation: slide-in-left 0.3s;
+}
+
+.slide-in-left-leave-active {
+    animation: slide-in-left 0.3s reverse;
+}
+
+@keyframes slide-in-left {
+    0% {
+        transform: translate(-100%);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
+
+.slide-in-right-enter-active {
+    animation: slide-in-right 0.3s;
+}
+
+.slide-in-right-leave-active {
+    animation: slide-in-right 0.3s reverse;
+}
+
+@keyframes slide-in-right {
+    0% {
+        transform: translate(100%);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.15s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}

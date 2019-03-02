@@ -1,3 +1,11 @@
+import Vue from './vendors/vue';
+import App from './components/App.vue';
+
+new Vue({
+    el: '#app',
+    render: h => h(App)
+});
+
 window.onload = function() {
     var vm = new Vue({
         el: '#main',

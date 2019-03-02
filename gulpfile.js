@@ -5,7 +5,8 @@ var gulp = require('gulp'),
     imagemin = require('gulp-imagemin'),
     vueify = require('gulp-vueify2'),
     concat = require('gulp-concat'),
-    minify = require('gulp-minify');
+    minify = require('gulp-minify'),
+    rename = require('gulp-rename');
 
 // Configure build-css task.
 gulp.task('build-css', function() {
@@ -34,15 +35,18 @@ gulp.task('imagemin', function() {
 gulp.task('vueify', function() {
     return gulp.src('src/scripts/**/*.vue')
     .pipe(vueify())
-    .pipe(gulp.dest('dist'));
+    .pipe(minify({ noSource: true }))
+    .pipe(gulp.dest('dist/'));
 });
 
-// Configure JavaScript concat and minification task
+// Configure Vueify, and minification task.
 gulp.task('scripts', function() {
-    return gulp.src('src/scripts/**/*.js')
+    return gulp.src('src/scripts/**/*.vue')
+    .pipe(vueify())
     .pipe(concat('app.js'))
     .pipe(minify({ noSource: true }))
-    .pipe(gulp.dest('dist'));
+    .pipe(rename({ dirname: '' }))
+    .pipe(gulp.dest('./dist'));
 });
 
 // Configure the default task.
