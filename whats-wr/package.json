@@ -11,6 +11,7 @@
     "axios": "^0.18.0",
     "collect.js": "^4.12.2",
     "core-js": "^2.6.5",
+    "random-number": "0.0.9",
     "vue": "^2.6.10"
   },
   "devDependencies": {
