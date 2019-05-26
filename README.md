@@ -1,4 +1,4 @@
-# whats-wr
+# what-wr
 
 ## Project setup
 ```
