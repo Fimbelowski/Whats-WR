@@ -1,10 +1,10 @@
 import Vue from 'vue';
-import Axios from 'axios';
+import axios from 'axios';
 import App from './App.vue';
 
-Vue.config.productionTip = false;
+axios.defaults.baseURL = 'https://www.speedrun.com/api/v1';
 
-Axios.defaults.baseUrl = 'https://www.speedrun.com/api/v1';
+Vue.config.productionTip = false;
 
 new Vue({
   render: h => h(App),
