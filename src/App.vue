@@ -17,6 +17,34 @@ export default {
     this.findTotalNumberOfGames();
   },
   methods: {
+    /** @return {array} */
+    extractCategoriesFrom(games) {
+      let categories = [];
+
+      games.forEach((game) => {
+        categories = categories.concat(game.categories.data);
+      });
+
+      categories = categories.filter(category => category.type === 'per-game');
+
+      return categories;
+    },
+
+    /** @return {void} */
+    async findRun() {
+      let groupOfCategories;
+      let groupOfGames;
+
+      try {
+        groupOfGames = await this.getRandomGroupOfGames();
+      } catch (e) {
+        //
+      }
+
+      groupOfGames = groupOfGames.data.data;
+      groupOfCategories = this.extractCategoriesFrom(groupOfGames);
+    },
+
     /** @return {void} */
     findTotalNumberOfGames() {
       axios.get('/games', {
@@ -32,8 +60,25 @@ export default {
 
           if (count === 1000) {
             this.findTotalNumberOfGames();
+            return;
           }
+
+          this.findRun();
         });
+    },
+
+    /** @return {array} */
+    getRandomGroupOfGames() {
+      return axios.get('/games', {
+        params: {
+          embed: 'categories',
+          offset: rn({
+            min: 0,
+            max: this.totalNumberOfGames - 21,
+            integer: true,
+          }),
+        },
+      });
     },
   },
 };
