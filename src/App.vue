@@ -4,6 +4,7 @@
 
 <script>
 import axios from 'axios';
+import rn from 'random-number';
 
 export default {
   name: 'App',
