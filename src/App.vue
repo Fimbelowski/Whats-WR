@@ -23,21 +23,70 @@ export default {
   methods: {
     /** @return {void} */
     findRun() {
-      const categories = [];
-
       this.getRandomGroupOfGames()
-        .then((response) => {
-          response.forEach((game) => {
+        .then((groupOfGames) => {
+          let categories = [];
+
+          groupOfGames.forEach((game) => {
             categories.push(...game.categories.data);
           });
 
-          console.log(categories);
+          categories = categories.filter(category => category.type === 'per-game');
+
+          const randomGroupOfCategories = this.getRandomGroupOfCategories(categories);
+          
+          const promises = [];
+          randomGroupOfCategories.forEach((category) => {
+            promises.push(this.getCategoryRecord(category.id));
+          });
+
+          return Promise.all(promises);
+        })
+        .then((records) => {
+          const validRecords = records.filter((item) => {
+            console.log(item);
+            return item.data.runs.length
+              && item.data.runs[0].run.videos
+              && item.data.runs[0].run.videos.links.length === 1;
+          });
+
+          console.log(validRecords);
+        });
+    },
+
+    /** @return {Promise<any>} */
+    getCategoryRecord(categoryId) {
+      return this.speedrunDotCom
+        .get(`categories/${categoryId}/records`, {
+          params: {
+            skip_empty: true,
+            top: 1,
+          },
+          transformResponse: (response) => JSON.parse(response).data[0],
         });
     },
 
     /** @return {array} */
+    getRandomGroupOfCategories(arrayOfCategories) {
+      const indices = [];
+      const categories = [];
+
+      for (let i = 0; i < 5; i++) {
+        let randomIndex = this.getRandomNumber(arrayOfCategories.length - 1);
+        while (indices.includes(randomIndex)) {
+          randomIndex = this.getRandomNumber(arrayOfCategories.length - 1);
+        }
+
+        categories.push(arrayOfCategories[randomIndex]);
+        indices.push(randomIndex);
+      }
+
+      return categories;
+    },
+
+    /** @return {array} */
     async getRandomGroupOfGames() {
-      const randomOffset = this.getRandomOffset();
+      const randomOffset = this.getRandomNumber(this.totalNumberOfGames - 21);
       let response;
 
       try {
@@ -55,8 +104,8 @@ export default {
     },
 
     /** @return {number} */
-    getRandomOffset() {
-      return Math.floor(Math.random() * Math.floor(this.totalNumberOfGames - 21));
+    getRandomNumber(max) {
+      return Math.floor(Math.random() * Math.floor(max));
     },
 
     /** @return {void} */
