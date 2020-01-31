@@ -25,13 +25,7 @@ export default {
     findRun() {
       this.getRandomGroupOfGames()
         .then((groupOfGames) => {
-          let categories = [];
-
-          groupOfGames.forEach((game) => {
-            categories.push(...game.categories.data);
-          });
-
-          categories = categories.filter(category => category.type === 'per-game');
+          const categories = groupOfGames.map(game => game.categories.data).flat().filter(category => category.type === 'per-game');
 
           const randomGroupOfCategories = this.getRandomGroupOfCategories(categories);
           
@@ -44,7 +38,6 @@ export default {
         })
         .then((records) => {
           const validRecords = records.filter((item) => {
-            console.log(item);
             return item.data.runs.length
               && item.data.runs[0].run.videos
               && item.data.runs[0].run.videos.links.length === 1;
@@ -68,20 +61,15 @@ export default {
 
     /** @return {array} */
     getRandomGroupOfCategories(arrayOfCategories) {
-      const indices = [];
+      const clonedArr = [...arrayOfCategories];
       const categories = [];
 
-      for (let i = 0; i < 5; i++) {
-        let randomIndex = this.getRandomNumber(arrayOfCategories.length - 1);
-        while (indices.includes(randomIndex)) {
-          randomIndex = this.getRandomNumber(arrayOfCategories.length - 1);
-        }
-
-        categories.push(arrayOfCategories[randomIndex]);
-        indices.push(randomIndex);
+      for (let i = 0; i < 5; i+= 1) {
+        const randomIndex = this.getRandomNumber(clonedArr.length - 1);
+        categories.push(clonedArr.splice(randomIndex, 1));
       }
 
-      return categories;
+      return categories.flat();
     },
 
     /** @return {array} */
