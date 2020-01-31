@@ -1,130 +1,135 @@
 <template>
-  <div id="app"/>
+  <div id="app" />
 </template>
 
 <script>
 import axios from 'axios';
+import rn from 'random-number';
+import parse from 'url-parse';
 
 export default {
-  name: 'app',
+  name: 'App',
   data() {
     return {
-      speedrunDotCom: axios.create({
-        baseURL: 'https://www.speedrun.com/api/v1/',
-        transformResponse: (response) => JSON.parse(response).data,
+      speedrunDotComApi: axios.create({
+        baseURL: 'https://www.speedrun.com/api/v1',
+        transformResponse: axios.defaults.transformResponse.concat(data => data.data),
       }),
-      totalNumberOfGames: 17000,
+      totalNumberOfGames: 16000,
+      validHostNames: [
+        'www.youtube.com',
+        'youtu.be',
+        'www.twitch.tv',
+      ],
     };
   },
-  async created() {
-    await this.getTotalNumberOfGames();
-    this.findRun();
+  created() {
+    this.findTotalNumberOfGames();
   },
   methods: {
+    /** @return {array} */
+    extractCategoriesFrom(games) {
+      let categories = [];
+
+      games.forEach((game) => {
+        categories = categories.concat(game.categories.data);
+      });
+
+      categories = categories.filter(category => category.type === 'per-game');
+
+      return categories;
+    },
+
     /** @return {void} */
-    findRun() {
-      this.getRandomGroupOfGames()
-        .then((groupOfGames) => {
-          const categories = groupOfGames.map(game => game.categories.data).flat().filter(category => category.type === 'per-game');
-
-          const randomGroupOfCategories = this.getRandomGroupOfCategories(categories);
-          
-          const promises = [];
-          randomGroupOfCategories.forEach((category) => {
-            promises.push(this.getCategoryRecord(category.id));
-          });
-
-          return Promise.all(promises);
-        })
-        .then((records) => {
-          const validRecords = records.filter((item) => {
-            return item.data.runs.length
-              && item.data.runs[0].run.videos
-              && item.data.runs[0].run.videos.links.length === 1;
-          });
-
-          console.log(validRecords);
-        });
-    },
-
-    /** @return {Promise<any>} */
-    getCategoryRecord(categoryId) {
-      return this.speedrunDotCom
-        .get(`categories/${categoryId}/records`, {
-          params: {
-            skip_empty: true,
-            top: 1,
-          },
-          transformResponse: (response) => JSON.parse(response).data[0],
-        });
-    },
-
-    /** @return {array} */
-    getRandomGroupOfCategories(arrayOfCategories) {
-      const clonedArr = [...arrayOfCategories];
-      const categories = [];
-
-      for (let i = 0; i < 5; i+= 1) {
-        const randomIndex = this.getRandomNumber(clonedArr.length - 1);
-        categories.push(clonedArr.splice(randomIndex, 1));
-      }
-
-      return categories.flat();
-    },
-
-    /** @return {array} */
-    async getRandomGroupOfGames() {
-      const randomOffset = this.getRandomNumber(this.totalNumberOfGames - 21);
-      let response;
+    async findRun() {
+      let groupOfGames;
 
       try {
-        response = await this.speedrunDotCom.get('games', {
-          params: {
-            embed: 'categories',
-            offset: randomOffset,
-          },
-        });
+        groupOfGames = await this.getRandomGroupOfGames();
       } catch (e) {
-        console.error(e);
+        //
       }
 
-      return Promise.resolve(response.data);
-    },
+      groupOfGames = groupOfGames.data;
+      const groupOfCategories = this.extractCategoriesFrom(groupOfGames);
 
-    /** @return {number} */
-    getRandomNumber(max) {
-      return Math.floor(Math.random() * Math.floor(max));
+      const promises = [];
+
+      for (let i = 0; i < 3; i += 1) {
+        const categoryId = groupOfCategories[rn({
+          integer: true,
+          min: 0,
+          max: groupOfCategories.length - 1,
+        })].id;
+
+        promises.push(this.speedrunDotComApi.get(`/categories/${categoryId}/records`, {
+          params: {
+            top: 1,
+          },
+        }));
+      }
+
+      let categoryRecords;
+
+      Promise.all(promises)
+        .then((values) => {
+          categoryRecords = values.filter((category) => {
+            return (
+              category.data[0].runs.length
+              && category.data[0].runs[0].run.videos
+              && category.data[0].runs[0].run.videos.links
+              && category.data[0].runs[0].run.videos.links.length
+            );
+          });
+
+          categoryRecords = categoryRecords.filter((category) => {
+            const url = parse(category.data[0].runs[0].run.videos.links[0].uri);
+            console.log(url);
+
+            return this.validHostNames.includes(url.hostname);
+          });
+
+          categoryRecords.forEach((category) => {
+            console.log(category.data[0].runs[0].run.videos.links[0].uri);
+          });
+        });
     },
 
     /** @return {void} */
-    getTotalNumberOfGames() {
-      const getNextGroupOfBulkGames = async () => {
-        let response;
+    findTotalNumberOfGames() {
+      this.speedrunDotComApi.get('/games', {
+        params: {
+          _bulk: 'yes',
+          max: 1000,
+          offset: this.totalNumberOfGames,
+        },
+      })
+        .then((response) => {
+          const count = response.data.length;
+          this.totalNumberOfGames += count;
 
-        try {
-          response = await this.speedrunDotCom.get('games', {
-            params: {
-              _bulk: true,
-              max: 1000,
-              offset: this.totalNumberOfGames,
-            },
-          });
-        } catch (e) {
-          console.error(e);
-        }
+          if (count === 1000) {
+            this.findTotalNumberOfGames();
+            return;
+          }
 
-        const length = response.data.length;
-        this.totalNumberOfGames += length;
+          this.findRun();
+        });
+    },
 
-        if (length === 1000) {
-          return getNextGroupOfBulkGames();
-        } else {
-          return Promise.resolve();
-        }
-      }
-
-      return getNextGroupOfBulkGames();
+    /** @return {array} */
+    getRandomGroupOfGames() {
+      return this.speedrunDotComApi.get('/games', {
+        params: {
+          embed: 'categories',
+          offset: rn({
+            min: 0,
+            max: this.totalNumberOfGames - 21,
+            integer: true,
+          }),
+        },
+      });
     },
   },
-}
+};
 </script>
