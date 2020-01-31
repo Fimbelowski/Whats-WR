@@ -28,22 +28,22 @@ export default {
           const categories = groupOfGames.map(game => game.categories.data).flat().filter(category => category.type === 'per-game');
 
           const randomGroupOfCategories = this.getRandomGroupOfCategories(categories);
-          
-          const promises = [];
-          randomGroupOfCategories.forEach((category) => {
-            promises.push(this.getCategoryRecord(category.id));
-          });
-
-          return Promise.all(promises);
+          return this.getRecordsFromGroupOfCategories(randomGroupOfCategories);
         })
-        .then((records) => {
-          const validRecords = records.filter((item) => {
-            return item.data.runs.length
-              && item.data.runs[0].run.videos
-              && item.data.runs[0].run.videos.links.length === 1;
-          });
+        .then((groupOfRecords) => {
+          const acceptableRecords = groupOfRecords.filter((record) => {
+            if (
+              !(
+                record.data.runs.length
+                  && record.data.runs[0].run.videos
+                  && record.data.runs[0].run.videos.links.length === 1
+              )
+            ) {
+              return false;
+            }
 
-          console.log(validRecords);
+            console.log('Run has video but needs further validation.');
+          });
         });
     },
 
@@ -94,6 +94,17 @@ export default {
     /** @return {number} */
     getRandomNumber(max) {
       return Math.floor(Math.random() * Math.floor(max));
+    },
+
+    /** @return {Promise<any>} */
+    getRecordsFromGroupOfCategories(categories) {
+      const promises = [];
+
+      categories.forEach((category) => {
+        promises.push(this.getCategoryRecord(category.id));
+      });
+
+      return Promise.all(promises);
     },
 
     /** @return {void} */
