@@ -4,21 +4,27 @@
 
 <script>
 import axios from 'axios';
+import parseUrl from 'parse-url';
 
 export default {
   name: 'app',
   data() {
     return {
+      acceptableRecords: [],
       speedrunDotCom: axios.create({
         baseURL: 'https://www.speedrun.com/api/v1/',
         transformResponse: (response) => JSON.parse(response).data,
       }),
+      targetNumberOfAcceptableRecords: 5,
       totalNumberOfGames: 17000,
     };
   },
   async created() {
     await this.getTotalNumberOfGames();
-    this.findRun();
+
+    for (let i = 0; i < this.targetNumberOfAcceptableRecords; i+= 1) {
+      this.findRun();
+    }
   },
   methods: {
     /** @return {void} */
@@ -31,20 +37,52 @@ export default {
           return this.getRecordsFromGroupOfCategories(randomGroupOfCategories);
         })
         .then((groupOfRecords) => {
-          const acceptableRecords = groupOfRecords.filter((record) => {
-            if (
-              !(
-                record.data.runs.length
-                  && record.data.runs[0].run.videos
-                  && record.data.runs[0].run.videos.links.length === 1
-              )
-            ) {
-              return false;
-            }
+          const acceptableRecords = this.filterPotentialRecords(groupOfRecords);
 
-            console.log('Run has video but needs further validation.');
-          });
+          return acceptableRecords[this.getRandomNumber(acceptableRecords.length - 1)];
+        })
+        .then((chosenRecord) => {
+          return this.getDetailedRecord(chosenRecord.runs[0].run.id);
+        })
+        .then((detailedRecord) => {
+          this.acceptableRecords.push(detailedRecord);
+        })
+        .catch(() => {
+          this.findRun();
         });
+    },
+
+    /** @return {array} */
+    filterPotentialRecords(groupOfRecords) {
+      return groupOfRecords.filter((record) => {
+        try {
+          if (
+            !(
+              record.runs.length
+                && record.runs[0].run.videos
+                && record.runs[0].run.videos.links.length === 1
+            )
+          ) {
+            return false;
+          }
+        } catch (e) {
+          console.log(e);
+        }
+
+        let parsedUrl;
+
+        try {
+          parsedUrl = parseUrl(record.runs[0].run.videos.links[0].uri);
+        } catch (e) {
+          return false;
+        }
+
+        if (!['youtu.be', 'www.youtube.com', 'www.twitch.tv'].includes(parsedUrl.resource)) {
+          return false;
+        }
+
+        return true;
+      });
     },
 
     /** @return {Promise<any>} */
@@ -57,6 +95,17 @@ export default {
           },
           transformResponse: (response) => JSON.parse(response).data[0],
         });
+    },
+
+    /** @return {Promise<any>} */
+    async getDetailedRecord(runId) {
+      const response = await this.speedrunDotCom.get(`runs/${runId}`, {
+          params: {
+            embed: ['category', 'game', 'players'],
+          },
+        });
+
+      return response.data;
     },
 
     /** @return {array} */
@@ -75,6 +124,7 @@ export default {
     /** @return {array} */
     async getRandomGroupOfGames() {
       const randomOffset = this.getRandomNumber(this.totalNumberOfGames - 21);
+
       let response;
 
       try {
@@ -88,7 +138,7 @@ export default {
         console.error(e);
       }
 
-      return Promise.resolve(response.data);
+      return response.data;
     },
 
     /** @return {number} */
@@ -96,15 +146,17 @@ export default {
       return Math.floor(Math.random() * Math.floor(max));
     },
 
-    /** @return {Promise<any>} */
-    getRecordsFromGroupOfCategories(categories) {
+    /** @return {array} */
+    async getRecordsFromGroupOfCategories(categories) {
       const promises = [];
 
       categories.forEach((category) => {
         promises.push(this.getCategoryRecord(category.id));
       });
 
-      return Promise.all(promises);
+      const responses = await Promise.all(promises);
+
+      return responses.map(response => response.data);
     },
 
     /** @return {void} */
