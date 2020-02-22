@@ -1,13 +1,34 @@
 <template>
-  <div id="app"/>
+  <v-app id="app">
+    <v-content>
+      <v-container
+        class="pa-0"
+        fluid
+      >
+        <v-row
+          class="ma-0"
+          justify="center"
+        >
+          <VideoEmbed/>
+        </v-row>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
 import axios from 'axios';
 import parseUrl from 'parse-url';
 
+import VideoEmbed from './components/VideoEmbed';
+
 export default {
   name: 'app',
+
+  components: {
+    VideoEmbed,
+  },
+
   data() {
     return {
       acceptableRecords: [],
@@ -19,6 +40,15 @@ export default {
       totalNumberOfGames: 17000,
     };
   },
+
+  computed: {
+    currentRun() {
+      return this.acceptableRecords.length
+        ? this.acceptableRecords[0]
+        : null;
+    },
+  },
+
   async created() {
     await this.getTotalNumberOfGames();
 
@@ -26,6 +56,7 @@ export default {
       this.findRun();
     }
   },
+
   methods: {
     /** @return {void} */
     findRun() {
