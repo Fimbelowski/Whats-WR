@@ -1,17 +1,36 @@
 <template>
-  <div 
+  <v-container
     :style="`height: ${height}px; width: ${width}px;`"
-    id="video-embed"
-    ref="videoEmbed"
-  />
+    class="pa-0 video-embed"
+    fluid
+  >
+    <v-row
+      align="center"
+      justify="center"
+      style="height: 100%;"
+    >
+      <iframe
+        v-if="!isLoading"
+        style="height: 100%; width: 100%;"
+      >
+
+      </iframe>
+      <v-progress-circular
+        indeterminate
+        v-else
+      />
+    </v-row>
+  </v-container>
 </template>
 
 <script>
+import parseUrl from 'parse-url';
+
 export default {
   name: 'VideoEmbed',
 
   props: {
-    url: {
+    videoUrl: {
       default: '',
       type: String,
     },
@@ -20,8 +39,19 @@ export default {
   data() {
     return {
       height: 0,
+      isLoading: false,
       width: 0,
     };
+  },
+
+  computed: {
+    computedSrc() {
+      const parsedUrl = parseUrl(this.videoUrl);
+
+      console.log(parsedUrl);
+
+      return parsedUrl;
+    },
   },
 
   created() {
@@ -35,10 +65,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-#video-embed {
-  width: 100%;
-  background-color: yellow;
-}
-</style>
