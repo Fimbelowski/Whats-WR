@@ -3,7 +3,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "lint": "eslint src/**/*.{js,vue}",
+    "lint": "eslint **/*.{js,vue}",
     "serve": "vite preview"
   },
   "dependencies": {

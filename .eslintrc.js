@@ -15,6 +15,14 @@ module.exports = {
     'vue',
   ],
   rules: {
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: true,
+        optionalDependencies: false,
+        peerDependencies: false,
+      },
+    ],
     'vue/no-multiple-template-root': 'off',
   },
 };
