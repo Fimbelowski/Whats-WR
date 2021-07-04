@@ -7,9 +7,11 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "ky": "^0.28.5",
     "vue": "^3.0.5"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.14.7",
     "@vitejs/plugin-vue": "^1.2.3",
     "@vue/compiler-sfc": "^3.0.5",
     "eslint": "^7.29.0",

@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import Game from './models/Game';
 import HelloWorld from './components/HelloWorld.vue';
 
 export default {
@@ -16,6 +17,11 @@ export default {
 
   components: {
     HelloWorld,
+  },
+
+  async created() {
+    const games = await Game.search();
+    console.log(games);
   },
 };
 </script>
