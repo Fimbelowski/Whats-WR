@@ -19,9 +19,9 @@
 
   <button
     type="button"
-    @click="state.count++"
+    @click="count++"
   >
-    count is: {{ state.count }}
+    count is: {{ count }}
   </button>
   <p>
     Edit
