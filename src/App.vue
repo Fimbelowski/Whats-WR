@@ -10,12 +10,18 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue';
+import Game from './models/Game';
 
 export default {
   name: 'App',
 
   components: {
     HelloWorld,
+  },
+
+  async created() {
+    const games = await Game.search();
+    console.log(games);
   },
 };
 </script>
