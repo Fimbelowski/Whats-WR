@@ -10,8 +10,10 @@ class SpeedrunDotComApiClient {
   });
 
   /** @return {Promise<any>} */
-  static async get(url, options = {}) {
-    const response = await SpeedrunDotComApiClient.HTTP_CLIENT.get(url, options);
+  static async get(url, searchParams) {
+    const response = await SpeedrunDotComApiClient.HTTP_CLIENT.get(url, {
+      searchParams,
+    });
     const json = await response.json();
     return json.data;
   }

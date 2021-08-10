@@ -9,8 +9,9 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
 import Game from './models/Game';
+import HelloWorld from './components/HelloWorld.vue';
+import RunQueue from './utilities/RunQueue';
 
 export default {
   name: 'App',
@@ -19,9 +20,14 @@ export default {
     HelloWorld,
   },
 
+  data() {
+    return {
+      runQueue: new RunQueue(),
+    };
+  },
+
   async created() {
-    const games = await Game.search();
-    console.log(games);
+    await this.runQueue.getTotalNumberOfGames();
   },
 };
 </script>
