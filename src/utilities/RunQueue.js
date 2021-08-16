@@ -1,4 +1,3 @@
-import { nextTick } from 'vue';
 import Game from '../models/Game';
 
 class RunQueue {
