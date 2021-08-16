@@ -9,13 +9,27 @@ class RunQueue {
   }
 
   /** @return {number} */
-  getAdjustedOffset(offset) {
-    return offset - 250;
+  getAdjustedOffset(offset, bulk = false) {
+    const adjustmentDifference = bulk
+      ? 250
+      : 20;
+
+    return offset - adjustmentDifference;
+  }
+
+  /** @return {Promise<array>} */
+  async getRandomPageOfGames() {
+    const randomOffset = Math.floor(Math.random() * this.totalNumberOfGames);
+    const adjustedOffset = this.getAdjustedOffset(randomOffset);
+    
+    const games = await Game.search({
+      offset: adjustedOffset,
+    });
   }
 
   /** @return {Promise<number>} */
   async findCeiling(potentialCeiling) {
-    const adjustedOffset = this.getAdjustedOffset(potentialCeiling);
+    const adjustedOffset = this.getAdjustedOffset(potentialCeiling, true);
       
     const games = await Game.search({
       offset: adjustedOffset,
@@ -36,7 +50,7 @@ class RunQueue {
   /** @return {Promise<number>} */
   async findTotalNumberOfGames(floor, ceiling) {
     const median = Math.round(((ceiling - floor) / 2) + floor);
-    const adjustedOffset = this.getAdjustedOffset(median);
+    const adjustedOffset = this.getAdjustedOffset(median, true);
 
     const games = await Game.search({
       offset: adjustedOffset,
