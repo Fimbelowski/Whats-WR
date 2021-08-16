@@ -4,10 +4,15 @@ import Game from '../models/Game';
 class RunQueue {
   static baseTotalNumberOfGames = 24000;
 
+  /** @return {number} */
+  getAdjustedOffset(offset) {
+    return offset - 250;
+  }
+
   /** @return {Promise<number>} */
   async getTotalNumberOfGames() {
     const findCeiling = async (potentialCeiling) => {
-      const adjustedOffset = potentialCeiling - 250;
+      const adjustedOffset = this.getAdjustedOffset(potentialCeiling);
       
       const games = await Game.search({
         offset: adjustedOffset,
@@ -33,7 +38,7 @@ class RunQueue {
 
     const findTotalNumberOfGames = async (floor, ceiling) => {
       const median = Math.round(((ceiling - floor) / 2) + floor);
-      const adjustedOffset = median - 250;
+      const adjustedOffset = this.getAdjustedOffset(median);
 
       const games = await Game.search({
         offset: adjustedOffset,
