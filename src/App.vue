@@ -27,7 +27,8 @@ export default {
   },
 
   async created() {
-    await this.runQueue.getTotalNumberOfGames();
+    const totalNumberOfGames = await this.runQueue.getTotalNumberOfGames();
+    console.log(totalNumberOfGames);
   },
 };
 </script>
