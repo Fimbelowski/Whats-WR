@@ -54,7 +54,7 @@ class RunQueue {
     return this.findTotalNumberOfGames(median, ceiling);
   }
 
-  /** @return {Promise<number>} */
+  /** @return {Promise<void>} */
   async getTotalNumberOfGames() {
     const ceiling = await this.findCeiling(RunQueue.baseTotalNumberOfGames + 5000);
 
