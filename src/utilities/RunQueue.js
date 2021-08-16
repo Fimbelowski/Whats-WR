@@ -2,20 +2,19 @@ import { nextTick } from 'vue';
 import Game from '../models/Game';
 
 class RunQueue {
-  static baseTotalNumberOfGames = 20000;
+  static baseTotalNumberOfGames = 24000;
 
   /** @return {Promise<number>} */
   async getTotalNumberOfGames() {
     const findCeiling = async (potentialCeiling) => {
       const adjustedOffset = potentialCeiling - 250;
       
-      const response = await Game.search({
+      const games = await Game.search({
         offset: adjustedOffset,
         _bulk: true,
       });
 
-      const json = await response.json();
-      const numberOfGames = json.data.length;
+      const numberOfGames = games.length;
       
       if (numberOfGames === 0) {
         return potentialCeiling;
@@ -36,13 +35,12 @@ class RunQueue {
       const median = Math.round(((ceiling - floor) / 2) + floor);
       const adjustedOffset = median - 250;
 
-      const response = await Game.search({
+      const games = await Game.search({
         offset: adjustedOffset,
         _bulk: true,
       });
 
-      const json = await response.json();
-      const numberOfGames = json.data.length;
+      const numberOfGames = games.length;
 
       if (numberOfGames === 0) {
         return findTotalNumberOfGames(floor, median);

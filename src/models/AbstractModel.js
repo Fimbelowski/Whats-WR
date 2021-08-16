@@ -27,7 +27,7 @@ class AbstractModel {
 
   /** @return {Promise<any>} */
   static async search(params = {}) {
-    return await SpeedrunDotComApiClient.get(this.BASE_URI, params);
+    return SpeedrunDotComApiClient.get(this.BASE_URI, params);
   }
 }
 
