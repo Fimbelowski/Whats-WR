@@ -1,3 +1,4 @@
+import cloneDeep from '../helpers/cloneDeep';
 import SpeedrunDotComApiClient from '../clients/SpeedrunDotComApiClient';
 
 class AbstractModel {
@@ -11,13 +12,20 @@ class AbstractModel {
     return {};
   }
 
+  /** @type {object} */
+  static get EMBEDS() {
+    return {};
+  }
+
   /** AbstractModel constructor */
   constructor(data = {}) {
     if (this.constructor.name === 'AbstractModel') {
       throw new Error('An AbstractModel cannot be constructed directly.');
     }
 
-    Object.assign(this, data);
+    const tempData = cloneDeep(data);
+
+    Object.assign(this, tempData);
   }
 
   /** @return {Promise<any>} */
@@ -27,7 +35,9 @@ class AbstractModel {
 
   /** @return {Promise<any>} */
   static async search(params = {}) {
-    return SpeedrunDotComApiClient.get(this.BASE_URI, params);
+    const records = await SpeedrunDotComApiClient.get(this.BASE_URI, params);
+
+    return records.map((record) => new this(record));
   }
 }
 

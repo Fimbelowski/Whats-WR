@@ -20,7 +20,6 @@ class RunQueue {
   /** @return {Promise<object>} */
   async getRandomGame() {
     const randomPageOfGames = await this.getRandomPageOfGames();
-    console.log(randomPageOfGames);
   }
 
   /** @return {Promise<array>} */
@@ -29,6 +28,9 @@ class RunQueue {
     const adjustedOffset = this.getAdjustedOffset(randomOffset);
     
     return Game.search({
+      embed: [
+        'categories',
+      ],
       offset: adjustedOffset,
     });
   }
