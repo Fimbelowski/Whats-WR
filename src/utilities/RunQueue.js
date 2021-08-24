@@ -17,12 +17,18 @@ class RunQueue {
     return offset - adjustmentDifference;
   }
 
+  /** @return {Promise<object>} */
+  async getRandomGame() {
+    const randomPageOfGames = await this.getRandomPageOfGames();
+    console.log(randomPageOfGames);
+  }
+
   /** @return {Promise<array>} */
   async getRandomPageOfGames() {
     const randomOffset = Math.floor(Math.random() * this.totalNumberOfGames);
     const adjustedOffset = this.getAdjustedOffset(randomOffset);
     
-    const games = await Game.search({
+    return Game.search({
       offset: adjustedOffset,
     });
   }
@@ -68,7 +74,11 @@ class RunQueue {
     return this.findTotalNumberOfGames(median, ceiling);
   }
 
-  /** @return {Promise<void>} */
+  /** 
+   * The speedrun.com API doesn't allow us to know the total number of games easily,
+   * so we must find it ourselves.
+   * 
+   * @return {Promise<void>} */
   async getTotalNumberOfGames() {
     const ceiling = await this.findCeiling(RunQueue.baseTotalNumberOfGames + 5000);
 
