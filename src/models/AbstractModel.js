@@ -1,3 +1,4 @@
+import camelCase from '../helpers/camelCase';
 import cloneDeep from '../helpers/cloneDeep';
 import SpeedrunDotComApiClient from '../clients/SpeedrunDotComApiClient';
 
@@ -25,6 +26,17 @@ class AbstractModel {
 
     const tempData = cloneDeep(data);
 
+    Object
+      .entries(tempData)
+      .forEach(([key, value]) => {
+        if (key.includes('-')) {
+          const newKey = camelCase(key);
+          tempData[newKey] = value;
+
+          delete tempData[key];
+        }
+      });
+    
     Object.assign(this, tempData);
   }
 
