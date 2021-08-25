@@ -37,6 +37,22 @@ class AbstractModel {
         }
       });
     
+    Object
+      .entries(this.constructor.EMBEDS)
+      .forEach(([key, value]) => {
+        if (Object.prototype.hasOwnProperty.call(tempData, key)) {
+          const embeddedData = tempData[key].data;
+
+          if (Array.isArray(embeddedData)) {
+            tempData[key] = embeddedData.map((item) => {
+              return new value(item);
+            });
+          } else {
+            tempData[key] = new value(embeddedData);
+          }
+        }
+      });
+        
     Object.assign(this, tempData);
   }
 
