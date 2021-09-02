@@ -36,7 +36,7 @@ class AbstractModel {
           delete tempData[key];
         }
       });
-    
+
     Object
       .entries(this.constructor.EMBEDS)
       .forEach(([key, value]) => {
@@ -44,20 +44,20 @@ class AbstractModel {
           const embeddedData = tempData[key].data;
 
           if (Array.isArray(embeddedData)) {
-            tempData[key] = embeddedData.map((item) => {
-              return new value(item);
-            });
+            // eslint-disable-next-line new-cap
+            tempData[key] = embeddedData.map((item) => new value(item));
           } else {
+            // eslint-disable-next-line new-cap
             tempData[key] = new value(embeddedData);
           }
         }
       });
-        
+
     Object.assign(this, tempData);
   }
 
   /** @return {Promise<any>} */
-  static findById(id) {
+  static findById() {
     //
   }
 

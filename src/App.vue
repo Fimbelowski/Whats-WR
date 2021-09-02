@@ -9,7 +9,6 @@
 </template>
 
 <script>
-import Game from './models/Game';
 import HelloWorld from './components/HelloWorld.vue';
 import RunQueue from './utilities/RunQueue';
 
