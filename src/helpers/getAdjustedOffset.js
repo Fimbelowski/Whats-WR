@@ -4,7 +4,13 @@ function getAdjustedOffset(offset, bulk = false) {
     ? 250
     : 20;
 
-  return offset - adjustmentDifference;
+  const adjustedOffset = offset - adjustmentDifference;
+
+  if (adjustedOffset < 0) {
+    return 0;
+  }
+
+  return adjustedOffset;
 }
 
 export default getAdjustedOffset;
