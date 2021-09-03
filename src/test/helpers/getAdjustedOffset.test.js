@@ -1,4 +1,4 @@
-import getAdjustedOffset from '../helpers/getAdjustedOffset';
+import getAdjustedOffset from '../../helpers/getAdjustedOffset';
 
 test('Adjusts a request\'s offset.', () => {
   expect(getAdjustedOffset(100)).toBe(80);
