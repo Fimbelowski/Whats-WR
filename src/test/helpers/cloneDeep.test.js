@@ -1,7 +1,12 @@
 import cloneDeep from '../../helpers/cloneDeep';
 
-test('Clones an object deeply', () => {
-  const testArray = [1, 2, 3];
+describe('The cloneDeep helper.', () => {
+  const testArray = [
+    1,
+    2,
+    3,
+  ];
+
   const testObject = {
     deep: {
       foo: 'bar',
@@ -9,8 +14,19 @@ test('Clones an object deeply', () => {
     foo: 'bar',
   };
 
-  expect(cloneDeep(testArray)).toStrictEqual(testArray);
-  expect(cloneDeep(testArray)).not.toBe(testArray);
-  expect(cloneDeep(testObject)).toStrictEqual(testObject);
-  expect(cloneDeep(testObject)).not.toBe(testObject);
+  test('Should return an array identical to testArray.', () => {
+    expect(cloneDeep(testArray)).toStrictEqual(testArray);
+  });
+
+  test('Should return an array that is not testArray.', () => {
+    expect(cloneDeep(testArray)).not.toBe(testArray);
+  });
+
+  test('Should return an object that is identical to testObject.', () => {
+    expect(cloneDeep(testObject)).toStrictEqual(testObject);
+  });
+
+  test('Should return an object that is not testObject.', () => {
+    expect(cloneDeep(testObject)).not.toBe(testObject);
+  });
 });
