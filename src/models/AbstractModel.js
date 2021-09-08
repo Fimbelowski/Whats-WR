@@ -1,6 +1,6 @@
 import camelCase from '../helpers/camelCase';
 import cloneDeep from '../helpers/cloneDeep';
-import SpeedrunDotComApiClient from '../clients/SpeedrunDotComApiClient';
+// import SpeedrunDotComApiClient from '../clients/SpeedrunDotComApiClient';
 
 class AbstractModel {
   /** @type {string} */
@@ -59,13 +59,6 @@ class AbstractModel {
   /** @return {Promise<any>} */
   static findById() {
     //
-  }
-
-  /** @return {Promise<any>} */
-  static async search(params = {}) {
-    const records = await SpeedrunDotComApiClient.get(this.BASE_URI, params);
-
-    return records.map((record) => new this(record));
   }
 }
 

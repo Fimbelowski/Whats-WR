@@ -1,5 +1,4 @@
 import Game from '../models/Game';
-import getAdjustedOffset from '../helpers/getAdjustedOffset';
 
 class RunQueue {
   static baseTotalNumberOfGames = 24000;
@@ -18,22 +17,19 @@ class RunQueue {
   /** @return {Promise<array>} */
   async getRandomPageOfGames() {
     const randomOffset = Math.floor(Math.random() * this.totalNumberOfGames);
-    const adjustedOffset = getAdjustedOffset(randomOffset);
 
     return Game.search({
       embed: [
         'categories',
       ],
-      offset: adjustedOffset,
+      offset: randomOffset,
     });
   }
 
   /** @return {Promise<number>} */
   async findCeiling(potentialCeiling) {
-    const adjustedOffset = getAdjustedOffset(potentialCeiling, true);
-
     const games = await Game.search({
-      offset: adjustedOffset,
+      offset: potentialCeiling,
       _bulk: true,
     });
 
@@ -44,7 +40,7 @@ class RunQueue {
     }
 
     if (numberOfGames > 0 && numberOfGames < 250) {
-      return adjustedOffset + numberOfGames;
+      return Game.getAdjustedOffset(potentialCeiling, true) + numberOfGames;
     }
 
     return this.findCeiling(potentialCeiling + 5000);
@@ -53,10 +49,9 @@ class RunQueue {
   /** @return {Promise<number>} */
   async findTotalNumberOfGames(floor, ceiling) {
     const median = Math.round(((ceiling - floor) / 2) + floor);
-    const adjustedOffset = this.getAdjustedOffset(median, true);
 
     const games = await Game.search({
-      offset: adjustedOffset,
+      offset: median,
       _bulk: true,
     });
 
@@ -67,7 +62,7 @@ class RunQueue {
     }
 
     if (numberOfGames > 0 && numberOfGames < 250) {
-      return adjustedOffset + numberOfGames;
+      return Game.getAdjustedOffset(median, true) + numberOfGames;
     }
 
     return this.findTotalNumberOfGames(median, ceiling);
