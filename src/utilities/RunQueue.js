@@ -1,4 +1,6 @@
+import cloneDeep from '../helpers/cloneDeep';
 import Game from '../models/Game';
+import getRandomInclusiveInteger from '../helpers/getRandomInclusiveInteger';
 
 class RunQueue {
   static baseTotalNumberOfGames = 24000;
@@ -9,14 +11,15 @@ class RunQueue {
   }
 
   /** @return {Promise<object>} */
-  async getRandomGame() {
+  async getRun() {
     const randomPageOfGames = await this.getRandomPageOfGames();
-    console.log(randomPageOfGames);
+    const randomSubsetOfGames = await this.getRandomSubsetOfGames(randomPageOfGames, 6);
+    console.log(randomSubsetOfGames);
   }
 
   /** @return {Promise<array>} */
   async getRandomPageOfGames() {
-    const randomOffset = Math.floor(Math.random() * this.totalNumberOfGames);
+    const randomOffset = getRandomInclusiveInteger(0, this.totalNumberOfGames);
 
     return Game.search({
       embed: [
@@ -24,6 +27,23 @@ class RunQueue {
       ],
       offset: randomOffset,
     });
+  }
+
+  /** @return {Promise<array>} */
+  // eslint-disable-next-line class-methods-use-this
+  getRandomSubsetOfGames(setOfGames, size) {
+    const randomSubsetOfGames = [];
+    const internalSetOfGames = cloneDeep(setOfGames);
+
+    for (let i = 0; i < size; i += 1) {
+      const randomIndex = getRandomInclusiveInteger(0, randomSubsetOfGames.length);
+      const randomGame = internalSetOfGames[randomIndex];
+      randomSubsetOfGames.push(randomGame);
+
+      internalSetOfGames.splice(randomIndex, 1);
+    }
+
+    return randomSubsetOfGames;
   }
 
   /** @return {Promise<number>} */
@@ -80,7 +100,10 @@ class RunQueue {
       return ceiling;
     }
 
-    return this.findTotalNumberOfGames(RunQueue.baseTotalNumberOfGames, ceiling);
+    return this.findTotalNumberOfGames(
+      RunQueue.baseTotalNumberOfGames,
+      ceiling,
+    );
   }
 }
 

@@ -76,7 +76,12 @@ class Game extends AbstractModel {
       ...params,
     };
 
-    if (Object.prototype.hasOwnProperty.call(adjustedParams, 'offset')) {
+    if (
+      Object
+        .prototype
+        .hasOwnProperty
+        .call(adjustedParams, 'offset')
+    ) {
       // eslint-disable-next-line no-underscore-dangle
       adjustedParams.offset = Game.getAdjustedOffset(adjustedParams.offset, adjustedParams._bulk);
     }

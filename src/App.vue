@@ -26,8 +26,8 @@ export default {
   },
 
   async created() {
-    await this.runQueue.getTotalNumberOfGames();
-    await this.runQueue.getRandomGame();
+    this.runQueue.totalNumberOfGames = await this.runQueue.getTotalNumberOfGames();
+    await this.runQueue.getRun();
   },
 };
 </script>
