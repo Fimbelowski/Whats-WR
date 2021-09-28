@@ -1,5 +1,6 @@
 import AbstractModel from './AbstractModel';
 import Category from './Category';
+import cloneDeep from '../helpers/cloneDeep';
 import SpeedrunDotComApiClient from '../clients/SpeedrunDotComApiClient';
 
 class Game extends AbstractModel {
@@ -33,7 +34,7 @@ class Game extends AbstractModel {
       platforms: [],
       publishers: [],
       regions: [],
-      release_date: null,
+      releaseDate: null,
       released: null,
       romhack: false,
       ruleset: {},
@@ -70,11 +71,9 @@ class Game extends AbstractModel {
     return adjustedOffset;
   }
 
-  /** @return {Promise<any>} */
+  /** @return {Promise<array>} */
   static async search(params = {}) {
-    const adjustedParams = {
-      ...params,
-    };
+    const adjustedParams = cloneDeep(params);
 
     if (
       Object

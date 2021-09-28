@@ -1,6 +1,5 @@
 import camelCase from '../helpers/camelCase';
 import cloneDeep from '../helpers/cloneDeep';
-// import SpeedrunDotComApiClient from '../clients/SpeedrunDotComApiClient';
 
 class AbstractModel {
   /** @type {string} */
@@ -46,7 +45,7 @@ class AbstractModel {
           if (Array.isArray(embeddedData)) {
             // eslint-disable-next-line new-cap
             tempData[key] = embeddedData.map((item) => new value(item));
-          } else {
+          } else if (embeddedData !== undefined) {
             // eslint-disable-next-line new-cap
             tempData[key] = new value(embeddedData);
           }
@@ -54,11 +53,6 @@ class AbstractModel {
       });
 
     Object.assign(this, tempData);
-  }
-
-  /** @return {Promise<any>} */
-  static findById() {
-    //
   }
 }
 

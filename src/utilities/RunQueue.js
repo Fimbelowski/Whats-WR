@@ -1,6 +1,7 @@
 import cloneDeep from '../helpers/cloneDeep';
 import Game from '../models/Game';
 import getRandomInclusiveInteger from '../helpers/getRandomInclusiveInteger';
+import Leaderboard from '../models/Leaderboard';
 
 class RunQueue {
   static baseTotalNumberOfGames = 24000;
@@ -10,11 +11,49 @@ class RunQueue {
     this.totalNumberOfGames = 0;
   }
 
+  /** @return {Promise<array>} */
+  // eslint-disable-next-line class-methods-use-this
+  async getGameCategoryIdPairs(setOfGames) {
+    return setOfGames.map((game) => {
+      const gameCategoryIdPair = {
+        gameId: game.id,
+      };
+
+      const categoryIndex = getRandomInclusiveInteger(0, game.categories.length - 1);
+
+      gameCategoryIdPair.categoryId = game.categories[categoryIndex].id;
+
+      return gameCategoryIdPair;
+    });
+  }
+
+  /** @return {Promise<array>} */
+  // eslint-disable-next-line class-methods-use-this
+  async getLeaderboardsFromGameCategoryIdPairs(gameCategoryIdPairs) {
+    const promises = gameCategoryIdPairs.map((gameCategoryIdPair) => Leaderboard.search({
+      ...gameCategoryIdPair,
+      embed: [
+        'category',
+        'game',
+        'players',
+      ],
+      top: 1,
+    }));
+
+    return Promise.all(promises);
+  }
+
   /** @return {Promise<object>} */
   async getRun() {
     const randomPageOfGames = await this.getRandomPageOfGames();
     const randomSubsetOfGames = await this.getRandomSubsetOfGames(randomPageOfGames, 6);
-    console.log(randomSubsetOfGames);
+
+    const gameCategoryIdPairs = await this.getGameCategoryIdPairs(randomSubsetOfGames);
+
+    const leaderboards = await this.getLeaderboardsFromGameCategoryIdPairs(gameCategoryIdPairs);
+
+    // const acceptableLeaderboards = this.getAcceptableLeaderboards(leaderboards);
+    console.log(leaderboards);
   }
 
   /** @return {Promise<array>} */
@@ -33,7 +72,17 @@ class RunQueue {
   // eslint-disable-next-line class-methods-use-this
   getRandomSubsetOfGames(setOfGames, size) {
     const randomSubsetOfGames = [];
-    const internalSetOfGames = cloneDeep(setOfGames);
+    let internalSetOfGames = cloneDeep(setOfGames);
+
+    internalSetOfGames.forEach((game, index) => {
+      internalSetOfGames[index].categories = game.categories.filter((category) => category.type !== 'per-level');
+    });
+
+    internalSetOfGames = internalSetOfGames.filter((game) => game.categories.length > 0);
+
+    if (internalSetOfGames.length <= size) {
+      return internalSetOfGames;
+    }
 
     for (let i = 0; i < size; i += 1) {
       const randomIndex = getRandomInclusiveInteger(0, randomSubsetOfGames.length);
