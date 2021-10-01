@@ -41,7 +41,7 @@ class Leaderboard extends AbstractModel {
   }
 
   /** @return {boolean} */
-  static hasRuns() {
+  hasRuns() {
     return this.runs.length > 0;
   }
 

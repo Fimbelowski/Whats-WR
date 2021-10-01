@@ -23,8 +23,22 @@ class Run extends AbstractModel {
   }
 
   /** @return {boolean} */
+  hasExactlyOneVideo() {
+    return this.videos.links.length === 1;
+  }
+
+  /** @return {boolean} */
   hasVideo() {
     return this.videos !== null;
+  }
+
+  /** @return {boolean} */
+  hasVideoHostedOnTwitchOrYouTube() {
+    const videoUri = this.videos.links[0].uri;
+
+    return videoUri.includes('twitch.tv')
+      || videoUri.includes('youtube.com')
+      || videoUri.includes('youtu.be');
   }
 }
 

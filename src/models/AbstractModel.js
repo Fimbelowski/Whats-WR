@@ -40,7 +40,19 @@ class AbstractModel {
       .entries(this.constructor.EMBEDS)
       .forEach(([key, value]) => {
         if (Object.prototype.hasOwnProperty.call(tempData, key)) {
-          const embeddedData = tempData[key].data;
+          let embeddedData;
+
+          if (key === 'runs') {
+            const runs = tempData[key];
+
+            if (Array.isArray(runs)) {
+              embeddedData = runs.map((run) => run.run);
+            }
+          } else {
+            embeddedData = Object.prototype.hasOwnProperty.call(tempData[key], 'data')
+              ? tempData[key].data
+              : tempData[key];
+          }
 
           if (Array.isArray(embeddedData)) {
             // eslint-disable-next-line new-cap

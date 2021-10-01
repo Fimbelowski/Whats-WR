@@ -11,6 +11,22 @@ class RunQueue {
     this.totalNumberOfGames = 0;
   }
 
+  /** @return {array} */
+  // eslint-disable-next-line class-methods-use-this
+  getAcceptableLeaderboards(leaderboards) {
+    return leaderboards.filter((leaderboard) => {
+      if (!leaderboard.hasRuns()) {
+        return false;
+      }
+
+      const worldRecordRun = leaderboard.runs[0];
+
+      return worldRecordRun.hasVideo()
+        && worldRecordRun.hasExactlyOneVideo()
+        && worldRecordRun.hasVideoHostedOnTwitchOrYouTube();
+    });
+  }
+
   /** @return {Promise<array>} */
   // eslint-disable-next-line class-methods-use-this
   async getGameCategoryIdPairs(setOfGames) {
@@ -52,8 +68,8 @@ class RunQueue {
 
     const leaderboards = await this.getLeaderboardsFromGameCategoryIdPairs(gameCategoryIdPairs);
 
-    // const acceptableLeaderboards = this.getAcceptableLeaderboards(leaderboards);
-    console.log(leaderboards);
+    const acceptableLeaderboards = this.getAcceptableLeaderboards(leaderboards);
+    console.log(acceptableLeaderboards);
   }
 
   /** @return {Promise<array>} */
