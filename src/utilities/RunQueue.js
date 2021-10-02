@@ -27,9 +27,9 @@ class RunQueue {
     });
   }
 
-  /** @return {Promise<array>} */
+  /** @return {array} */
   // eslint-disable-next-line class-methods-use-this
-  async getGameCategoryIdPairs(setOfGames) {
+  getGameCategoryIdPairs(setOfGames) {
     return setOfGames.map((game) => {
       const gameCategoryIdPair = {
         gameId: game.id,
@@ -61,15 +61,17 @@ class RunQueue {
 
   /** @return {Promise<object>} */
   async getRun() {
-    const randomPageOfGames = await this.getRandomPageOfGames();
-    const randomSubsetOfGames = await this.getRandomSubsetOfGames(randomPageOfGames, 6);
+    this.getRandomPageOfGames()
+      .then((randomPageOfGames) => {
+        const randomSubsetOfGames = this.getRandomSubsetOfGames(randomPageOfGames, 6);
+        const gameCategoryIdPairs = this.getGameCategoryIdPairs(randomSubsetOfGames);
 
-    const gameCategoryIdPairs = await this.getGameCategoryIdPairs(randomSubsetOfGames);
-
-    const leaderboards = await this.getLeaderboardsFromGameCategoryIdPairs(gameCategoryIdPairs);
-
-    const acceptableLeaderboards = this.getAcceptableLeaderboards(leaderboards);
-    console.log(acceptableLeaderboards);
+        return this.getLeaderboardsFromGameCategoryIdPairs(gameCategoryIdPairs);
+      })
+      .then((leaderboards) => {
+        const acceptableLeaderboards = this.getAcceptableLeaderboards(leaderboards);
+        console.log(acceptableLeaderboards);
+      });
   }
 
   /** @return {Promise<array>} */
@@ -84,7 +86,7 @@ class RunQueue {
     });
   }
 
-  /** @return {Promise<array>} */
+  /** @return {array} */
   // eslint-disable-next-line class-methods-use-this
   getRandomSubsetOfGames(setOfGames, size) {
     const randomSubsetOfGames = [];
