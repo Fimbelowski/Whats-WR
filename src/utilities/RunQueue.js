@@ -4,12 +4,26 @@ import getRandomInclusiveInteger from '../helpers/getRandomInclusiveInteger';
 import Leaderboard from '../models/Leaderboard';
 
 class RunQueue {
+  /** @var {number} */
   static baseTotalNumberOfGames = 24000;
+
+  /** @var {number} */
+  static targetNumberOfRuns = 5;
 
   /** RunQueue Constructor */
   constructor() {
     this.runs = [];
     this.totalNumberOfGames = 0;
+  }
+
+  /** @return {Promise<undefined>} */
+  async fillRuns() {
+    const run = await this.getRun();
+    this.runs.push(run);
+
+    if (this.runs.length < RunQueue.targetNumberOfRuns) {
+      await this.fillRuns();
+    }
   }
 
   /** @return {array} */
@@ -110,7 +124,7 @@ class RunQueue {
 
   /** @return {Promise<object>} */
   async getRun() {
-    this.getRandomPageOfGames()
+    return this.getRandomPageOfGames()
       .then((randomPageOfGames) => {
         const randomSubsetOfGames = this.getRandomSubsetOfGames(randomPageOfGames, 6);
         const gameCategoryIdPairs = this.getGameCategoryIdPairs(randomSubsetOfGames);
@@ -125,9 +139,7 @@ class RunQueue {
 
         const randomAcceptableLeaderboardAsRun = randomAcceptableLeaderboard.transformIntoRun();
 
-        this.runs.push(randomAcceptableLeaderboardAsRun);
-
-        console.log(this.runs);
+        return randomAcceptableLeaderboardAsRun;
       });
   }
 
@@ -177,18 +189,24 @@ class RunQueue {
    * The speedrun.com API doesn't allow us to know the total number of games easily,
    * so we must find it ourselves.
    *
-   * @return {Promise<void>} */
+   * @return {Promise<undefined>} */
   async getTotalNumberOfGames() {
     const ceiling = await this.findCeiling(RunQueue.baseTotalNumberOfGames + 5000);
 
     if (ceiling % 250 !== 0) {
-      return ceiling;
+      this.totalNumberOfGames = ceiling;
     }
 
-    return this.findTotalNumberOfGames(
+    this.totalNumberOfGames = await this.findTotalNumberOfGames(
       RunQueue.baseTotalNumberOfGames,
       ceiling,
     );
+  }
+
+  /** @return {Promise<undefined>} */
+  async start() {
+    await this.getTotalNumberOfGames();
+    await this.fillRuns();
   }
 }
 
