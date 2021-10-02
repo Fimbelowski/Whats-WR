@@ -40,6 +40,11 @@ class Leaderboard extends AbstractModel {
     };
   }
 
+  /** @return {object} */
+  getWorldRecordRun() {
+    return this.runs[0];
+  }
+
   /** @return {boolean} */
   hasRuns() {
     return this.runs.length > 0;
@@ -60,6 +65,19 @@ class Leaderboard extends AbstractModel {
     const record = await SpeedrunDotComApiClient.get(updatedBaseUri, adjustedParams);
 
     return new this(record);
+  }
+
+  /** @return {object} */
+  transformIntoRun() {
+    const worldRecordRun = this.getWorldRecordRun();
+
+    const run = new Run(worldRecordRun);
+
+    run.category = this.category;
+    run.game = this.game;
+    run.players = this.players;
+
+    return run;
   }
 }
 

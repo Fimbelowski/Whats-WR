@@ -8,6 +8,7 @@ class RunQueue {
 
   /** RunQueue Constructor */
   constructor() {
+    this.runs = [];
     this.totalNumberOfGames = 0;
   }
 
@@ -19,7 +20,7 @@ class RunQueue {
         return false;
       }
 
-      const worldRecordRun = leaderboard.runs[0];
+      const worldRecordRun = leaderboard.getWorldRecordRun();
 
       return worldRecordRun.hasVideo()
         && worldRecordRun.hasExactlyOneVideo()
@@ -59,19 +60,11 @@ class RunQueue {
     return Promise.all(promises);
   }
 
-  /** @return {Promise<object>} */
-  async getRun() {
-    this.getRandomPageOfGames()
-      .then((randomPageOfGames) => {
-        const randomSubsetOfGames = this.getRandomSubsetOfGames(randomPageOfGames, 6);
-        const gameCategoryIdPairs = this.getGameCategoryIdPairs(randomSubsetOfGames);
-
-        return this.getLeaderboardsFromGameCategoryIdPairs(gameCategoryIdPairs);
-      })
-      .then((leaderboards) => {
-        const acceptableLeaderboards = this.getAcceptableLeaderboards(leaderboards);
-        console.log(acceptableLeaderboards);
-      });
+  /** @return {object} */
+  // eslint-disable-next-line class-methods-use-this
+  getRandomAcceptableLeaderboard(acceptableLeaderboards) {
+    const index = getRandomInclusiveInteger(0, acceptableLeaderboards.length - 1);
+    return acceptableLeaderboards[index];
   }
 
   /** @return {Promise<array>} */
@@ -92,6 +85,8 @@ class RunQueue {
     const randomSubsetOfGames = [];
     let internalSetOfGames = cloneDeep(setOfGames);
 
+    internalSetOfGames = internalSetOfGames.filter((game) => game.categories !== undefined);
+
     internalSetOfGames.forEach((game, index) => {
       internalSetOfGames[index].categories = game.categories.filter((category) => category.type !== 'per-level');
     });
@@ -111,6 +106,29 @@ class RunQueue {
     }
 
     return randomSubsetOfGames;
+  }
+
+  /** @return {Promise<object>} */
+  async getRun() {
+    this.getRandomPageOfGames()
+      .then((randomPageOfGames) => {
+        const randomSubsetOfGames = this.getRandomSubsetOfGames(randomPageOfGames, 6);
+        const gameCategoryIdPairs = this.getGameCategoryIdPairs(randomSubsetOfGames);
+
+        return this.getLeaderboardsFromGameCategoryIdPairs(gameCategoryIdPairs);
+      })
+      .then((leaderboards) => {
+        const acceptableLeaderboards = this.getAcceptableLeaderboards(leaderboards);
+        const randomAcceptableLeaderboard = (
+          this.getRandomAcceptableLeaderboard(acceptableLeaderboards)
+        );
+
+        const randomAcceptableLeaderboardAsRun = randomAcceptableLeaderboard.transformIntoRun();
+
+        this.runs.push(randomAcceptableLeaderboardAsRun);
+
+        console.log(this.runs);
+      });
   }
 
   /** @return {Promise<number>} */
