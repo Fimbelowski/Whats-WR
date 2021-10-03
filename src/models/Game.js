@@ -71,6 +71,17 @@ class Game extends AbstractModel {
     return adjustedOffset;
   }
 
+  /** @return {string} */
+  getTitle() {
+    let title = this.names.international;
+
+    if (this.names.japanese !== null) {
+      title = `${title} (${this.names.japanese})`;
+    }
+
+    return title;
+  }
+
   /** @return {Promise<array>} */
   static async search(params = {}) {
     const adjustedParams = cloneDeep(params);

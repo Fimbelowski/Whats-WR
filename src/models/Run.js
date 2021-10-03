@@ -22,6 +22,39 @@ class Run extends AbstractModel {
     };
   }
 
+  /** @return {string} */
+  getFormattedTime() {
+    // eslint-disable-next-line no-useless-escape
+    const regex = /PT(?:(?<hours>\d+)H|)(?:(?<minutes>\d+)M|)(?<seconds>[\d\.]+)/;
+    const matches = this.times.primary.match(regex);
+
+    const { hours = '0' } = matches.groups;
+    let { minutes = '00', seconds } = matches.groups;
+
+    minutes = minutes.padStart(2, '0');
+
+    seconds = seconds.includes('.')
+      ? seconds.padStart(6, '0')
+      : seconds.padStart(2, '0');
+
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
+  /** @return {string} */
+  getTimingMethod() {
+    const { primary } = this.times;
+
+    if (primary === this.times.realtime) {
+      return 'RTA';
+    }
+
+    if (primary === this.times.realtime_noloads) {
+      return 'RTA (No Loads)';
+    }
+
+    return 'IGT';
+  }
+
   /** @return {boolean} */
   hasExactlyOneVideo() {
     return this.videos.links.length === 1;
@@ -29,7 +62,8 @@ class Run extends AbstractModel {
 
   /** @return {boolean} */
   hasVideo() {
-    return this.videos !== null;
+    return this.videos !== null
+      && this.videos.links !== undefined;
   }
 
   /** @return {boolean} */

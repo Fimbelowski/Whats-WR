@@ -16,6 +16,11 @@ class RunQueue {
     this.totalNumberOfGames = 0;
   }
 
+  /** @return {object|undefined} */
+  currentRun() {
+    return this.runs[0];
+  }
+
   /** @return {Promise<undefined>} */
   async fillRuns() {
     const run = await this.getRun();
@@ -24,6 +29,48 @@ class RunQueue {
     if (this.runs.length < RunQueue.targetNumberOfRuns) {
       await this.fillRuns();
     }
+  }
+
+  /** @return {Promise<number>} */
+  async findCeiling(potentialCeiling) {
+    const games = await Game.search({
+      offset: potentialCeiling,
+      _bulk: true,
+    });
+
+    const numberOfGames = games.length;
+
+    if (numberOfGames === 0) {
+      return potentialCeiling;
+    }
+
+    if (numberOfGames > 0 && numberOfGames < 250) {
+      return Game.getAdjustedOffset(potentialCeiling, true) + numberOfGames;
+    }
+
+    return this.findCeiling(potentialCeiling + 5000);
+  }
+
+  /** @return {Promise<number>} */
+  async findTotalNumberOfGames(floor, ceiling) {
+    const median = Math.round(((ceiling - floor) / 2) + floor);
+
+    const games = await Game.search({
+      offset: median,
+      _bulk: true,
+    });
+
+    const numberOfGames = games.length;
+
+    if (numberOfGames === 0) {
+      return this.findTotalNumberOfGames(floor, median);
+    }
+
+    if (numberOfGames > 0 && numberOfGames < 250) {
+      return Game.getAdjustedOffset(median, true) + numberOfGames;
+    }
+
+    return this.findTotalNumberOfGames(median, ceiling);
   }
 
   /** @return {array} */
@@ -143,48 +190,6 @@ class RunQueue {
       });
   }
 
-  /** @return {Promise<number>} */
-  async findCeiling(potentialCeiling) {
-    const games = await Game.search({
-      offset: potentialCeiling,
-      _bulk: true,
-    });
-
-    const numberOfGames = games.length;
-
-    if (numberOfGames === 0) {
-      return potentialCeiling;
-    }
-
-    if (numberOfGames > 0 && numberOfGames < 250) {
-      return Game.getAdjustedOffset(potentialCeiling, true) + numberOfGames;
-    }
-
-    return this.findCeiling(potentialCeiling + 5000);
-  }
-
-  /** @return {Promise<number>} */
-  async findTotalNumberOfGames(floor, ceiling) {
-    const median = Math.round(((ceiling - floor) / 2) + floor);
-
-    const games = await Game.search({
-      offset: median,
-      _bulk: true,
-    });
-
-    const numberOfGames = games.length;
-
-    if (numberOfGames === 0) {
-      return this.findTotalNumberOfGames(floor, median);
-    }
-
-    if (numberOfGames > 0 && numberOfGames < 250) {
-      return Game.getAdjustedOffset(median, true) + numberOfGames;
-    }
-
-    return this.findTotalNumberOfGames(median, ceiling);
-  }
-
   /**
    * The speedrun.com API doesn't allow us to know the total number of games easily,
    * so we must find it ourselves.
@@ -201,6 +206,22 @@ class RunQueue {
       RunQueue.baseTotalNumberOfGames,
       ceiling,
     );
+  }
+
+  /** @return {boolean} */
+  hasMoreRuns() {
+    return this.runs.length > 1;
+  }
+
+  /** @return {boolean} */
+  hasRuns() {
+    return this.runs.length > 0;
+  }
+
+  /** @return {Promise<undefined>} */
+  async shift() {
+    this.runs.shift();
+    await this.fillRuns();
   }
 
   /** @return {Promise<undefined>} */
