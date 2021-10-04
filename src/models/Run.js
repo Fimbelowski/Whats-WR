@@ -55,6 +55,11 @@ class Run extends AbstractModel {
     return 'IGT';
   }
 
+  /** @return {string} */
+  getVideoUri() {
+    return this.videos.links[0].uri;
+  }
+
   /** @return {boolean} */
   hasExactlyOneVideo() {
     return this.videos.links.length === 1;

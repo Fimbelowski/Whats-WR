@@ -2,6 +2,9 @@
   <div
     v-if="runQueue.hasRuns()"
   >
+    <VideoEmbed
+      :uri="runQueue.currentRun().getVideoUri()"
+    />
     <h1>
       <a
         :href="runQueue.currentRun().category.weblink"
@@ -73,9 +76,14 @@
 
 <script>
 import RunQueue from './utilities/RunQueue';
+import VideoEmbed from './components/VideoEmbed.vue';
 
 export default {
   name: 'App',
+
+  components: {
+    VideoEmbed,
+  },
 
   data() {
     return {

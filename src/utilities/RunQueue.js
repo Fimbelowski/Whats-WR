@@ -186,6 +186,7 @@ class RunQueue {
 
         const randomAcceptableLeaderboardAsRun = randomAcceptableLeaderboard.transformIntoRun();
 
+        console.log(randomAcceptableLeaderboardAsRun);
         return randomAcceptableLeaderboardAsRun;
       });
   }
