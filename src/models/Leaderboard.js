@@ -40,6 +40,30 @@ class Leaderboard extends AbstractModel {
     };
   }
 
+  /**
+   * @return {array}
+   * Getting a leaderboard with the top N place runs can result in more than N runs. In this
+   * case more players will be listed than are actually in the world record run, so we need to
+   * filter the list of players.
+   */
+  filterPlayers(worldRecordRun) {
+    const filteredPlayers = this.players.filter((player) => {
+      const playerIds = worldRecordRun.players
+        .map((worldRecordRunPlayer) => worldRecordRunPlayer.id);
+
+      return playerIds.includes(player.id);
+    });
+
+    const uniqueFilteredPlayers = filteredPlayers.filter((filteredPlayer, index, self) => {
+      const indexOfFirstOccurrence = self
+        .findIndex((player) => player.id === filteredPlayer.id);
+
+      return index === indexOfFirstOccurrence;
+    });
+
+    return uniqueFilteredPlayers;
+  }
+
   /** @return {object} */
   getWorldRecordRun() {
     return this.runs[0];
@@ -75,7 +99,7 @@ class Leaderboard extends AbstractModel {
 
     run.category = this.category;
     run.game = this.game;
-    run.players = this.players;
+    run.players = this.filterPlayers(worldRecordRun);
 
     return run;
   }

@@ -1,27 +1,13 @@
 <template>
-  <template
-    v-if="videoType === 'twitchVod'"
-  >
-    <iframe
-      :src="iframeSrc"
-      allowfullscreen="true"
-      height="720"
-      width="1280"
-    />
-    <div>
-      {{ uri }}
-    </div>
-  </template>
-  <template
-    v-else-if="videoType === 'twitchClip'"
-  >
-    Twitch Clip ({{ uri }})
-  </template>
-  <template
-    v-else
-  >
-    YouTube Video ({{ uri }})
-  </template>
+  <iframe
+    :src="iframeSrc"
+    allowfullscreen="true"
+    height="720"
+    width="1280"
+  />
+  <div>
+    {{ uri }}
+  </div>
 </template>
 
 <script>
@@ -38,37 +24,43 @@ export default {
   computed: {
     /** @type {string} */
     iframeSrc() {
-      if (this.videoType === 'twitchVod') {
+      if (this.videoType === 'twitch') {
         let src = 'https://player.twitch.tv/?video=v{videoId}&time={time}&parent={parent}&autoplay=true';
 
-        const twitchVodRegex = /videos\/(?<videoId>\d+)(?:.*t=(?<time>[0-9hms]+)|)/i;
-        const matches = this.uri.match(twitchVodRegex);
+        const twitchRegex = /(?:videos\/|[a-zA-Z0-9-_]+\/v\/)(?<videoId>\d+)(?:.*t=(?<time>[0-9hms]+)|)/i;
+        const matches = this.uri.match(twitchRegex);
 
-        const { time, videoId } = matches.groups;
+        const { time = '0h0m0s', videoId } = matches.groups;
 
         const parent = import.meta.env.DEV
           ? 'localhost'
           : 'whatswr';
 
         src = src.replace('{videoId}', videoId);
-        src = src.replace('{time}', time || '0h0m0s');
+        src = src.replace('{time}', time);
         src = src.replace('{parent}', parent);
 
         return src;
       }
 
-      return '';
+      let src = 'https://www.youtube.com/embed/{videoId}?start={start}&autoplay=1';
+
+      const youTubeRegex = /(?:youtube.com|youtu.be)\/(?:watch\?v=|)(?<videoId>[a-zA-Z0-9_-]+)(?:.*t=(?<start>\d+)|)/;
+      const matches = this.uri.match(youTubeRegex);
+
+      const { start = 0, videoId } = matches.groups;
+
+      src = src.replace('{videoId}', videoId);
+      src = src.replace('{start}', start);
+
+      return src;
     },
 
     /** @type {string} */
     videoType() {
-      if (this.uri.includes('twitch.tv')) {
-        return this.uri.includes('/c/')
-          ? 'twitchClip'
-          : 'twitchVod';
-      }
-
-      return 'youtube';
+      return this.uri.includes('twitch.tv')
+        ? 'twitch'
+        : 'youtube';
     },
   },
 };

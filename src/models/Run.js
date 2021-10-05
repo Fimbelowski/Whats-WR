@@ -75,8 +75,11 @@ class Run extends AbstractModel {
   hasVideoHostedOnTwitchOrYouTube() {
     const videoUri = this.videos.links[0].uri;
 
-    return videoUri.includes('twitch.tv')
-      || videoUri.includes('youtube.com')
+    return (
+      videoUri.includes('twitch.tv')
+      && !videoUri.includes('/clip/')
+      && !videoUri.includes('/c/')
+    ) || videoUri.includes('youtube.com')
       || videoUri.includes('youtu.be');
   }
 }
