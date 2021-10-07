@@ -22,6 +22,11 @@ class Run extends AbstractModel {
     };
   }
 
+  /** @return {object} */
+  static TRANSFORM_FOR_EMBEDDING(run) {
+    return new this(run.run);
+  }
+
   /** @return {string} */
   getFormattedTime() {
     // eslint-disable-next-line no-useless-escape
