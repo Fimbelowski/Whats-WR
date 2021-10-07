@@ -17,6 +17,11 @@ class AbstractModel {
     return {};
   }
 
+  /** @return {object} */
+  static TRANSFORM_FOR_EMBEDDING(record) {
+    return new this(record);
+  }
+
   /** AbstractModel constructor */
   constructor(data = {}) {
     if (this.constructor.name === 'AbstractModel') {
@@ -40,26 +45,16 @@ class AbstractModel {
       .entries(this.constructor.EMBEDS)
       .forEach(([key, value]) => {
         if (Object.prototype.hasOwnProperty.call(tempData, key)) {
-          let embeddedData;
+          let dataToEmbed = tempData[key];
 
-          if (key === 'runs') {
-            const runs = tempData[key];
-
-            if (Array.isArray(runs)) {
-              embeddedData = runs.map((run) => run.run);
-            }
-          } else {
-            embeddedData = Object.prototype.hasOwnProperty.call(tempData[key], 'data')
-              ? tempData[key].data
-              : tempData[key];
+          if (Object.prototype.hasOwnProperty.call(dataToEmbed, 'data')) {
+            dataToEmbed = dataToEmbed.data;
           }
 
-          if (Array.isArray(embeddedData)) {
-            // eslint-disable-next-line new-cap
-            tempData[key] = embeddedData.map((item) => new value(item));
-          } else if (embeddedData !== undefined) {
-            // eslint-disable-next-line new-cap
-            tempData[key] = new value(embeddedData);
+          if (Array.isArray(dataToEmbed)) {
+            tempData[key] = dataToEmbed.map((record) => value.TRANSFORM_FOR_EMBEDDING(record));
+          } else {
+            tempData[key] = value.TRANSFORM_FOR_EMBEDDING(dataToEmbed);
           }
         }
       });
