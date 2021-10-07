@@ -12,6 +12,7 @@ class RunQueue {
 
   /** RunQueue Constructor */
   constructor() {
+    this.forcedGameCategoryIdPairs = [];
     this.runs = [];
     this.totalNumberOfGames = 0;
   }
@@ -228,6 +229,15 @@ class RunQueue {
   /** @return {Promise<undefined>} */
   async start() {
     await this.getTotalNumberOfGames();
+
+    if (this.forcedGameCategoryIdPairs.length > 0) {
+      const leaderboards = await this.getLeaderboardsFromGameCategoryIdPairs(
+        this.forcedGameCategoryIdPairs,
+      );
+
+      this.runs.push(...leaderboards.map((leaderboard) => leaderboard.transformIntoRun()));
+    }
+
     await this.fillRuns();
   }
 }
