@@ -19,8 +19,8 @@
       Players:
     </h3>
     <div
-      :key="player.id"
       v-for="player in runQueue.currentRun().players"
+      :key="player.id"
     >
       <a
         :href="player.weblink"
@@ -66,8 +66,8 @@
       </ul>
     </div>
     <button
-      @click="runQueue.shift()"
       :disabled="!runQueue.hasMoreRuns()"
+      @click="runQueue.shift()"
     >
       Next Run
     </button>
