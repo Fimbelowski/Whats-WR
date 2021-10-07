@@ -5,8 +5,8 @@ module.exports = {
     'jest/globals': true,
   },
   extends: [
-    'plugin:vue/essential',
     'airbnb-base',
+    'plugin:vue/recommended',
   ],
   parserOptions: {
     ecmaVersion: 12,
