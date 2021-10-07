@@ -12,6 +12,7 @@ class RunQueue {
 
   /** RunQueue Constructor */
   constructor() {
+    this.forcedGameCategoryIdPairs = [];
     this.runs = [];
     this.totalNumberOfGames = 0;
   }
@@ -107,7 +108,7 @@ class RunQueue {
 
   /** @return {Promise<array>} */
   // eslint-disable-next-line class-methods-use-this
-  async getLeaderboardsFromGameCategoryIdPairs(gameCategoryIdPairs) {
+  async getLeaderboards(gameCategoryIdPairs) {
     const promises = gameCategoryIdPairs.map((gameCategoryIdPair) => Leaderboard.search({
       ...gameCategoryIdPair,
       embed: [
@@ -176,7 +177,7 @@ class RunQueue {
         const randomSubsetOfGames = this.getRandomSubsetOfGames(randomPageOfGames, 6);
         const gameCategoryIdPairs = this.getGameCategoryIdPairs(randomSubsetOfGames);
 
-        return this.getLeaderboardsFromGameCategoryIdPairs(gameCategoryIdPairs);
+        return this.getLeaderboards(gameCategoryIdPairs);
       })
       .then((leaderboards) => {
         const acceptableLeaderboards = this.getAcceptableLeaderboards(leaderboards);
@@ -228,6 +229,13 @@ class RunQueue {
   /** @return {Promise<undefined>} */
   async start() {
     await this.getTotalNumberOfGames();
+
+    if (this.forcedGameCategoryIdPairs.length > 0) {
+      const leaderboards = await this.getLeaderboards(this.forcedGameCategoryIdPairs);
+
+      this.runs.push(...leaderboards.map((leaderboard) => leaderboard.transformIntoRun()));
+    }
+
     await this.fillRuns();
   }
 }
