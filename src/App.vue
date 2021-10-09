@@ -3,23 +3,23 @@
     v-if="runQueue.hasRuns()"
   >
     <VideoEmbed
-      :uri="runQueue.currentRun().getVideoUri()"
+      :uri="currentRun.getVideoUri()"
     />
     <h1>
       <a
-        :href="runQueue.currentRun().category.weblink"
+        :href="currentRun.category.weblink"
         rel="noopener noreferrer"
         target="_blank"
       >
-        {{ runQueue.currentRun().game.getTitle() }} - {{ runQueue.currentRun().category.name }}
+        {{ currentRun.game.getTitle() }} - {{ currentRun.category.name }}
       </a> in
-      {{ runQueue.currentRun().getFormattedTime() }} ({{ runQueue.currentRun().getTimingMethod() }})
+      {{ currentRun.getFormattedTime() }} ({{ currentRun.getTimingMethod() }})
     </h1>
     <h3>
       Players:
     </h3>
     <div
-      v-for="player in runQueue.currentRun().players"
+      v-for="player in currentRun.players"
       :key="player.id"
     >
       <a
@@ -89,6 +89,29 @@ export default {
     return {
       runQueue: new RunQueue(),
     };
+  },
+
+  computed: {
+    /** @type {object} */
+    currentRun() {
+      return this.runQueue.currentRun();
+    },
+  },
+
+  watch: {
+    currentRun(newValue) {
+      const categoryId = newValue.category.id;
+      const gameId = newValue.game.id;
+
+      const newUrl = `${window.location.origin}#${gameId}-${categoryId}`;
+
+      if (window.location.hash === '') {
+        window.history.replaceState({}, '', newUrl);
+        return;
+      }
+
+      window.history.pushState({}, '', newUrl);
+    },
   },
 
   created() {
