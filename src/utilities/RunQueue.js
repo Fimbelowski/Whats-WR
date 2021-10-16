@@ -8,7 +8,7 @@ class RunQueue {
   static baseTotalNumberOfGames = 24000;
 
   /** @var {number} */
-  static targetNumberOfRuns = 5;
+  static targetNumberOfRuns = 1;
 
   /** RunQueue Constructor */
   constructor() {

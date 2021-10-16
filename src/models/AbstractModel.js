@@ -1,5 +1,4 @@
-import camelCase from '../helpers/camelCase';
-import cloneDeep from '../helpers/cloneDeep';
+import transformKeysToCamelCaseDeep from '../helpers/transformKeysToCamelCaseDeep';
 
 class AbstractModel {
   /** @type {string} */
@@ -28,18 +27,7 @@ class AbstractModel {
       throw new Error('An AbstractModel cannot be constructed directly.');
     }
 
-    const tempData = cloneDeep(data);
-
-    Object
-      .entries(tempData)
-      .forEach(([key, value]) => {
-        if (key.includes('-')) {
-          const newKey = camelCase(key);
-          tempData[newKey] = value;
-
-          delete tempData[key];
-        }
-      });
+    const tempData = transformKeysToCamelCaseDeep(data);
 
     Object
       .entries(this.constructor.EMBEDS)
