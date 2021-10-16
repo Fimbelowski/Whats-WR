@@ -1,4 +1,3 @@
-import cloneDeep from '../helpers/cloneDeep';
 import Game from '../models/Game';
 import getRandomInclusiveInteger from '../helpers/getRandomInclusiveInteger';
 import Leaderboard from '../models/Leaderboard';
@@ -148,7 +147,9 @@ class RunQueue {
   // eslint-disable-next-line class-methods-use-this
   getRandomSubsetOfGames(setOfGames, size) {
     const randomSubsetOfGames = [];
-    let internalSetOfGames = cloneDeep(setOfGames);
+    let internalSetOfGames = [
+      ...setOfGames,
+    ];
 
     internalSetOfGames = internalSetOfGames.filter((game) => game.categories !== undefined);
 
