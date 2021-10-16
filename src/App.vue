@@ -29,7 +29,9 @@
       >
         {{ player.getName() }}
       </a>
-      <ul>
+      <ul
+        v-if="!(player instanceof Guest)"
+      >
         <li
           v-if="player.hasSocial('twitch')"
         >
@@ -75,6 +77,7 @@
 </template>
 
 <script>
+import Guest from './models/Guest';
 import RunQueue from './utilities/RunQueue';
 import VideoEmbed from './components/VideoEmbed.vue';
 
@@ -87,6 +90,7 @@ export default {
 
   data() {
     return {
+      Guest,
       runQueue: new RunQueue(),
     };
   },
