@@ -1,6 +1,5 @@
 import AbstractModel from './AbstractModel';
 import Category from './Category';
-import cloneDeep from '../helpers/cloneDeep';
 import SpeedrunDotComApiClient from '../clients/SpeedrunDotComApiClient';
 
 class Game extends AbstractModel {
@@ -84,21 +83,13 @@ class Game extends AbstractModel {
 
   /** @return {Promise<array>} */
   static async search(params = {}) {
-    const adjustedParams = cloneDeep(params);
-
-    if (
-      Object
-        .prototype
-        .hasOwnProperty
-        .call(adjustedParams, 'offset')
-    ) {
-      // eslint-disable-next-line no-underscore-dangle
-      adjustedParams.offset = Game.getAdjustedOffset(adjustedParams.offset, adjustedParams._bulk);
-    }
-
-    const records = await SpeedrunDotComApiClient.get(this.BASE_URI, adjustedParams);
-
-    return records.map((record) => new this(record));
+    return SpeedrunDotComApiClient
+      .get(this.BASE_URI, params)
+      .then((response) => response.json())
+      .then((results) => {
+        const games = results.data;
+        return games.map((game) => new this(game));
+      });
   }
 }
 

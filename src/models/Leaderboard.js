@@ -1,6 +1,5 @@
 import AbstractModel from './AbstractModel';
 import Category from './Category';
-import cloneDeep from '../helpers/cloneDeep';
 import Game from './Game';
 import Run from './Run';
 import SpeedrunDotComApiClient from '../clients/SpeedrunDotComApiClient';
@@ -75,20 +74,18 @@ class Leaderboard extends AbstractModel {
   }
 
   /** @return {Promise<object>} */
-  static async search(params = {}) {
-    const adjustedParams = cloneDeep(params);
+  static async findByGameCategoryIdPair({ categoryId, gameId }, params = {}) {
+    let uri = this.BASE_URI;
 
-    let updatedBaseUri = this.BASE_URI;
+    uri = uri.replace(':gameId', gameId);
+    uri = uri.replace(':categoryId', categoryId);
 
-    updatedBaseUri = updatedBaseUri.replace(':gameId', adjustedParams.gameId);
-    updatedBaseUri = updatedBaseUri.replace(':categoryId', adjustedParams.categoryId);
-
-    delete adjustedParams.gameId;
-    delete adjustedParams.categoryId;
-
-    const record = await SpeedrunDotComApiClient.get(updatedBaseUri, adjustedParams);
-
-    return new this(record);
+    return SpeedrunDotComApiClient.get(uri, params)
+      .then((response) => response.json())
+      .then((result) => {
+        const leaderboard = result.data;
+        return new this(leaderboard);
+      });
   }
 
   /** @return {object} */

@@ -34,8 +34,10 @@ class RunQueue {
 
   /** @return {Promise<number>} */
   async findCeiling(potentialCeiling) {
+    const adjustedOffset = Game.getAdjustedOffset(potentialCeiling, true);
+
     const games = await Game.search({
-      offset: potentialCeiling,
+      offset: adjustedOffset,
       _bulk: true,
     });
 
@@ -46,7 +48,7 @@ class RunQueue {
     }
 
     if (numberOfGames > 0 && numberOfGames < 250) {
-      return Game.getAdjustedOffset(potentialCeiling, true) + numberOfGames;
+      return adjustedOffset + numberOfGames;
     }
 
     return this.findCeiling(potentialCeiling + 5000);
@@ -55,9 +57,10 @@ class RunQueue {
   /** @return {Promise<number>} */
   async findTotalNumberOfGames(floor, ceiling) {
     const median = Math.round(((ceiling - floor) / 2) + floor);
+    const adjustedOffset = Game.getAdjustedOffset(median, true);
 
     const games = await Game.search({
-      offset: median,
+      offset: adjustedOffset,
       _bulk: true,
     });
 
@@ -68,7 +71,7 @@ class RunQueue {
     }
 
     if (numberOfGames > 0 && numberOfGames < 250) {
-      return Game.getAdjustedOffset(median, true) + numberOfGames;
+      return adjustedOffset + numberOfGames;
     }
 
     return this.findTotalNumberOfGames(median, ceiling);
@@ -109,15 +112,15 @@ class RunQueue {
   /** @return {Promise<array>} */
   // eslint-disable-next-line class-methods-use-this
   async getLeaderboards(gameCategoryIdPairs) {
-    const promises = gameCategoryIdPairs.map((gameCategoryIdPair) => Leaderboard.search({
-      ...gameCategoryIdPair,
-      embed: [
-        'category',
-        'game',
-        'players',
-      ],
-      top: 1,
-    }));
+    const promises = gameCategoryIdPairs
+      .map((gameCategoryIdPair) => Leaderboard.findByGameCategoryIdPair(gameCategoryIdPair, {
+        embed: [
+          'category',
+          'game',
+          'players',
+        ],
+        top: 1,
+      }));
 
     return Promise.all(promises);
   }
