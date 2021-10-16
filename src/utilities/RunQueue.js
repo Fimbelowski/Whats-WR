@@ -7,11 +7,15 @@ class RunQueue {
   static baseTotalNumberOfGames = 24000;
 
   /** @var {number} */
-  static targetNumberOfRuns = 1;
+  static maxConcurrentLeaderboardQueries = 3;
+
+  /** @var {number} */
+  static targetNumberOfRuns = 15;
 
   /** RunQueue Constructor */
   constructor() {
-    this.forcedGameCategoryIdPairs = [];
+    this.initialGameCategoryIdPair = null;
+    this.isQueueBeingFilled = false;
     this.runs = [];
     this.totalNumberOfGames = 0;
   }
@@ -22,17 +26,26 @@ class RunQueue {
   }
 
   /** @return {Promise<undefined>} */
-  async fillRuns() {
-    const run = await this.getRun();
-    this.runs.push(run);
+  async getNextRun() {
+    this.getRun()
+      .then((run) => {
+        this.runs.push(run);
+      })
+      .then(() => {
+        if (this.runs.length < RunQueue.targetNumberOfRuns) {
+          return this.getNextRun();
+        }
 
-    if (this.runs.length < RunQueue.targetNumberOfRuns) {
-      await this.fillRuns();
-    }
+        this.isQueueBeingFilled = false;
+        return Promise.resolve();
+      })
+      .catch((error) => {
+        Promise.reject(error);
+      });
   }
 
   /** @return {Promise<number>} */
-  async findCeiling(potentialCeiling) {
+  async findCeiling(potentialCeiling, increment) {
     const adjustedOffset = Game.getAdjustedOffset(potentialCeiling, true);
 
     const games = await Game.search({
@@ -50,7 +63,7 @@ class RunQueue {
       return adjustedOffset + numberOfGames;
     }
 
-    return this.findCeiling(potentialCeiling + 5000);
+    return this.findCeiling(potentialCeiling + increment);
   }
 
   /** @return {Promise<number>} */
@@ -112,14 +125,7 @@ class RunQueue {
   // eslint-disable-next-line class-methods-use-this
   async getLeaderboards(gameCategoryIdPairs) {
     const promises = gameCategoryIdPairs
-      .map((gameCategoryIdPair) => Leaderboard.findByGameCategoryIdPair(gameCategoryIdPair, {
-        embed: [
-          'category',
-          'game',
-          'players',
-        ],
-        top: 1,
-      }));
+      .map((gameCategoryIdPair) => Leaderboard.findByGameCategoryIdPair(gameCategoryIdPair));
 
     return Promise.all(promises);
   }
@@ -178,7 +184,11 @@ class RunQueue {
   async getRun() {
     return this.getRandomPageOfGames()
       .then((randomPageOfGames) => {
-        const randomSubsetOfGames = this.getRandomSubsetOfGames(randomPageOfGames, 6);
+        const randomSubsetOfGames = this.getRandomSubsetOfGames(
+          randomPageOfGames,
+          RunQueue.maxConcurrentLeaderboardQueries,
+        );
+
         const gameCategoryIdPairs = this.getGameCategoryIdPairs(randomSubsetOfGames);
 
         return this.getLeaderboards(gameCategoryIdPairs);
@@ -188,6 +198,10 @@ class RunQueue {
         const randomAcceptableLeaderboard = (
           this.getRandomAcceptableLeaderboard(acceptableLeaderboards)
         );
+
+        if (randomAcceptableLeaderboard === undefined) {
+          return Promise.reject(new Error('No acceptable leaderboard found.'));
+        }
 
         const randomAcceptableLeaderboardAsRun = randomAcceptableLeaderboard.transformIntoRun();
 
@@ -201,7 +215,7 @@ class RunQueue {
    *
    * @return {Promise<undefined>} */
   async getTotalNumberOfGames() {
-    const ceiling = await this.findCeiling(RunQueue.baseTotalNumberOfGames + 5000);
+    const ceiling = await this.findCeiling(RunQueue.baseTotalNumberOfGames, 5000);
 
     if (ceiling % 250 !== 0) {
       this.totalNumberOfGames = ceiling;
@@ -226,20 +240,28 @@ class RunQueue {
   /** @return {Promise<undefined>} */
   async shift() {
     this.runs.shift();
-    await this.fillRuns();
+
+    if (!this.isQueueBeingFilled) {
+      this.isQueueBeingFilled = true;
+
+      await this.getNextRun();
+    }
   }
 
   /** @return {Promise<undefined>} */
   async start() {
-    await this.getTotalNumberOfGames();
+    if (this.initialGameCategoryIdPair !== null) {
+      const leaderboard = await Leaderboard.findByGameCategoryIdPair(
+        this.initialGameCategoryIdPair,
+      );
 
-    if (this.forcedGameCategoryIdPairs.length > 0) {
-      const leaderboards = await this.getLeaderboards(this.forcedGameCategoryIdPairs);
-
-      this.runs.push(...leaderboards.map((leaderboard) => leaderboard.transformIntoRun()));
+      this.runs.push(leaderboard.transformIntoRun());
     }
 
-    await this.fillRuns();
+    await this.getTotalNumberOfGames();
+
+    this.isQueueBeingFilled = true;
+    await this.getNextRun();
   }
 }
 

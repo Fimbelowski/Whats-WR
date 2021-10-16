@@ -66,13 +66,20 @@ class Leaderboard extends AbstractModel {
   }
 
   /** @return {Promise<object>} */
-  static async findByGameCategoryIdPair({ categoryId, gameId }, params = {}) {
+  static async findByGameCategoryIdPair({ categoryId, gameId }) {
     let uri = this.BASE_URI;
 
     uri = uri.replace(':gameId', gameId);
     uri = uri.replace(':categoryId', categoryId);
 
-    return SpeedrunDotComApiClient.get(uri, params)
+    return SpeedrunDotComApiClient.get(uri, {
+      embed: [
+        'category',
+        'game',
+        'players',
+      ],
+      top: 1,
+    })
       .then((response) => response.json())
       .then((result) => {
         const leaderboard = result.data;

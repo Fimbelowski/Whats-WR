@@ -119,6 +119,22 @@ export default {
   },
 
   created() {
+    const { hash } = window.location;
+
+    if (hash !== '') {
+      const [
+        gameId,
+        categoryId,
+      ] = hash
+        .slice(1)
+        .split('-');
+
+      this.runQueue.initialGameCategoryIdPair = {
+        categoryId,
+        gameId,
+      };
+    }
+
     this.runQueue.start();
   },
 };
