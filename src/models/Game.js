@@ -8,37 +8,13 @@ class Game extends AbstractModel {
     return 'games';
   }
 
-  /** @type {object} */
-  static get EMBEDS() {
-    return {
-      categories: Category,
-    };
-  }
+  /** Game constructor */
+  constructor(data = {}) {
+    super(data);
 
-  /** @type {object} */
-  static get DEFAULTS() {
-    return {
-      abbreviation: null,
-      assets: {},
-      categories: [],
-      created: null,
-      developers: [],
-      engines: [],
-      gametypes: [],
-      genres: [],
-      id: null,
-      links: [],
-      moderators: {},
-      names: {},
-      platforms: [],
-      publishers: [],
-      regions: [],
-      releaseDate: null,
-      released: null,
-      romhack: false,
-      ruleset: {},
-      weblink: null,
-    };
+    if (data.categories !== undefined) {
+      this.categories = data.categories.data.map((category) => new Category(category));
+    }
   }
 
   /**

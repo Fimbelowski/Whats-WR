@@ -1,32 +1,6 @@
 import AbstractModel from './AbstractModel';
 
 class Run extends AbstractModel {
-  /** @type {object} */
-  static get DEFAULTS() {
-    return {
-      category: '',
-      comment: '',
-      date: '',
-      game: '',
-      id: '',
-      level: null,
-      links: {},
-      players: [],
-      status: {},
-      submitted: null,
-      system: {},
-      times: {},
-      values: {},
-      videos: null,
-      weblink: '',
-    };
-  }
-
-  /** @return {object} */
-  static TRANSFORM_FOR_EMBEDDING(run) {
-    return new this(run.run);
-  }
-
   /** @return {string} */
   getFormattedTime() {
     // eslint-disable-next-line no-useless-escape

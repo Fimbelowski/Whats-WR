@@ -1,6 +1,7 @@
 import AbstractModel from './AbstractModel';
 import Category from './Category';
 import Game from './Game';
+import Guest from './Guest';
 import Run from './Run';
 import SpeedrunDotComApiClient from '../clients/SpeedrunDotComApiClient';
 import User from './User';
@@ -11,32 +12,17 @@ class Leaderboard extends AbstractModel {
     return 'leaderboards/:gameId/category/:categoryId';
   }
 
-  /** @type {object} */
-  static get EMBEDS() {
-    return {
-      category: Category,
-      game: Game,
-      players: User,
-      runs: Run,
-    };
-  }
+  /** Leaderboard constructor */
+  constructor(data = {}) {
+    super(data);
 
-  /** @type {object} */
-  static get DEFAULTS() {
-    return {
-      category: '',
-      emulators: '',
-      game: '',
-      level: '',
-      links: [],
-      platform: '',
-      region: '',
-      runs: [],
-      timing: '',
-      values: {},
-      videoOnly: false,
-      weblink: '',
-    };
+    this.category = new Category(this.category);
+    this.game = new Game(this.game);
+    this.players = this.players.data.map((player) => (player.rel === 'user'
+      ? new User(player)
+      : new Guest(player)));
+
+    this.runs = this.runs.map((run) => new Run(run.run));
   }
 
   /**
