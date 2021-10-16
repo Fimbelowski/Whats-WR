@@ -31,22 +31,28 @@ class Leaderboard extends AbstractModel {
    * case more players will be listed than are actually in the world record run, so we need to
    * filter the list of players.
    */
-  filterPlayers(worldRecordRun) {
-    const filteredPlayers = this.players.filter((player) => {
-      const playerIds = worldRecordRun.players
-        .map((worldRecordRunPlayer) => worldRecordRunPlayer.id);
+  getUniquePlayers() {
+    const worldRecordRun = this.getWorldRecordRun();
+    const worldRecordRunPlayers = worldRecordRun.players;
 
-      return playerIds.includes(player.id);
+    const matchingPlayers = this.players.filter((player) => {
+      const isUser = player.rel === 'user';
+
+      const matchedPlayer = worldRecordRunPlayers.find((worldRecordRunPlayer) => (isUser
+        ? worldRecordRunPlayer.id === player.id
+        : worldRecordRunPlayer.name === player.name));
+
+      return matchedPlayer !== undefined;
     });
 
-    const uniqueFilteredPlayers = filteredPlayers.filter((filteredPlayer, index, self) => {
+    const uniqueMatchingPlayers = matchingPlayers.filter((matchedPlayer, index, self) => {
       const indexOfFirstOccurrence = self
-        .findIndex((player) => player.id === filteredPlayer.id);
+        .findIndex((player) => player.id === matchedPlayer.id);
 
       return index === indexOfFirstOccurrence;
     });
 
-    return uniqueFilteredPlayers;
+    return uniqueMatchingPlayers;
   }
 
   /** @return {object} */
@@ -78,13 +84,11 @@ class Leaderboard extends AbstractModel {
   transformIntoRun() {
     const worldRecordRun = this.getWorldRecordRun();
 
-    const run = new Run(worldRecordRun);
+    worldRecordRun.category = this.category;
+    worldRecordRun.game = this.game;
+    worldRecordRun.players = this.getUniquePlayers(worldRecordRun);
 
-    run.category = this.category;
-    run.game = this.game;
-    run.players = this.filterPlayers(worldRecordRun);
-
-    return run;
+    return worldRecordRun;
   }
 }
 
