@@ -38,9 +38,6 @@ class RunQueue {
 
         this.isQueueBeingFilled = false;
         return Promise.resolve();
-      })
-      .catch((error) => {
-        Promise.reject(error);
       });
   }
 
@@ -200,7 +197,7 @@ class RunQueue {
         );
 
         if (randomAcceptableLeaderboard === undefined) {
-          return Promise.reject(new Error('No acceptable leaderboard found.'));
+          return this.getRun();
         }
 
         const randomAcceptableLeaderboardAsRun = randomAcceptableLeaderboard.transformIntoRun();
