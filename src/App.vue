@@ -91,6 +91,7 @@ export default {
   data() {
     return {
       Guest,
+      hashRegex: /#(?<gameId>[a-z\d]+)-(?<categoryId>[a-z\d]+)/,
       runQueue: new RunQueue(),
     };
   },
@@ -119,23 +120,40 @@ export default {
   },
 
   created() {
+    window.addEventListener('hashchange', () => {
+      const { hash } = window.location;
+
+      if (this.isHashValid(hash)) {
+        this.runQueue.getRunFromLookup(hash.slice(1));
+      }
+    });
+
     const { hash } = window.location;
 
-    if (hash !== '') {
-      const [
-        gameId,
-        categoryId,
-      ] = hash
-        .slice(1)
-        .split('-');
-
-      this.runQueue.initialGameCategoryIdPair = {
-        categoryId,
-        gameId,
-      };
+    if (this.isHashValid(hash)) {
+      this.runQueue.initialGameCategoryIdPair = this.parseHash(hash);
     }
 
     this.runQueue.start();
+  },
+
+  methods: {
+    /** @return {boolean} */
+    isHashValid(hash) {
+      return this.hashRegex.test(hash);
+    },
+
+    /** @return {object} */
+    parseHash(hash) {
+      const matches = this.hashRegex.exec(hash);
+
+      const { categoryId, gameId } = matches.groups;
+
+      return {
+        categoryId,
+        gameId,
+      };
+    },
   },
 };
 </script>

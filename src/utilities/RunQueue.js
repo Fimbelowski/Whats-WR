@@ -16,8 +16,16 @@ class RunQueue {
   constructor() {
     this.initialGameCategoryIdPair = null;
     this.isQueueBeingFilled = false;
+    this.runLookup = {};
     this.runs = [];
     this.totalNumberOfGames = 0;
+  }
+
+  /** @return {undefined} */
+  addRunToLookup(run) {
+    const { categoryId, gameId } = run.getGameCategoryIdPair();
+
+    this.runLookup[`${gameId}-${categoryId}`] = run;
   }
 
   /** @return {object|undefined} */
@@ -30,6 +38,8 @@ class RunQueue {
     this.getRun()
       .then((run) => {
         this.runs.push(run);
+
+        this.addRunToLookup(run);
       })
       .then(() => {
         if (this.runs.length < RunQueue.targetNumberOfRuns) {
@@ -206,6 +216,15 @@ class RunQueue {
       });
   }
 
+  /** @return {undefined} */
+  getRunFromLookup(key) {
+    const runFromLookup = this.runLookup[key];
+
+    if (runFromLookup !== undefined) {
+      this.runs.unshift(runFromLookup);
+    }
+  }
+
   /**
    * The speedrun.com API doesn't allow us to know the total number of games easily,
    * so we must find it ourselves.
@@ -234,6 +253,11 @@ class RunQueue {
     return this.runs.length > 0;
   }
 
+  /** @return {object|undefined} */
+  lookupRun(key) {
+    return this.runLookup[key];
+  }
+
   /** @return {Promise<undefined>} */
   async shift() {
     this.runs.shift();
@@ -252,7 +276,10 @@ class RunQueue {
         this.initialGameCategoryIdPair,
       );
 
-      this.runs.push(leaderboard.transformIntoRun());
+      const leaderboardAsRun = leaderboard.transformIntoRun();
+
+      this.runs.push(leaderboardAsRun);
+      this.addRunToLookup(leaderboardAsRun);
     }
 
     await this.getTotalNumberOfGames();

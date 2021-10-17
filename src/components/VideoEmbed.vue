@@ -1,9 +1,6 @@
 <template>
-  <iframe
-    :src="iframeSrc"
-    allowfullscreen="true"
-    height="720"
-    width="1280"
+  <div
+    class="iframe-container"
   />
   <div>
     {{ uri }}
@@ -19,6 +16,13 @@ export default {
       required: true,
       type: String,
     },
+  },
+
+  data() {
+    return {
+      iframe: null,
+      iframeContainer: null,
+    };
   },
 
   computed: {
@@ -62,6 +66,27 @@ export default {
         ? 'twitch'
         : 'youtube';
     },
+  },
+
+  watch: {
+    uri() {
+      this.iframe.remove();
+      this.iframe.setAttribute('src', this.iframeSrc);
+      this.iframeContainer.insertAdjacentElement('afterbegin', this.iframe);
+    },
+  },
+
+  mounted() {
+    this.iframe = document.createElement('iframe');
+
+    this.iframe.setAttribute('allowfullscreen', 'true');
+    this.iframe.setAttribute('height', 720);
+    this.iframe.setAttribute('src', this.iframeSrc);
+    this.iframe.setAttribute('width', 1280);
+
+    this.iframeContainer = document.querySelector('.iframe-container');
+
+    this.iframeContainer.insertAdjacentElement('afterbegin', this.iframe);
   },
 };
 </script>

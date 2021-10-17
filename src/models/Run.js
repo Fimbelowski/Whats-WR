@@ -19,6 +19,14 @@ class Run extends AbstractModel {
     return `${hours}:${minutes}:${seconds}`;
   }
 
+  /** @return {object} */
+  getGameCategoryIdPair() {
+    return {
+      categoryId: this.category.id,
+      gameId: this.game.id,
+    };
+  }
+
   /** @return {string} */
   getTimingMethod() {
     const { primary } = this.times;
