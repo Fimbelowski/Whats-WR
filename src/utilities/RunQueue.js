@@ -15,17 +15,17 @@ class RunQueue {
   /** RunQueue Constructor */
   constructor() {
     this.initialGameCategoryIdPair = null;
+    this.history = {};
     this.isQueueBeingFilled = false;
-    this.runLookup = {};
     this.runs = [];
     this.totalNumberOfGames = 0;
   }
 
   /** @return {undefined} */
-  addRunToLookup(run) {
+  addRunToHistory(run) {
     const { categoryId, gameId } = run.getGameCategoryIdPair();
 
-    this.runLookup[`${gameId}-${categoryId}`] = run;
+    this.history[`${gameId}-${categoryId}`] = run;
   }
 
   /** @return {object|undefined} */
@@ -38,8 +38,6 @@ class RunQueue {
     this.getRun()
       .then((run) => {
         this.runs.push(run);
-
-        this.addRunToLookup(run);
       })
       .then(() => {
         if (this.runs.length < RunQueue.targetNumberOfRuns) {
@@ -217,8 +215,8 @@ class RunQueue {
   }
 
   /** @return {undefined} */
-  getRunFromLookup(key) {
-    const runFromLookup = this.runLookup[key];
+  getRunFromHistory(key) {
+    const runFromLookup = this.history[key];
 
     if (runFromLookup !== undefined) {
       this.runs.unshift(runFromLookup);
@@ -244,6 +242,11 @@ class RunQueue {
   }
 
   /** @return {boolean} */
+  hasHistory() {
+    return Object.keys(this.history).length > 0;
+  }
+
+  /** @return {boolean} */
   hasMoreRuns() {
     return this.runs.length > 1;
   }
@@ -255,12 +258,13 @@ class RunQueue {
 
   /** @return {object|undefined} */
   lookupRun(key) {
-    return this.runLookup[key];
+    return this.history[key];
   }
 
   /** @return {Promise<undefined>} */
   async shift() {
-    this.runs.shift();
+    const removedRun = this.runs.shift();
+    this.addRunToHistory(removedRun);
 
     if (!this.isQueueBeingFilled) {
       this.isQueueBeingFilled = true;
@@ -279,7 +283,6 @@ class RunQueue {
       const leaderboardAsRun = leaderboard.transformIntoRun();
 
       this.runs.push(leaderboardAsRun);
-      this.addRunToLookup(leaderboardAsRun);
     }
 
     await this.getTotalNumberOfGames();

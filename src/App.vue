@@ -73,6 +73,23 @@
     >
       Next Run
     </button>
+    <div
+      v-if="runQueue.hasHistory()"
+    >
+      History
+      <ul>
+        <li
+          v-for="(run, gameCategoryIdPair) in runQueue.history"
+          :key="gameCategoryIdPair"
+        >
+          <a
+            :href="`#${gameCategoryIdPair}`"
+          >
+            {{ run.game.getTitle() }} - {{ run.category.name }}
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -124,7 +141,8 @@ export default {
       const { hash } = window.location;
 
       if (this.isHashValid(hash)) {
-        this.runQueue.getRunFromLookup(hash.slice(1));
+        this.runQueue.shift();
+        this.runQueue.getRunFromHistory(hash.slice(1));
       }
     });
 
