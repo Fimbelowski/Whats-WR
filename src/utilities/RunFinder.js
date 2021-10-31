@@ -2,51 +2,16 @@ import Game from '../models/Game';
 import getRandomInclusiveInteger from '../helpers/getRandomInclusiveInteger';
 import Leaderboard from '../models/Leaderboard';
 
-class RunQueue {
+class RunFinder {
   /** @var {number} */
   static baseTotalNumberOfGames = 24000;
 
   /** @var {number} */
   static maxConcurrentLeaderboardQueries = 3;
 
-  /** @var {number} */
-  static targetNumberOfRuns = 15;
-
-  /** RunQueue Constructor */
+  /** RunFinder Constructor */
   constructor() {
-    this.initialGameCategoryIdPair = null;
-    this.history = {};
-    this.isQueueBeingFilled = false;
-    this.runs = [];
     this.totalNumberOfGames = 0;
-  }
-
-  /** @return {undefined} */
-  addRunToHistory(run) {
-    const { categoryId, gameId } = run.getGameCategoryIdPair();
-
-    this.history[`${gameId}-${categoryId}`] = run;
-  }
-
-  /** @return {object|undefined} */
-  currentRun() {
-    return this.runs[0];
-  }
-
-  /** @return {Promise<undefined>} */
-  async getNextRun() {
-    this.getRun()
-      .then((run) => {
-        this.runs.push(run);
-      })
-      .then(() => {
-        if (this.runs.length < RunQueue.targetNumberOfRuns) {
-          return this.getNextRun();
-        }
-
-        this.isQueueBeingFilled = false;
-        return Promise.resolve();
-      });
   }
 
   /** @return {Promise<number>} */
@@ -69,6 +34,41 @@ class RunQueue {
     }
 
     return this.findCeiling(potentialCeiling + increment);
+  }
+
+  /** @return {Promise<object>} */
+  async findRun(gameCategoryIdPair) {
+    if (gameCategoryIdPair !== undefined) {
+      const leaderboard = await Leaderboard.findByGameCategoryIdPair(gameCategoryIdPair);
+
+      return leaderboard.transformIntoRun();
+    }
+
+    return this.getRandomPageOfGames()
+      .then((randomPageOfGames) => {
+        const randomSubsetOfGames = this.getRandomSubsetOfGames(
+          randomPageOfGames,
+          RunFinder.maxConcurrentLeaderboardQueries,
+        );
+
+        const gameCategoryIdPairs = this.getGameCategoryIdPairs(randomSubsetOfGames);
+
+        return this.getLeaderboards(gameCategoryIdPairs);
+      })
+      .then((leaderboards) => {
+        const acceptableLeaderboards = this.getAcceptableLeaderboards(leaderboards);
+        const randomAcceptableLeaderboard = (
+          this.getRandomAcceptableLeaderboard(acceptableLeaderboards)
+        );
+
+        if (randomAcceptableLeaderboard === undefined) {
+          return this.findRun();
+        }
+
+        const randomAcceptableLeaderboardAsRun = randomAcceptableLeaderboard.transformIntoRun();
+
+        return randomAcceptableLeaderboardAsRun;
+      });
   }
 
   /** @return {Promise<number>} */
@@ -185,111 +185,23 @@ class RunQueue {
     return randomSubsetOfGames;
   }
 
-  /** @return {Promise<object>} */
-  async getRun() {
-    return this.getRandomPageOfGames()
-      .then((randomPageOfGames) => {
-        const randomSubsetOfGames = this.getRandomSubsetOfGames(
-          randomPageOfGames,
-          RunQueue.maxConcurrentLeaderboardQueries,
-        );
-
-        const gameCategoryIdPairs = this.getGameCategoryIdPairs(randomSubsetOfGames);
-
-        return this.getLeaderboards(gameCategoryIdPairs);
-      })
-      .then((leaderboards) => {
-        const acceptableLeaderboards = this.getAcceptableLeaderboards(leaderboards);
-        const randomAcceptableLeaderboard = (
-          this.getRandomAcceptableLeaderboard(acceptableLeaderboards)
-        );
-
-        if (randomAcceptableLeaderboard === undefined) {
-          return this.getRun();
-        }
-
-        const randomAcceptableLeaderboardAsRun = randomAcceptableLeaderboard.transformIntoRun();
-
-        return randomAcceptableLeaderboardAsRun;
-      });
-  }
-
-  /** @return {undefined} */
-  getRunFromHistory(key) {
-    const runFromLookup = this.history[key];
-
-    if (runFromLookup !== undefined) {
-      this.runs.unshift(runFromLookup);
-    }
-  }
-
   /**
    * The speedrun.com API doesn't allow us to know the total number of games easily,
    * so we must find it ourselves.
    *
    * @return {Promise<undefined>} */
   async getTotalNumberOfGames() {
-    const ceiling = await this.findCeiling(RunQueue.baseTotalNumberOfGames, 5000);
+    const ceiling = await this.findCeiling(RunFinder.baseTotalNumberOfGames, 5000);
 
     if (ceiling % 250 !== 0) {
       this.totalNumberOfGames = ceiling;
     }
 
     this.totalNumberOfGames = await this.findTotalNumberOfGames(
-      RunQueue.baseTotalNumberOfGames,
+      RunFinder.baseTotalNumberOfGames,
       ceiling,
     );
   }
-
-  /** @return {boolean} */
-  hasHistory() {
-    return Object.keys(this.history).length > 0;
-  }
-
-  /** @return {boolean} */
-  hasMoreRuns() {
-    return this.runs.length > 1;
-  }
-
-  /** @return {boolean} */
-  hasRuns() {
-    return this.runs.length > 0;
-  }
-
-  /** @return {object|undefined} */
-  lookupRun(key) {
-    return this.history[key];
-  }
-
-  /** @return {Promise<undefined>} */
-  async shift() {
-    const removedRun = this.runs.shift();
-    this.addRunToHistory(removedRun);
-
-    if (!this.isQueueBeingFilled) {
-      this.isQueueBeingFilled = true;
-
-      await this.getNextRun();
-    }
-  }
-
-  /** @return {Promise<undefined>} */
-  async start() {
-    if (this.initialGameCategoryIdPair !== null) {
-      const leaderboard = await Leaderboard.findByGameCategoryIdPair(
-        this.initialGameCategoryIdPair,
-      );
-
-      const leaderboardAsRun = leaderboard.transformIntoRun();
-
-      this.runs.push(leaderboardAsRun);
-    }
-
-    await this.getTotalNumberOfGames();
-
-    this.isQueueBeingFilled = true;
-    await this.getNextRun();
-  }
 }
 
-export default RunQueue;
+export default RunFinder;

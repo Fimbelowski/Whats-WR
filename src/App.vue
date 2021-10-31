@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="runQueue.hasRuns()"
+    v-if="currentRun !== null"
   >
     <VideoEmbed
       :uri="currentRun.getVideoUri()"
@@ -68,18 +68,18 @@
       </ul>
     </div>
     <button
-      :disabled="!runQueue.hasMoreRuns()"
-      @click="runQueue.shift()"
+      :disabled="!runManager.hasNextRuns()"
+      @click="runManager.getNextRun()"
     >
       Next Run
     </button>
     <div
-      v-if="runQueue.hasHistory()"
+      v-if="runManager.hasHistory()"
     >
       History
       <ul>
         <li
-          v-for="(run, gameCategoryIdPair) in runQueue.history"
+          v-for="(run, gameCategoryIdPair) in runManager.history"
           :key="gameCategoryIdPair"
         >
           <a
@@ -95,7 +95,7 @@
 
 <script>
 import Guest from './models/Guest';
-import RunQueue from './utilities/RunQueue';
+import RunManager from './utilities/RunManager';
 import VideoEmbed from './components/VideoEmbed.vue';
 
 export default {
@@ -109,14 +109,14 @@ export default {
     return {
       Guest,
       hashRegex: /#(?<gameId>[a-z\d]+)-(?<categoryId>[a-z\d]+)/,
-      runQueue: new RunQueue(),
+      runManager: new RunManager(),
     };
   },
 
   computed: {
     /** @type {object} */
     currentRun() {
-      return this.runQueue.currentRun();
+      return this.runManager.currentRun;
     },
   },
 
@@ -141,18 +141,17 @@ export default {
       const { hash } = window.location;
 
       if (this.isHashValid(hash)) {
-        this.runQueue.shift();
-        this.runQueue.getRunFromHistory(hash.slice(1));
+        this.runManager.getRunFromHistory(hash.slice(1));
       }
     });
 
     const { hash } = window.location;
 
     if (this.isHashValid(hash)) {
-      this.runQueue.initialGameCategoryIdPair = this.parseHash(hash);
+      this.runManager.initialGameCategoryIdPair = this.parseHash(hash);
     }
 
-    this.runQueue.start();
+    this.runManager.start();
   },
 
   methods: {
